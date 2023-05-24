@@ -1,0 +1,11 @@
+matplotlib
+md2pdf
+numpy
+pandas
+Pillow
+scipy
+virtualenv
+weasyprint
+tabulate
+xlrd
+scikit-learn
