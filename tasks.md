@@ -40,6 +40,21 @@
 - md2pdf
   - ??? error programmatically add images
 
+## Done
+
+- backfit - recovery rate
+- rm reference from final results
+- mask samples + reason (<[>] as reference)
+- sample procesing output as dictionary
+- CV masking  <= 20%
+- notes for masking reason
 
 ## TODO
 
+- Backfit table mark masked value
+- Parameter file loading
+  - REF_VAL_MAX
+  - DILUTIONS
+  - CV masking threshold
+  - `fit_reference_auto_rm` verbose output
+  - R_squared add to md to fit section

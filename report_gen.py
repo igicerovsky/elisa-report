@@ -10,6 +10,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("-x", "--xlsdata", help="xls data path", default='C:/work/report-gen/data/sample_data.xlsx')
     parser.add_argument("-f", "--fitdata", help="csv data path", default='C:/work/report-gen/data/fit_0.csv')
+    parser.add_argument("-r", "--reference", help="reference", default=1.7954e+10)
     args = parser.parse_args()
 
     data = read_concat_data(args.xlsdata)

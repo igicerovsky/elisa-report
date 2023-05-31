@@ -13,322 +13,406 @@ Comment: TODO...
 
 ## Analysis Results
 
-| Sample type   | Sample Name               |   Pre-dilution |   Reader Data [cp/ml] |   Result [cp/ml] |    CV [%] |
-|:--------------|:--------------------------|---------------:|----------------------:|-----------------:|----------:|
-| control 01    | Kontrolle01               |              1 |           1.94581e+10 |      1.94581e+10 |   1.21412 |
-| reference 01  | Referenz01                |              1 |           2.0883e+10  |      2.0883e+10  |   1.25642 |
-| sample 01     | EHU04_2311_AAV9_FT1       |             10 |           1.35831e+10 |      1.35831e+11 |   2.10119 |
-| sample 02     | EHU04_2311_AAV9_FT2       |             10 |           8.36919e+09 |      8.36919e+10 |   3.86403 |
-| sample 03     | EHU04_2311_AAV9_FT3       |             10 |           4.44895e+09 |      4.44895e+10 |   3.07784 |
-| sample 04     | EHU04_2311_AAV9_W1        |             10 |           2.67225e+08 |      2.67225e+09 |   7.23745 |
-| sample 05     | EHU04_2311_AAV9_E2        |           1000 |           3.33313e+09 |      3.33313e+12 |   6.54286 |
-| sample 06     | EHU04_2311_AAV9_E1+E3     |             50 |           2.68553e+09 |      1.34277e+11 |   3.02315 |
-| sample 07     | EHU04_2311_AAV9_E_DIL     |           1000 |           2.81493e+09 |      2.81493e+12 |   4.63554 |
-| sample 08     | EHU04_2311_AAV9_Reg2      |             10 |           2.20794e+09 |      2.20794e+10 |   5.70059 |
-| sample 09     | EHU04_2311_AAV9_Reg4      |             10 |           3.82497e+09 |      3.82497e+10 |   3.68339 |
-| sample 10     | EHU04_2311_AAV9_Reg6      |             10 |           6.6915e+09  |      6.6915e+10  |   3.80582 |
-| sample 11     | PPO02_2307MUQ_FT          |            100 |           3.68489e+09 |      3.68489e+11 |   2.95516 |
-| sample 12     | PPO02_2307AFF_FT          |             10 |           7.55773e+07 |      7.55773e+08 |  35.5052  |
-| sample 13     | PPO02_2307AFF_NE          |             10 |           3.22825e+07 |      3.22825e+08 |  73.0673  |
-| sample 14     | PPO02_2307AFF_ELU         |           1000 |           1.76866e+07 |      1.76866e+10 |  49.3163  |
-| sample 15     | PPO02_2307SDT_F           |            200 |           2.87696e+07 |      5.75392e+09 |  80.0763  |
-| sample 16     | PPO02_2307POL_FT          |             10 |           4.55948e+07 |      4.55948e+08 | 125.411   |
-| sample 17     | PPO02_2307POL_FLT         |           1000 |           2.38348e+07 |      2.38348e+10 | 123.013   |
-| sample 18     | EDP_2313_S02_T03_CT       |             10 |           2.33355e+07 |      2.33355e+08 | 114.397   |
-| sample 19     | EDP_2313_S03_T03_CT       |             10 |           3.97058e+07 |      3.97058e+08 | 123.418   |
-| sample 20     | EHU04_2312B_UFA_UDR       |            200 |           4.26779e+07 |      8.53558e+09 |  97.5516  |
-| sample 21     | EHU04_2312B_UFA_UDR_conc. |            200 |           2.24679e+07 |      4.49358e+09 | 155.871   |
+| Sample type   | Sample Name               |   Pre-dilution |   Reader Data [cp/ml] |   Result [cp/ml] |    CV [%] | Note                                                               |
+|:--------------|:--------------------------|---------------:|----------------------:|-----------------:|----------:|:-------------------------------------------------------------------|
+| control 01    | Kontrolle01               |              1 |           2.24158e+10 |      2.24158e+10 |  11.3563  | Ruduced number of sample points. Measured 4, valid 3;              |
+| sample 01     | EHU04_2311_AAV9_FT1       |             10 |         nan           |    nan           | nan       | Not enough valid sample points. Required 2, available 0;           |
+| sample 02     | EHU04_2311_AAV9_FT2       |             10 |         nan           |    nan           | nan       | Not enough valid sample points. Required 2, available 0;           |
+| sample 03     | EHU04_2311_AAV9_FT3       |             10 |           5.50617e+07 |      5.50617e+08 | nan       | Not enough valid sample points. Required 2, available 0;           |
+| sample 04     | EHU04_2311_AAV9_W1        |             10 |         nan           |    nan           | nan       | Not enough valid sample points. Required 2, available 0;           |
+| sample 05     | EHU04_2311_AAV9_E2        |           1000 |           8.54313e+09 |      8.54313e+12 |   8.46792 |                                                                    |
+| sample 06     | EHU04_2311_AAV9_E1+E3     |             50 |           1.31677e+11 |      6.58384e+12 |  63.3859  | CV > 0.2; Not enough valid sample points. Required 2, available 0; |
+| sample 07     | EHU04_2311_AAV9_E_DIL     |           1000 |           1.12831e+10 |      1.12831e+13 |  12.2352  |                                                                    |
+| sample 08     | EHU04_2311_AAV9_Reg2      |             10 |           5.04272e+09 |      5.04272e+10 |  10.4164  |                                                                    |
+| sample 09     | EHU04_2311_AAV9_Reg4      |             10 |           5.96796e+08 |      5.96796e+09 | nan       | Not enough valid sample points. Required 2, available 1;           |
+| sample 10     | EHU04_2311_AAV9_Reg6      |             10 |           2.20217e+08 |      2.20217e+09 | nan       | Not enough valid sample points. Required 2, available 1;           |
+| sample 11     | PPO02_2307MUQ_FT          |            100 |           4.73723e+10 |      4.73723e+12 |  30.6791  | CV > 0.2; Ruduced number of sample points. Measured 4, valid 2;    |
+| sample 12     | PPO02_2307AFF_FT          |             10 |         nan           |    nan           | nan       | Not enough valid sample points. Required 2, available 0;           |
+| sample 13     | PPO02_2307AFF_NE          |             10 |         nan           |    nan           | nan       | Not enough valid sample points. Required 2, available 0;           |
+| sample 14     | PPO02_2307AFF_ELU         |           1000 |           2.67163e+10 |      2.67163e+13 |  22.1979  | CV > 0.2; Ruduced number of sample points. Measured 4, valid 3;    |
+| sample 15     | PPO02_2307SDT_F           |            200 |           3.15974e+10 |      6.31948e+12 |  18.114   | Ruduced number of sample points. Measured 4, valid 3;              |
+| sample 16     | PPO02_2307POL_FT          |             10 |           8.2948e+09  |      8.2948e+10  |   7.7785  |                                                                    |
+| sample 17     | PPO02_2307POL_FLT         |           1000 |           2.15592e+10 |      2.15592e+13 |  12.8379  | Ruduced number of sample points. Measured 4, valid 3;              |
+| sample 18     | EDP_2313_S02_T03_CT       |             10 |           1.03451e+10 |      1.03451e+11 |   5.27912 |                                                                    |
+| sample 19     | EDP_2313_S03_T03_CT       |             10 |           8.84037e+09 |      8.84037e+10 |   3.91523 |                                                                    |
+| sample 20     | EHU04_2312B_UFA_UDR       |            200 |           5.47003e+09 |      1.09401e+12 |  14.048   |                                                                    |
+| sample 21     | EHU04_2312B_UFA_UDR_conc. |            200 |           7.04322e+09 |      1.40864e+12 |   2.0137  |                                                                    |
 
 ## Reference Curve Fit
 
 $\LARGE x = {d + {a - d \over {1 + ({ x \over c })^b}} }$  
 
-!["alt text"](./fit.png)
+!["alt text"](./img/fit.png)
+
+Verbose fitting progress:
+
+|   idx |     metric | note                                                                                 |
+|------:|-----------:|:-------------------------------------------------------------------------------------|
+|    -1 |   0.997878 |                                                                                      |
+|     0 | nan        | Optimal parameters not found: Number of calls to function has reached maxfev = 1000. |
+|     1 |   0.9995   | max                                                                                  |
+|     2 |   0.998006 |                                                                                      |
+|     3 |   0.999024 |                                                                                      |
+|     4 |   0.99771  |                                                                                      |
+|     5 |   0.997778 |                                                                                      |
+|     6 |   0.997886 |                                                                                      |
 
 Fit parameters
 
 | Parameter name   |   Estimated value |       Error | Confidence interval   |
 |:-----------------|------------------:|------------:|:----------------------|
-| a                |        0.00788769 | 0.0188997   | [-0.0523, 0.068]      |
-| b                |        0.941942   | 0.0385487   | [0.819, 1.06]         |
-| c                |        3.28e+10   | 5.89603e+09 | [1.4e+10, 5.16e+10]   |
-| d                |        7.97675    | 0.766813    | [5.54, 10.4]          |
+| a                |       0.0246397   | 0.0369181   | [-0.0929, 0.142]      |
+| b                |       0.875882    | 0.182243    | [0.296, 1.46]         |
+| c                |       1.23757e+14 | 7.98525e+16 | [-2.54e+17, 2.54e+17] |
+| d                |    3278.56        | 1.84718e+06 | [-5.88e+06, 5.88e+06] |
 
 Backfit...
 
-| Well      |   Standard Value [cp/ml] |   Optical density |   Concentration backfit |
-|:----------|-------------------------:|------------------:|------------------------:|
-| ('A', 5)  |              2.09e+10    |            3.158  |             2.08875e+10 |
-| ('A', 6)  |              1.045e+10   |            2.0378 |             1.04931e+10 |
-| ('A', 7)  |              5.225e+09   |            1.1946 |             5.15457e+09 |
-| ('A', 8)  |              2.6125e+09  |            0.6939 |             2.67096e+09 |
-| ('A', 9)  |              1.30625e+09 |            0.3684 |             1.28788e+09 |
-| ('A', 10) |              6.53125e+08 |            0.2027 |             6.54879e+08 |
-| ('A', 11) |              3.26562e+08 |            0.1096 |             3.24364e+08 |
+| Well      |   Standard Value [cp/ml] |   Concentration backfit [cp/ml] |   Optical density |   Recovery rate [%] |
+|:----------|-------------------------:|--------------------------------:|------------------:|--------------------:|
+| ('A', 5)  |              1.7954e+10  |                     1.79777e+10 |            1.4609 |            100.132  |
+| ('A', 6)  |              8.977e+09   |                     8.06777e+09 |            0.7627 |             89.8715 |
+| ('A', 7)  |              4.4885e+09  |                     4.28226e+09 |            0.4562 |             95.405  |
+| ('A', 8)  |              2.24425e+09 |                     2.5087e+09  |            0.2956 |            111.783  |
+| ('A', 9)  |              1.12212e+09 |                     1.11438e+09 |            0.153  |             99.3099 |
+| ('A', 10) |              5.61062e+08 |                     5.19868e+08 |            0.0824 |             92.6577 |
+| ('A', 11) |              2.80531e+08 |                     2.56898e+08 |            0.0465 |             91.5755 |
 
 ## Sample evaluation
 
 ### Sample: controll 'k' 1
 
-|          |   OD_delta |   plate_layout_dil |   concentration |
-|:---------|-----------:|-------------------:|----------------:|
-| ('A', 1) |     3.0362 |                  1 |     1.95073e+10 |
-| ('A', 2) |     1.9465 |                  2 |     1.96645e+10 |
-| ('A', 3) |     1.1445 |                  4 |     1.95421e+10 |
-| ('A', 4) |     0.631  |                  8 |     1.91185e+10 |
+|          |   OD_delta |   plate_layout_dil |   concentration | mask_reason                  |
+|:---------|-----------:|-------------------:|----------------:|:-----------------------------|
+| ('A', 1) |     1.554  |                  1 |     1.94798e+10 | Backfit 1.948e+10 > 2.805e+8 |
+| ('A', 2) |     0.921  |                  2 |     2.11647e+10 |                              |
+| ('A', 3) |     0.5703 |                  4 |     2.4015e+10  |                              |
+| ('A', 4) |     0.3327 |                  8 |     2.50038e+10 |                              |
 
-CV = 1.21 [%]  
-mean = 1.946e+10 [cp/ml]
+CV = 11.4 [%]  
+mean = 2.242e+10 [cp/ml]  
+valid = False  
+note: Ruduced number of sample points. Measured 4, valid 3;
+
+!["alt text"](control_01.png)
 
 ### Sample: sample 's' 1
 
-|          |   OD_delta |   plate_layout_dil |   concentration |
-|:---------|-----------:|-------------------:|----------------:|
-| ('B', 1) |     2.459  |                  1 |     1.38597e+10 |
-| ('B', 2) |     1.4489 |                  2 |     1.31936e+10 |
-| ('B', 3) |     0.8489 |                  4 |     1.35697e+10 |
-| ('B', 4) |     0.4732 |                  8 |     1.37093e+10 |
+|          |   OD_delta |   plate_layout_dil |   concentration |   mask_reason |
+|:---------|-----------:|-------------------:|----------------:|--------------:|
+| ('B', 1) |     0.0146 |                  1 |             nan |           nan |
+| ('B', 2) |     0.0118 |                  2 |             nan |           nan |
+| ('B', 3) |     0.0094 |                  4 |             nan |           nan |
+| ('B', 4) |     0.0081 |                  8 |             nan |           nan |
 
-CV = 2.1 [%]  
-mean = 1.358e+10 [cp/ml]
+CV = nan [%]  
+mean = nan [cp/ml]  
+valid = False  
+note: Not enough valid sample points. Required 2, available 0;
+
+![sample_01.png](img/sample_01.png)
 
 ### Sample: sample 's' 2
 
-|          |   OD_delta |   plate_layout_dil |   concentration |
-|:---------|-----------:|-------------------:|----------------:|
-| ('C', 1) |     1.795  |                  1 |     8.78406e+09 |
-| ('C', 2) |     0.9791 |                  2 |     8.06129e+09 |
-| ('C', 3) |     0.5513 |                  4 |     8.17235e+09 |
-| ('C', 4) |     0.3096 |                  8 |     8.45905e+09 |
+|          |   OD_delta |   plate_layout_dil |   concentration |   mask_reason |
+|:---------|-----------:|-------------------:|----------------:|--------------:|
+| ('C', 1) |     0.0233 |                  1 |             nan |           nan |
+| ('C', 2) |     0.0211 |                  2 |             nan |           nan |
+| ('C', 3) |     0.0112 |                  4 |             nan |           nan |
+| ('C', 4) |     0.0091 |                  8 |             nan |           nan |
 
-CV = 3.86 [%]  
-mean = 8.369e+09 [cp/ml]
+CV = nan [%]  
+mean = nan [cp/ml]  
+valid = False  
+note: Not enough valid sample points. Required 2, available 0;
+
+![sample_02.png](img/sample_02.png)
 
 ### Sample: sample 's' 3
 
-|          |   OD_delta |   plate_layout_dil |   concentration |
-|:---------|-----------:|-------------------:|----------------:|
-| ('D', 1) |     1.1006 |                  1 |     4.65369e+09 |
-| ('D', 2) |     0.5858 |                  2 |     4.38374e+09 |
-| ('D', 3) |     0.3201 |                  4 |     4.39234e+09 |
-| ('D', 4) |     0.1726 |                  8 |     4.36603e+09 |
+|          |   OD_delta |   plate_layout_dil |   concentration | mask_reason                 |
+|:---------|-----------:|-------------------:|----------------:|:----------------------------|
+| ('D', 1) |     0.0336 |                  1 |     5.50617e+07 | Backfit 5.506e+7 < 2.805e+8 |
+| ('D', 2) |     0.0199 |                  2 |   nan           | NaN                         |
+| ('D', 3) |     0.0138 |                  4 |   nan           | NaN                         |
+| ('D', 4) |     0.012  |                  8 |   nan           | NaN                         |
 
-CV = 3.08 [%]  
-mean = 4.449e+09 [cp/ml]
+CV = nan [%]  
+mean = 5.506e+07 [cp/ml]  
+valid = False  
+note: Not enough valid sample points. Required 2, available 0;
+
+![sample_03.png](img/sample_03.png)
 
 ### Sample: sample 's' 4
 
-|          |   OD_delta |   plate_layout_dil |   concentration |
-|:---------|-----------:|-------------------:|----------------:|
-| ('E', 1) |     0.1012 |                  1 |     2.95665e+08 |
-| ('E', 2) |     0.05   |                  2 |     2.52356e+08 |
-| ('E', 3) |     0.0305 |                  4 |     2.60137e+08 |
-| ('E', 4) |     0.0197 |                  8 |     2.60743e+08 |
+|          |   OD_delta |   plate_layout_dil |   concentration |   mask_reason |
+|:---------|-----------:|-------------------:|----------------:|--------------:|
+| ('E', 1) |     0.0133 |                  1 |             nan |           nan |
+| ('E', 2) |     0.0091 |                  2 |             nan |           nan |
+| ('E', 3) |     0.007  |                  4 |             nan |           nan |
+| ('E', 4) |     0.0068 |                  8 |             nan |           nan |
 
-CV = 7.24 [%]  
-mean = 2.672e+08 [cp/ml]
+CV = nan [%]  
+mean = nan [cp/ml]  
+valid = False  
+note: Not enough valid sample points. Required 2, available 0;
+
+![sample_04.png](img/sample_04.png)
 
 ### Sample: sample 's' 5
 
-|          |   OD_delta |   plate_layout_dil |   concentration |
-|:---------|-----------:|-------------------:|----------------:|
-| ('F', 1) |     0.8959 |                  1 |     3.61936e+09 |
-| ('F', 2) |     0.4341 |                  2 |     3.1052e+09  |
-| ('F', 3) |     0.2449 |                  4 |     3.2444e+09  |
-| ('F', 4) |     0.1373 |                  8 |     3.36356e+09 |
+|          |   OD_delta |   plate_layout_dil |   concentration | mask_reason   |
+|:---------|-----------:|-------------------:|----------------:|:--------------|
+| ('F', 1) |     0.8188 |                  1 |     9.21598e+09 |               |
+| ('F', 2) |     0.4518 |                  2 |     9.07893e+09 |               |
+| ('F', 3) |     0.2265 |                  4 |     7.71542e+09 |               |
+| ('F', 4) |     0.1402 |                  8 |     8.16219e+09 |               |
 
-CV = 6.54 [%]  
-mean = 3.333e+09 [cp/ml]
+CV = 8.47 [%]  
+mean = 8.543e+09 [cp/ml]  
+valid = True  
+![sample_05.png](img/sample_05.png)
 
 ### Sample: sample 's' 6
 
-|          |   OD_delta |   plate_layout_dil |   concentration |
-|:---------|-----------:|-------------------:|----------------:|
-| ('G', 1) |     0.7171 |                  1 |     2.77634e+09 |
-| ('G', 2) |     0.3852 |                  2 |     2.70971e+09 |
-| ('G', 3) |     0.2001 |                  4 |     2.5815e+09  |
-| ('G', 4) |     0.1125 |                  8 |     2.67458e+09 |
+|          |   OD_delta |   plate_layout_dil |   concentration | mask_reason                  |
+|:---------|-----------:|-------------------:|----------------:|:-----------------------------|
+| ('G', 1) |     3.5014 |                  1 |     4.97835e+10 | Backfit 4.978e+10 > 2.805e+8 |
+| ('G', 2) |     3.0087 |                  2 |     8.36121e+10 | Backfit 4.181e+10 > 2.805e+8 |
+| ('G', 3) |     2.82   |                  4 |     1.55196e+11 | Backfit 3.880e+10 > 2.805e+8 |
+| ('G', 4) |     2.2412 |                  8 |     2.38115e+11 | Backfit 2.976e+10 > 2.805e+8 |
 
-CV = 3.02 [%]  
-mean = 2.686e+09 [cp/ml]
+CV = 63.4 [%]  
+mean = 1.317e+11 [cp/ml]  
+valid = False  
+note: CV > 0.2; Not enough valid sample points. Required 2, available 0;
+
+![sample_06.png](img/sample_06.png)
 
 ### Sample: sample 's' 7
 
-|          |   OD_delta |   plate_layout_dil |   concentration |
-|:---------|-----------:|-------------------:|----------------:|
-| ('H', 1) |     0.7485 |                  1 |     2.92043e+09 |
-| ('H', 2) |     0.3758 |                  2 |     2.63464e+09 |
-| ('H', 3) |     0.2218 |                  4 |     2.90054e+09 |
-| ('H', 4) |     0.1172 |                  8 |     2.8041e+09  |
+|          |   OD_delta |   plate_layout_dil |   concentration | mask_reason   |
+|:---------|-----------:|-------------------:|----------------:|:--------------|
+| ('H', 1) |     0.991  |                  1 |     1.15312e+10 |               |
+| ('H', 2) |     0.5685 |                  2 |     1.19623e+10 |               |
+| ('H', 3) |     0.3297 |                  4 |     1.2363e+10  |               |
+| ('H', 4) |     0.1539 |                  8 |     9.27599e+09 |               |
 
-CV = 4.64 [%]  
-mean = 2.815e+09 [cp/ml]
+CV = 12.2 [%]  
+mean = 1.128e+10 [cp/ml]  
+valid = True  
+![sample_07.png](img/sample_07.png)
 
 ### Sample: sample 's' 8
 
-|          |   OD_delta |   plate_layout_dil |   concentration |
-|:---------|-----------:|-------------------:|----------------:|
-| ('B', 5) |     0.6261 |                  1 |     2.36818e+09 |
-| ('B', 6) |     0.308  |                  2 |     2.10239e+09 |
-| ('B', 7) |     0.1677 |                  4 |     2.11272e+09 |
-| ('B', 8) |     0.0969 |                  8 |     2.24846e+09 |
+|          |   OD_delta |   plate_layout_dil |   concentration | mask_reason   |
+|:---------|-----------:|-------------------:|----------------:|:--------------|
+| ('B', 5) |     0.5229 |                  1 |     5.41198e+09 |               |
+| ('B', 6) |     0.2986 |                  2 |     5.4673e+09  |               |
+| ('B', 7) |     0.1617 |                  4 |     4.95888e+09 |               |
+| ('B', 8) |     0.091  |                  8 |     4.33273e+09 |               |
 
-CV = 5.7 [%]  
-mean = 2.208e+09 [cp/ml]
+CV = 10.4 [%]  
+mean = 5.043e+09 [cp/ml]  
+valid = True  
+![sample_08.png](img/sample_08.png)
 
 ### Sample: sample 's' 9
 
-|          |   OD_delta |   plate_layout_dil |   concentration |
-|:---------|-----------:|-------------------:|----------------:|
-| ('C', 5) |     0.9668 |                  1 |     3.96907e+09 |
-| ('C', 6) |     0.5012 |                  2 |     3.66117e+09 |
-| ('C', 7) |     0.2789 |                  4 |     3.75814e+09 |
-| ('C', 8) |     0.1567 |                  8 |     3.9115e+09  |
+|          |   OD_delta |   plate_layout_dil |   concentration | mask_reason                 |
+|:---------|-----------:|-------------------:|----------------:|:----------------------------|
+| ('C', 5) |     0.1337 |                  1 |     9.55017e+08 |                             |
+| ('C', 6) |     0.0616 |                  2 |     5.55273e+08 | Backfit 2.776e+8 < 2.805e+8 |
+| ('C', 7) |     0.0357 |                  4 |     2.801e+08   | Backfit 7.002e+7 < 2.805e+8 |
+| ('C', 8) |     0.0209 |                  8 |   nan           | NaN                         |
 
-CV = 3.68 [%]  
-mean = 3.825e+09 [cp/ml]
+CV = nan [%]  
+mean = 5.968e+08 [cp/ml]  
+valid = False  
+note: Not enough valid sample points. Required 2, available 1;
+
+![sample_09.png](img/sample_09.png)
 
 ### Sample: sample 's' 10
 
-|          |   OD_delta |   plate_layout_dil |   concentration |
-|:---------|-----------:|-------------------:|----------------:|
-| ('D', 5) |     1.5097 |                  1 |     6.96147e+09 |
-| ('D', 6) |     0.8075 |                  2 |     6.39139e+09 |
-| ('D', 7) |     0.4718 |                  4 |     6.83139e+09 |
-| ('D', 8) |     0.248  |                  8 |     6.58173e+09 |
+|          |   OD_delta |   plate_layout_dil |   concentration | mask_reason                 |
+|:---------|-----------:|-------------------:|----------------:|:----------------------------|
+| ('D', 5) |     0.0654 |                  1 |     3.10457e+08 |                             |
+| ('D', 6) |     0.035  |                  2 |     1.29976e+08 | Backfit 6.499e+7 < 2.805e+8 |
+| ('D', 7) |     0.0223 |                  4 |   nan           | NaN                         |
+| ('D', 8) |     0.0151 |                  8 |   nan           | NaN                         |
 
-CV = 3.81 [%]  
-mean = 6.691e+09 [cp/ml]
+CV = nan [%]  
+mean = 2.202e+08 [cp/ml]  
+valid = False  
+note: Not enough valid sample points. Required 2, available 1;
+
+![sample_10.png](img/sample_10.png)
 
 ### Sample: sample 's' 11
 
-|          |   OD_delta |   plate_layout_dil |   concentration |
-|:---------|-----------:|-------------------:|----------------:|
-| ('E', 5) |     0.9412 |                  1 |     3.84177e+09 |
-| ('E', 6) |     0.5027 |                  2 |     3.67377e+09 |
-| ('E', 7) |     0.2686 |                  4 |     3.60157e+09 |
-| ('E', 8) |     0.1465 |                  8 |     3.62247e+09 |
+|          |   OD_delta |   plate_layout_dil |   concentration | mask_reason                  |
+|:---------|-----------:|-------------------:|----------------:|:-----------------------------|
+| ('E', 5) |     2.2784 |                  1 |     3.03358e+10 | Backfit 3.034e+10 > 2.805e+8 |
+| ('E', 6) |     1.6191 |                  2 |     4.08595e+10 | Backfit 2.043e+10 > 2.805e+8 |
+| ('E', 7) |     1.1646 |                  4 |     5.57033e+10 |                              |
+| ('E', 8) |     0.7127 |                  8 |     6.25904e+10 |                              |
 
-CV = 2.96 [%]  
-mean = 3.685e+09 [cp/ml]
+CV = 30.7 [%]  
+mean = 4.737e+10 [cp/ml]  
+valid = False  
+note: CV > 0.2; Ruduced number of sample points. Measured 4, valid 2;
+
+![sample_11.png](img/sample_11.png)
 
 ### Sample: sample 's' 12
 
-|          |   OD_delta |   plate_layout_dil |   concentration |
-|:---------|-----------:|-------------------:|----------------:|
-| ('F', 5) |     0.0268 |                  1 |     5.37704e+07 |
-| ('F', 6) |     0.0182 |                  2 |     5.64225e+07 |
-| ('F', 7) |     0.0154 |                  4 |     8.05856e+07 |
-| ('F', 8) |     0.0132 |                  8 |     1.11531e+08 |
+|          |   OD_delta |   plate_layout_dil |   concentration |   mask_reason |
+|:---------|-----------:|-------------------:|----------------:|--------------:|
+| ('F', 5) |     0.0131 |                  1 |             nan |           nan |
+| ('F', 6) |     0.0092 |                  2 |             nan |           nan |
+| ('F', 7) |     0.0083 |                  4 |             nan |           nan |
+| ('F', 8) |     0.009  |                  8 |             nan |           nan |
 
-CV = 35.5 [%]  
-mean = 7.558e+07 [cp/ml]
+CV = nan [%]  
+mean = nan [cp/ml]  
+valid = False  
+note: Not enough valid sample points. Required 2, available 0;
+
+![sample_12.png](img/sample_12.png)
 
 ### Sample: sample 's' 13
 
-|          |   OD_delta |   plate_layout_dil |   concentration |
-|:---------|-----------:|-------------------:|----------------:|
-| ('G', 5) |     0.0127 |                  1 |     1.25516e+07 |
-| ('G', 6) |     0.0109 |                  2 |     1.52627e+07 |
-| ('G', 7) |     0.0116 |                  4 |     3.81101e+07 |
-| ('G', 8) |     0.011  |                  8 |     6.32055e+07 |
+|          |   OD_delta |   plate_layout_dil |   concentration |   mask_reason |
+|:---------|-----------:|-------------------:|----------------:|--------------:|
+| ('G', 5) |     0.0097 |                  1 |             nan |           nan |
+| ('G', 6) |     0.0078 |                  2 |             nan |           nan |
+| ('G', 7) |     0.0083 |                  4 |             nan |           nan |
+| ('G', 8) |     0.0084 |                  8 |             nan |           nan |
 
-CV = 73.1 [%]  
-mean = 3.228e+07 [cp/ml]
+CV = nan [%]  
+mean = nan [cp/ml]  
+valid = False  
+note: Not enough valid sample points. Required 2, available 0;
+
+![sample_13.png](img/sample_13.png)
 
 ### Sample: sample 's' 14
 
-|          |   OD_delta |   plate_layout_dil |   concentration |
-|:---------|-----------:|-------------------:|----------------:|
-| ('H', 5) |     0.0107 |                  1 |     7.09438e+06 |
-| ('H', 6) |     0.0107 |                  2 |     1.41888e+07 |
-| ('H', 7) |     0.0105 |                  4 |     2.62391e+07 |
-| ('H', 8) |     0.0091 |                  8 |     2.32241e+07 |
+|          |   OD_delta |   plate_layout_dil |   concentration | mask_reason                  |
+|:---------|-----------:|-------------------:|----------------:|:-----------------------------|
+| ('H', 5) |     1.5486 |                  1 |     1.94012e+10 | Backfit 1.940e+10 > 2.805e+8 |
+| ('H', 6) |     1.0657 |                  2 |     2.51094e+10 |                              |
+| ('H', 7) |     0.668  |                  4 |     2.89845e+10 |                              |
+| ('H', 8) |     0.4213 |                  8 |     3.33702e+10 |                              |
 
-CV = 49.3 [%]  
-mean = 1.769e+07 [cp/ml]
+CV = 22.2 [%]  
+mean = 2.672e+10 [cp/ml]  
+valid = False  
+note: CV > 0.2; Ruduced number of sample points. Measured 4, valid 3;
+
+![sample_14.png](img/sample_14.png)
 
 ### Sample: sample 's' 15
 
-|           |   OD_delta |   plate_layout_dil |   concentration |
-|:----------|-----------:|-------------------:|----------------:|
-| ('B', 9)  |     0.0105 |                  1 |     6.55979e+06 |
-| ('B', 10) |     0.0106 |                  2 |     1.36536e+07 |
-| ('B', 11) |     0.0116 |                  4 |     3.81101e+07 |
-| ('B', 12) |     0.0107 |                  8 |     5.6755e+07  |
+|           |   OD_delta |   plate_layout_dil |   concentration | mask_reason                  |
+|:----------|-----------:|-------------------:|----------------:|:-----------------------------|
+| ('B', 9)  |     1.8693 |                  1 |     2.4131e+10  | Backfit 2.413e+10 > 2.805e+8 |
+| ('B', 10) |     1.2447 |                  2 |     3.00977e+10 |                              |
+| ('B', 11) |     0.8001 |                  4 |     3.58743e+10 |                              |
+| ('B', 12) |     0.4515 |                  8 |     3.62866e+10 |                              |
 
-CV = 80.1 [%]  
-mean = 2.877e+07 [cp/ml]
+CV = 18.1 [%]  
+mean = 3.16e+10 [cp/ml]  
+valid = False  
+note: Ruduced number of sample points. Measured 4, valid 3;
+
+![sample_15.png](img/sample_15.png)
 
 ### Sample: sample 's' 16
 
-|           |   OD_delta |   plate_layout_dil |   concentration |
-|:----------|-----------:|-------------------:|----------------:|
-| ('C', 9)  |     0.0099 |                  1 |     4.9721e+06  |
-| ('C', 10) |     0.0107 |                  2 |     1.41888e+07 |
-| ('C', 11) |     0.0112 |                  4 |     3.37638e+07 |
-| ('C', 12) |     0.014  |                  8 |     1.29455e+08 |
+|           |   OD_delta |   plate_layout_dil |   concentration | mask_reason   |
+|:----------|-----------:|-------------------:|----------------:|:--------------|
+| ('C', 9)  |     0.7849 |                  1 |     8.76811e+09 |               |
+| ('C', 10) |     0.3998 |                  2 |     7.82824e+09 |               |
+| ('C', 11) |     0.254  |                  4 |     8.9267e+09  |               |
+| ('C', 12) |     0.1339 |                  8 |     7.65613e+09 |               |
 
-CV = 1.25e+02 [%]  
-mean = 4.559e+07 [cp/ml]
+CV = 7.78 [%]  
+mean = 8.295e+09 [cp/ml]  
+valid = True  
+![sample_16.png](img/sample_16.png)
 
 ### Sample: sample 's' 17
 
-|           |   OD_delta |   plate_layout_dil |   concentration |
-|:----------|-----------:|-------------------:|----------------:|
-| ('D', 9)  |     0.0098 |                  1 |     4.71013e+06 |
-| ('D', 10) |     0.01   |                  2 |     1.04698e+07 |
-| ('D', 11) |     0.0092 |                  4 |     1.26316e+07 |
-| ('D', 12) |     0.0112 |                  8 |     6.75276e+07 |
+|           |   OD_delta |   plate_layout_dil |   concentration | mask_reason                  |
+|:----------|-----------:|-------------------:|----------------:|:-----------------------------|
+| ('D', 9)  |     1.4741 |                  1 |     1.83217e+10 | Backfit 1.832e+10 > 2.805e+8 |
+| ('D', 10) |     0.8847 |                  2 |     2.01887e+10 |                              |
+| ('D', 11) |     0.5683 |                  4 |     2.39145e+10 |                              |
+| ('D', 12) |     0.3198 |                  8 |     2.38119e+10 |                              |
 
-CV = 1.23e+02 [%]  
-mean = 2.383e+07 [cp/ml]
+CV = 12.8 [%]  
+mean = 2.156e+10 [cp/ml]  
+valid = False  
+note: Ruduced number of sample points. Measured 4, valid 3;
+
+![sample_17.png](img/sample_17.png)
 
 ### Sample: sample 's' 18
 
-|           |   OD_delta |   plate_layout_dil |   concentration |
-|:----------|-----------:|-------------------:|----------------:|
-| ('E', 9)  |     0.0087 |                  1 |     1.89765e+06 |
-| ('E', 10) |     0.0094 |                  2 |     7.34245e+06 |
-| ('E', 11) |     0.0102 |                  4 |     2.30509e+07 |
-| ('E', 12) |     0.0109 |                  8 |     6.10508e+07 |
+|           |   OD_delta |   plate_layout_dil |   concentration | mask_reason   |
+|:----------|-----------:|-------------------:|----------------:|:--------------|
+| ('E', 9)  |     0.907  |                  1 |     1.03938e+10 |               |
+| ('E', 10) |     0.5332 |                  2 |     1.10798e+10 |               |
+| ('E', 11) |     0.2803 |                  4 |     1.01046e+10 |               |
+| ('E', 12) |     0.1603 |                  8 |     9.80219e+09 |               |
 
-CV = 1.14e+02 [%]  
-mean = 2.334e+07 [cp/ml]
+CV = 5.28 [%]  
+mean = 1.035e+10 [cp/ml]  
+valid = True  
+![sample_18.png](img/sample_18.png)
 
 ### Sample: sample 's' 19
 
-|           |   OD_delta |   plate_layout_dil |   concentration |
-|:----------|-----------:|-------------------:|----------------:|
-| ('F', 9)  |     0.0096 |                  1 |     4.18879e+06 |
-| ('F', 10) |     0.0106 |                  2 |     1.36536e+07 |
-| ('F', 11) |     0.0108 |                  4 |     2.94503e+07 |
-| ('F', 12) |     0.0132 |                  8 |     1.11531e+08 |
+|           |   OD_delta |   plate_layout_dil |   concentration | mask_reason   |
+|:----------|-----------:|-------------------:|----------------:|:--------------|
+| ('F', 9)  |     0.792  |                  1 |     8.86168e+09 |               |
+| ('F', 10) |     0.4611 |                  2 |     9.30498e+09 |               |
+| ('F', 11) |     0.2491 |                  4 |     8.70929e+09 |               |
+| ('F', 12) |     0.1442 |                  8 |     8.48555e+09 |               |
 
-CV = 1.23e+02 [%]  
-mean = 3.971e+07 [cp/ml]
+CV = 3.92 [%]  
+mean = 8.84e+09 [cp/ml]  
+valid = True  
+![sample_19.png](img/sample_19.png)
 
 ### Sample: sample 's' 20
 
-|           |   OD_delta |   plate_layout_dil |   concentration |
-|:----------|-----------:|-------------------:|----------------:|
-| ('G', 9)  |     0.0105 |                  1 |     6.55979e+06 |
-| ('G', 10) |     0.0116 |                  2 |     1.9055e+07  |
-| ('G', 11) |     0.0122 |                  4 |     4.46838e+07 |
-| ('G', 12) |     0.0127 |                  8 |     1.00413e+08 |
+|           |   OD_delta |   plate_layout_dil |   concentration | mask_reason   |
+|:----------|-----------:|-------------------:|----------------:|:--------------|
+| ('G', 9)  |     0.5592 |                  1 |     5.86448e+09 |               |
+| ('G', 10) |     0.334  |                  2 |     6.28107e+09 |               |
+| ('G', 11) |     0.1677 |                  4 |     5.2075e+09  |               |
+| ('G', 12) |     0.0936 |                  8 |     4.52708e+09 |               |
 
-CV = 97.6 [%]  
-mean = 4.268e+07 [cp/ml]
+CV = 14.0 [%]  
+mean = 5.47e+09 [cp/ml]  
+valid = True  
+![sample_20.png](img/sample_20.png)
 
 ### Sample: sample 's' 21
 
-|           |   OD_delta |   plate_layout_dil |    concentration |
-|:----------|-----------:|-------------------:|-----------------:|
-| ('H', 9)  |     0.008  |                  1 | 232231           |
-| ('H', 10) |     0.0081 |                  2 | 913160           |
-| ('H', 11) |     0.0094 |                  4 |      1.46849e+07 |
-| ('H', 12) |     0.0115 |                  8 |      7.40412e+07 |
+|           |   OD_delta |   plate_layout_dil |   concentration | mask_reason   |
+|:----------|-----------:|-------------------:|----------------:|:--------------|
+| ('H', 9)  |     0.6562 |                  1 |     7.09455e+09 |               |
+| ('H', 10) |     0.3631 |                  2 |     6.96008e+09 |               |
+| ('H', 11) |     0.2077 |                  4 |     6.90055e+09 |               |
+| ('H', 12) |     0.1284 |                  8 |     7.2177e+09  |               |
 
-CV = 1.56e+02 [%]  
-mean = 2.247e+07 [cp/ml]
+CV = 2.01 [%]  
+mean = 7.043e+09 [cp/ml]  
+valid = True  
+![sample_21.png](img/sample_21.png)
 
