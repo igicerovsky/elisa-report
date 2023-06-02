@@ -48,10 +48,13 @@
 - sample procesing output as dictionary
 - CV masking  <= 20%
 - notes for masking reason
+- notes in final result sheet
+- reference point removal verbose output to sheet
 
 ## TODO
 
-- Backfit table mark masked value
+- CV from valid (non-masked) values only
+- Backfit table mark masked value (visualy)
 - Parameter file loading
   - REF_VAL_MAX
   - DILUTIONS
