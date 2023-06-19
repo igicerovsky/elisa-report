@@ -14,7 +14,7 @@ def inv_func(y, a, b, c, d):
 
 def fit_reference(func, x, y):
     p0 = [y.min(), 0.9, x[len(x) - 2], y.max()]
-    return curve_fit(func, x, y, p0=p0, method='lm', full_output=True)
+    return curve_fit(func, x, y, p0=p0, method='lm', full_output=True, maxfev=10000)
 
 
 def fit_magic(data):
