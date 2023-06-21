@@ -50,10 +50,10 @@
 - notes for masking reason
 - notes in final result sheet
 - reference point removal verbose output to sheet
+- CV from valid (non-masked) values only
 
 ## TODO
 
-- CV from valid (non-masked) values only
 - Backfit table mark masked value (visualy)
 - Parameter file loading
   - REF_VAL_MAX
