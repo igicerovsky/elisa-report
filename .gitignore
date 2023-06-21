@@ -4,3 +4,4 @@ data/input/results_1
 data/input/results_2
 __pycache__/
 .vs/
+__pycache__/fitdata.cpython-39.pyc
