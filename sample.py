@@ -14,3 +14,7 @@ def make_concentration(ref_val_max, dilution):
     return conc
 
 
+def unique_sample_numbers(df):
+    sample_nums = df['plate_layout_num'].astype(int).unique()
+    sample_nums.sort()
+    return sample_nums
