@@ -19,6 +19,10 @@ def fit_reference(func, x, y):
     return curve_fit(func, x, y, p0=p0, method='lm', full_output=True, maxfev=10000)
 
 
+def conc_func(x, dil, *popt):
+    return inv_func(x, *popt) * dil
+
+
 def fit_magic(data):
     popt, pcov, infodict, mesg, ier = fit_reference(func,
         data['Conc'], data['OD'])
