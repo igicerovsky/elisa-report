@@ -7,7 +7,6 @@ def to_multi_index(df_single_index, name):
 
   return df_multi_idx
 
-
 def to_matrix(l, n):
   return [l[i:i + n] for i in range(0, len(l), n)]
 
@@ -37,7 +36,7 @@ def get_data_crop(df, row_span, col_span):
   crop = df.iloc[row_span, col_span].copy()
   crop.reset_index(drop=True, inplace=True)
   crop.set_index([['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']], inplace=True)
-  crop.columns = range(crop.columns.size)
+  crop.columns = range(1, crop.columns.size+1)
   return crop
 
 
@@ -60,4 +59,3 @@ def read_concat_data(data_file_path):
                   pd.merge(df_450_all, df_630_all, 
                   left_index=True, right_index=True),
                   left_index=True, right_index=True)
-
