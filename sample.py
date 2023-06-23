@@ -2,8 +2,18 @@ import pandas as pd
 from decimal import Decimal
 import math
 from scipy.stats import variation
-import constants as cnt
+import constants as cc
 import numpy as np
+from enum import Enum
+from dataclasses import dataclass
+import typing
+
+@dataclass
+class DataRange:
+    sv: typing.Tuple[int, int]
+    od: typing.Tuple[int, int]
+    od_fit: typing.Tuple[int, int]
+    cb: typing.Tuple[int, int]
 
 
 def get_sample(dfa, type, sample_num):
@@ -59,8 +69,8 @@ def process_sample(samples, stype, sample_num):
     return sample, cv, mean
 
 
-def sample_check(samples, stype, sample_num, cv_thresh=cnt.CV_THRESHOLD,
-                 min_valid_pts=cnt.MIN_VALID_SAMPLE_POINTS):
+def sample_check(samples, stype, sample_num, cv_thresh=cc.CV_THRESHOLD,
+                 min_valid_pts=cc.MIN_VALID_SAMPLE_POINTS):
     s = process_sample(samples, stype, sample_num)
     valid = True
     note = ''
@@ -84,3 +94,69 @@ def sample_check(samples, stype, sample_num, cv_thresh=cnt.CV_THRESHOLD,
         #     note += note_cols['mask_reason'].str.cat(sep=', ')
 
     return {'sample':smp, 'cv':s[1], 'mean':s[2], 'note':note, 'type':stype, 'num':sample_num, 'valid':valid, 'valid_pts': valid_pts}
+
+
+class SampleInfo(str, Enum):
+    NAN_LOW = 'NaN below reference'
+    NAN_HIGH = 'NaN above reference'
+    LOW = 'value below reference'
+    HIGH = 'value above reference'
+    CV = 'CV above threshold'
+    VALID_PTS = 'few valid points'
+
+
+def sampleinfo_to_str(info, multiplier=1.0):
+    if info is None:
+        return None
+
+    if not info:
+        return None;
+    
+    if info['enum'] == SampleInfo.CV:
+        return 'CV>{:.1f}%({:.1f}%)'.format(cc.CV_THRESHOLD * 100, float(info['value']) * 100.0)
+
+    if info['enum'] == SampleInfo.VALID_PTS:
+        return '{} valid point'.format(info['value'])
+
+    return '{}{:.4e}'.format(info['sign'], float(info['value']) * multiplier)
+
+
+def sample_info(samples, stype, sample_num, dr: DataRange, verbose=False):
+    s = get_sample(samples, stype, sample_num)
+    sc = sample_check(samples, stype, sample_num)
+    if verbose:
+        print('OD=[{}, {}]'.format(dr.od[0], dr.od[1]))
+        print('OD_fit=[{:.3}, {:.3}]'.format(Decimal(dr.od_fit[0]), Decimal(dr.od_fit[1])))
+        print('SV=[{:.3e}, {:.3e}]'.format(Decimal(dr.sv[0]), Decimal(dr.sv[1])))
+        print('CB=[{}, {}]'.format(dr.cb[0], dr.cb[1]))
+    above_ref_od_max = s['OD_delta'] > dr.od_fit[1]
+    below_ref_od_min = s['OD_delta'] < dr.od_fit[0]
+    msgdc = {}
+    if s['backfit'].isna().all():
+        if above_ref_od_max.all():
+            msgdc = {'sign': '>', 'value': Decimal(dr.sv[1]), 'enum': SampleInfo.NAN_HIGH}
+        if below_ref_od_min.all():
+            msgdc = {'sign': '<', 'value': Decimal(dr.sv[0]), 'enum': SampleInfo.NAN_LOW}
+    elif sc['cv'] > cc.CV_THRESHOLD:
+        msgdc = {'sign': '>{:.2f}'.format(cc.CV_THRESHOLD), 'value': sc['cv'], 'enum': SampleInfo.CV}
+    elif not s['mask_reason'].isna().all():
+        t = s[['OD_delta', 'plate_layout_dil', 'concentration', 'backfit']]
+        t_not_na = t[~t['backfit'].isna()]
+        
+        if t_not_na['OD_delta'].max() < dr.od_fit[0]:
+            t_below_ref = t_not_na[below_ref_od_min]
+            # msgdc = {'sign': '<', 'value': t_below_ref['concentration'].max(), 'enum': SampleInfo.LOW}
+            msgdc = {'sign': '<', 'value': Decimal(dr.sv[0] * sc['sample']['plate_layout_dil'].min()), 'enum': SampleInfo.LOW}
+        elif t_not_na['OD_delta'].min() > dr.od_fit[1]:
+            t_above_ref = t_not_na[above_ref_od_max]
+            # print('*** {} *  {} = {}'.format(sv_max, sc['sample']['plate_layout_dil'].max(), sv_max * sc['sample']['plate_layout_dil'].max()))
+            msgdc = {'sign': '>', 'value': Decimal(dr.sv[1] * sc['sample']['plate_layout_dil'].max()), 'enum': SampleInfo.HIGH}
+    
+    if sc['valid_pts'] < cc.MIN_VALID_SAMPLE_POINTS and sc['valid_pts'] != 0:
+        msgdc = {'sign': '', 'value': sc['valid_pts'], 'enum': SampleInfo.VALID_PTS}
+
+    del sc['sample']
+    del sc['note']
+    sc['info'] = msgdc
+    
+    return sc

@@ -2,6 +2,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.stats import distributions
 import fitdata
+from sample import sample_check
+from fitdata import fit_reference_auto_rm
 
 def fit_image(x, y, popt, pcov, file_path, confidence_interval=95.0,
     confidence=None, interval_ratio=2.0,
@@ -144,3 +146,36 @@ def fit_image(x, y, popt, pcov, file_path, confidence_interval=95.0,
         plt.show()
     else:
         plt.clf()
+
+
+def mask_index(df):
+    b = df.reset_index(level=[0,1])
+    b = b[b['mask_reason'].notna()]
+
+    return b.index
+
+
+def na_index(df):
+    b = df.reset_index(level=[0,1])
+    b = b[b['backfit'].isna()]
+    
+    return b.index
+
+
+def sample_img(samples, reference, sample_type, sample_num, img_file=None, show=True, verbose=False):
+    sd = sample_check(samples, sample_type, sample_num)
+    if verbose:
+        print(sample_type, sample_num)
+
+    mask_idx = mask_index(sd['sample'])
+    x = reference.reset_index(level=[0,1])['plate_layout_dil']
+    y = reference.reset_index(level=[0,1])['OD_delta']
+    fit_result = fit_reference_auto_rm(x, y, verbose=verbose)
+    # compute original concenmtration 
+    sd['sample'].loc[:, ['conc_plot']] = sd['sample'].apply(lambda x: x['concentration'] / x['plate_layout_dil'], axis=1)
+    sx = sd['sample'].reset_index(level=[0,1])['conc_plot']
+    sy = sd['sample'].reset_index(level=[0,1])['OD_delta']
+    fit_image(x, y, fit_result[0][0], fit_result[0][1], img_file, confidence='student-t',
+              rm_index=fit_result[1], mask_index=mask_idx,
+              sx=sx, sy=sy, sna_idx=na_index(sd['sample']), show=show, valid_sample=sd['valid'], interval_ratio=1.0)
+ 
