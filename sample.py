@@ -160,3 +160,32 @@ def sample_info(samples, stype, sample_num, dr: DataRange, verbose=False):
     sc['info'] = msgdc
     
     return sc
+
+
+def final_sample_info(all_info, pre_dilution):
+    info = all_info['info']
+    if not all_info: raise Exception("Invalid sample info!")
+    if not info:
+        return '', True
+    
+    msg = ''
+    valid_ex = False
+    if info['enum'] == SampleInfo.NAN_HIGH:
+        msg = '>{:.4e}'.format(info['value'] * pre_dilution)
+    elif info['enum'] == SampleInfo.NAN_LOW and pre_dilution <= cc.PRE_DILUTION_THRESHOLD:
+        valid_ex = True
+        msg = '<{:.4e}'.format(info['value'] * pre_dilution)
+    elif info['enum'] == SampleInfo.HIGH:
+        msg = '>{:.4e}'.format(info['value'] * pre_dilution)
+    elif info['enum'] == SampleInfo.LOW:
+        msg = '<{:.4e}'.format(info['value'] * pre_dilution)
+        valid_ex = True
+    elif info['enum'] == SampleInfo.VALID_PTS:
+        msg = '{} valid point'.format(all_info['valid_pts'])
+    elif info['enum'] == SampleInfo.CV:
+        msg = 'CV>{:.2f}%({:.2f}%)'.format(cc.CV_THRESHOLD * 100.0, info['value'] * 100.0)
+    else:
+        msg = ''
+        valid_ex = True
+
+    return msg, valid_ex
