@@ -160,4 +160,3 @@ def fit_reference_auto_rm(x, y, err_threshold=0.998, verbose=False):
     fit_stats.loc[idx, 'note'] = 'Maximum.'
 
     return fc, idx, r2_max, fit_stats
-

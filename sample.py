@@ -7,6 +7,8 @@ import numpy as np
 from enum import Enum
 from dataclasses import dataclass
 import typing
+import  fitdata as fit
+
 
 @dataclass
 class DataRange:
@@ -29,7 +31,7 @@ def make_concentration(ref_val_max, dilution):
     return conc
 
 
-def unique_sample_numbers(df):
+def sample_numbers(df):
     sample_nums = df['plate_layout_num'].astype(int).unique()
     sample_nums.sort()
     return sample_nums
@@ -90,8 +92,6 @@ def sample_check(samples, stype, sample_num, cv_thresh=cc.CV_THRESHOLD,
     if len(note_cols)!= 0:
         if (note_cols['mask_reason'] == note_cols['mask_reason'][0]).all():
             note += note_cols['mask_reason'][0] + ';' + note_cols['od_mask_reason'][0]
-        # else:
-        #     note += note_cols['mask_reason'].str.cat(sep=', ')
 
     return {'sample':smp, 'cv':s[1], 'mean':s[2], 'note':note, 'type':stype, 'num':sample_num, 'valid':valid, 'valid_pts': valid_pts}
 
@@ -189,3 +189,62 @@ def final_sample_info(all_info, pre_dilution):
         valid_ex = True
 
     return msg, valid_ex
+
+
+def generate_results(df_data, datarange):
+    dfres = pd.DataFrame(columns=['id', 'CV [%]', 'Reader Data [cp/ml]', 'Note', 'Valid', 'info'])
+    knum = 1
+    s = sample_check(df_data, 'k', knum)
+    si = sample_info(df_data, 'k', knum, datarange)
+    dfres.loc[len(dfres)] = ['control {:02d}'.format(knum), s['cv'], s['mean'], s['note'], s['valid'], si]
+
+    rnum = 1
+    s = sample_check(df_data, 'r', rnum)
+    si = sample_info(df_data, 'r', knum, datarange)
+    dfres.loc[len(dfres)] = ['reference {:02d}'.format(knum), s['cv'], s['mean'], s['note'], s['valid'], si]
+
+    for i in sample_numbers(df_data):
+        stype = 's'
+        s = sample_check(df_data, 's', i)
+        si = sample_info(df_data, 's', i, datarange)
+        dfres.loc[len(dfres)] = ['sample {:02d}'.format(i), s['cv'], s['mean'], s['note'], s['valid'], si]
+
+    dfres.set_index(dfres['id'], inplace=True)
+    dfres = dfres.drop('id', axis=1)
+
+    return dfres
+
+
+def data_range(ref, popt):
+    bf = fit.backfit(ref, popt)
+
+    od_min = bf['Optical density'].min()
+    od_max = bf['Optical density'].max()
+
+    od_fit_min = bf['SV to OD fit'].min()
+    od_fit_max = bf['SV to OD fit'].max()
+
+    sv_min = bf['Standard Value [cp/ml]'].min()
+    sv_max = bf['Standard Value [cp/ml]'].max()
+
+    cb_min = bf['Concentration backfit [cp/ml]'].min()
+    cb_max = bf['Concentration backfit [cp/ml]'].max()
+
+    return DataRange((sv_min, sv_max),
+        (od_min, od_max),
+        (od_fit_min, od_fit_max),
+        (cb_min, cb_max))
+
+
+def apply_fit(df, popt):
+    df.loc[:, ['concentration']] = df.apply(lambda x: fit.conc_func(x['OD_delta'], x['plate_layout_dil'], *popt), axis=1)
+    df.loc[:, ['backfit']] = df.apply(lambda x: fit.inv_func(x['OD_delta'], *popt), axis=1)
+
+    return df
+
+
+def init_samples(df, reference_conc):
+    skr = df.loc[(df['plate_layout_ident']=='s') | (df['plate_layout_ident']=='k') | (df['plate_layout_ident']=='r')]
+    skr.loc[:, ['plate_layout_dil']] = skr['plate_layout_dil_id'].map(reference_conc['dilution'])
+    
+    return skr
