@@ -26,9 +26,9 @@ def read_plate_layout(file_path):
   return plate_layout
 
 
-def concat_data_and_layout(df_data, df_layout):
-  return pd.merge(df_data, df_layout,
-                  left_index=True, right_index=True)
+# def concat_data_and_layout(df_data, df_layout):
+#   return pd.merge(df_data, df_layout,
+#                   left_index=True, right_index=True)
 
 
 def save_plate_layout_csv(layout_list, out_file):

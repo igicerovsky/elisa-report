@@ -59,3 +59,18 @@ def read_concat_data(data_file_path):
                   pd.merge(df_450_all, df_630_all, 
                   left_index=True, right_index=True),
                   left_index=True, right_index=True)
+
+
+def concat_data_with_layouts(df_data, playout_id, playout_num, playout_dil_id):
+  res = pd.merge(df_data, to_multi_index(playout_id, 'plate_layout_ident'), left_index=True, right_index=True)
+  res = pd.merge(res, to_multi_index(playout_num, 'plate_layout_num'), left_index=True, right_index=True)
+  res = pd.merge(res, to_multi_index(playout_dil_id, 'plate_layout_dil_id'), left_index=True, right_index=True)
+
+  return res
+
+
+def read_params(file_path):
+    params = pd.read_csv(file_path, sep=';')
+    params.set_index('Variable', inplace=True)
+
+    return params
