@@ -248,3 +248,14 @@ def init_samples(df, reference_conc):
     skr.loc[:, ['plate_layout_dil']] = skr['plate_layout_dil_id'].map(reference_conc['dilution'])
     
     return skr
+
+
+def mask_sample(df, dr):
+    df.loc[:, ['od_mask_reason']] = df.apply(
+        lambda x: mask_reason_fn(x['OD_delta'], dr.od[0], dr.od[1], 'Measured OD'),
+        axis=1)
+    df.loc[:, ['mask_reason']] = df.apply(
+        lambda x: mask_reason_short_fn(x['backfit'], dr.cb[0], dr.cb[1], x['plate_layout_dil'], ''),
+        axis=1)
+    
+    return df
