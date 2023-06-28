@@ -2,6 +2,10 @@ result/
 
 data/input/results_1
 data/input/results_2
+data/input/results_plate_1
+data/input/results_plate_2
+data/input/results_plate_4
+data/input/results_plate_5
 __pycache__/
 .vs/
 __pycache__/fitdata.cpython-39.pyc
