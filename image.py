@@ -172,7 +172,7 @@ def sample_img(samples, reference, sample_type, sample_num, img_file=None, show=
     y = reference.reset_index(level=[0,1])['OD_delta']
     fit_result = fit_reference_auto_rm(x, y, verbose=verbose)
     # compute original concenmtration 
-    sd['sample'].loc[:, ['conc_plot']] = sd['sample'].apply(lambda x: x['concentration'] / x['plate_layout_conc'], axis=1)
+    sd['sample'].loc[:, ['conc_plot']] = sd['sample'].apply(lambda x: x['concentration'] / x['plate_layout_dil'], axis=1)
     sx = sd['sample'].reset_index(level=[0,1])['conc_plot']
     sy = sd['sample'].reset_index(level=[0,1])['OD_delta']
     fit_image(x, y, fit_result[0][0], fit_result[0][1], img_file, confidence='student-t',
