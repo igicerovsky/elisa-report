@@ -246,6 +246,7 @@ def apply_fit(df, popt):
 def init_samples(df, reference_conc):
     skr = df.loc[(df['plate_layout_ident']=='s') | (df['plate_layout_ident']=='k') | (df['plate_layout_ident']=='r')]
     skr.loc[:, ['plate_layout_dil']] = skr['plate_layout_dil_id'].map(reference_conc['dilution'])
+    skr['plate_layout_conc'] = skr['plate_layout_dil_id'].map(reference_conc['concentration'])
     
     return skr
 

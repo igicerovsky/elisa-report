@@ -70,9 +70,9 @@ def fit_sheet(popt, pcov, n, confidence_interval=95.0):
 
 
 def backfit(df, param):
-    bf = df[['OD_delta', 'plate_layout_dil']].copy()
-    bf = bf.reindex(['plate_layout_dil', 'OD_delta'], axis=1)
-    bf.rename(columns={'plate_layout_dil': 'Standard Value [cp/ml]', 'OD_delta': 'Optical density'}, inplace=True)
+    bf = df[['OD_delta', 'plate_layout_conc']].copy()
+    bf = bf.reindex(['plate_layout_conc', 'OD_delta'], axis=1)
+    bf.rename(columns={'plate_layout_conc': 'Standard Value [cp/ml]', 'OD_delta': 'Optical density'}, inplace=True)
     bf.loc[:, ['Concentration backfit [cp/ml]']] = bf.apply(lambda x: inv_func(x['Optical density'], *param), axis=1)
     bf.loc[:, ['SV to OD fit']] = bf.apply(lambda x: func(x['Standard Value [cp/ml]'], *param), axis=1)
     bf.index.name = 'Well'
