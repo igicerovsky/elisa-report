@@ -144,12 +144,8 @@ def sample_info(samples, stype, sample_num, dr: DataRange, verbose=False):
         t_not_na = t[~t['backfit'].isna()]
         
         if t_not_na['OD_delta'].max() < dr.od_fit[0]:
-            t_below_ref = t_not_na[below_ref_od_min]
-            # msgdc = {'sign': '<', 'value': t_below_ref['concentration'].max(), 'enum': SampleInfo.LOW}
             msgdc = {'sign': '<', 'value': Decimal(dr.sv[0] * sc['sample']['plate_layout_dil'].min()), 'enum': SampleInfo.LOW}
         elif t_not_na['OD_delta'].min() > dr.od_fit[1]:
-            t_above_ref = t_not_na[above_ref_od_max]
-            # print('*** {} *  {} = {}'.format(sv_max, sc['sample']['plate_layout_dil'].max(), sv_max * sc['sample']['plate_layout_dil'].max()))
             msgdc = {'sign': '>', 'value': Decimal(dr.sv[1] * sc['sample']['plate_layout_dil'].max()), 'enum': SampleInfo.HIGH}
     
     if sc['valid_pts'] < cc.MIN_VALID_SAMPLE_POINTS and sc['valid_pts'] != 0:
@@ -246,7 +242,7 @@ def apply_fit(df, popt):
 def init_samples(df, reference_conc):
     skr = df.loc[(df['plate_layout_ident']=='s') | (df['plate_layout_ident']=='k') | (df['plate_layout_ident']=='r')]
     skr.loc[:, ['plate_layout_dil']] = skr['plate_layout_dil_id'].map(reference_conc['dilution'])
-    skr['plate_layout_conc'] = skr['plate_layout_dil_id'].map(reference_conc['concentration'])
+    skr.loc[:, ['plate_layout_conc']] = skr['plate_layout_dil_id'].map(reference_conc['concentration'])
     
     return skr
 
