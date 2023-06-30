@@ -13,15 +13,14 @@ def check_report_crc(report: str, crc):
     if t != crc:
         raise Exception('Report CRC missmatch! {} != {}'.format(t, crc))
     else:
-         print('\nReport CRC is OK. ({})\n'.format(t))
+         print('Report CRC is OK. ({})'.format(t))
 
-def report_plate(plate_id, worklist, params, plate_layout_id, plate_layout_num,
-                 plate_layout_dil_id, reference_conc,
+def report_plate(plate_id, worklist, params, layouts, reference_conc,
                  input_data_path, report_dir, report_file_path
                  ):
 
     od = read_concat_data(input_data_path)
-    df_all = concat_data_with_layouts(od, plate_layout_id, plate_layout_num, plate_layout_dil_id)
+    df_all = concat_data_with_layouts(od, layouts)
 
     dfg = init_samples(df_all, reference_conc)
 

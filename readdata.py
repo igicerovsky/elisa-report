@@ -61,12 +61,16 @@ def read_concat_data(data_file_path):
                   left_index=True, right_index=True)
 
 
-def concat_data_with_layouts(df_data, playout_id, playout_num, playout_dil_id):
-  res = pd.merge(df_data, to_multi_index(playout_id, 'plate_layout_ident'), left_index=True, right_index=True)
+def concat_layouts(playout_id, playout_num, playout_dil_id):
+  res = to_multi_index(playout_id, 'plate_layout_ident')
   res = pd.merge(res, to_multi_index(playout_num, 'plate_layout_num'), left_index=True, right_index=True)
   res = pd.merge(res, to_multi_index(playout_dil_id, 'plate_layout_dil_id'), left_index=True, right_index=True)
 
   return res
+
+
+def concat_data_with_layouts(df_data, df_layout):
+  return pd.merge(df_data, df_layout, left_index=True, right_index=True)
 
 
 def read_params(file_path):
