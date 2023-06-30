@@ -9,11 +9,11 @@ import reportmd as rmd
 def check_report_crc(report: str, crc):
     res = bytearray(report,'utf8')
     t = crc32(res)
-    print('\nReport CRC = {}\n'.format(t))
 
     if t != crc:
         raise Exception('Report CRC missmatch! {} != {}'.format(t, crc))
-
+    else:
+         print('\nReport CRC is OK. ({})\n'.format(t))
 
 def report_plate(plate_id, worklist, params, plate_layout_id, plate_layout_num,
                  plate_layout_dil_id, reference_conc,
