@@ -1,4 +1,5 @@
 import pandas as pd
+from layouthandle import read_plate_layout
 
 
 def to_multi_index(df_single_index, name):
@@ -78,3 +79,11 @@ def read_params(file_path):
     params.set_index('Variable', inplace=True)
 
     return params
+
+
+def read_layouts(file_id, file_num, file_dil):
+    plate_layout_id = read_plate_layout(file_id)
+    plate_layout_num = read_plate_layout(file_num)
+    plate_layout_dil_id = read_plate_layout(file_dil)
+
+    return concat_layouts(plate_layout_id, plate_layout_num, plate_layout_dil_id)
