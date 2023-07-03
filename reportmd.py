@@ -120,7 +120,9 @@ def sample_section_md(samples, reference, dr, img_dir):
         sfile = 'sample_{0:02d}.svg'.format(i)
         img_file = path.join(img_dir, sfile)
         sample_img(samples, reference, stype, i, img_file=img_file, show=False, verbose=False)
-        md += '![{0}](./img/{0})\n\n'.format(sfile)
+        md += '![{0}](./img/{0})\n'.format(sfile)
+        if i != sample_n[-1]:
+            md += '\n'
     return md
 
 def save_md(file_path, md_txt):

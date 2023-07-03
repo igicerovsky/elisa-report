@@ -51,7 +51,7 @@ This a PoC for automatic report generation...\n\n'''
 
     report += rmd.sample_section_md(dfg, ref, dr, img_dir)
 
-    if not report_file_path:
+    if report_file_path:
         print(report_file_path)
         rmd.save_md(report_file_path, report)
 

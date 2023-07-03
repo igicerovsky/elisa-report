@@ -5,13 +5,18 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "report_gen.py",
+            "name": "report",
             "type": "python",
             "request": "launch",
             "program": "report_gen.py",
             "console": "integratedTerminal",
             "justMyCode": true,
-            "args": ["-d", "./reports/input/", "-b", "230426_GN004240-033_-_"]
+            "args": [
+                "-d",
+                "./reports/input/",
+                "-b",
+                "230426_GN004240-033_-_"
+            ]
         }
     ]
 }
