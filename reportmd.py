@@ -9,6 +9,7 @@ from sample import final_sample_info, sample_check, sample_info, sampleinfo_to_s
 import constants as cc
 import worklist as wk
 import pandas as pd
+from tqdm import tqdm
 
 
 def make_final(sl, wl_raw, plate_id):
@@ -106,7 +107,7 @@ def sample_section_md(samples, reference, dr, img_dir):
     md += '!["alt text"](./img/{})\n\n'.format(sfile)
     sample_n = samples['plate_layout_num'].astype(int).unique()
     sample_n.sort()
-    for i in sample_n:
+    for i in tqdm(sample_n):
         stype = 's'
         s = sample_check(samples, stype, i)
         md += sample_to_md(s)
