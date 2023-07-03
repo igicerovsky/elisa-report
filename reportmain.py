@@ -42,7 +42,8 @@ def report_plate(plate_id, worklist, params, layouts, reference_conc,
 This a PoC for automatic report generation...\n\n'''
 
     report += rmd.header_section('05 May 2023', 'GN004240-033', plate_id, ':)')
-    report += rmd.result_section(rmd.make_final(sl, worklist, plate_id).drop('reference 01', axis=0))
+    final = rmd.make_final(sl, worklist, plate_id).drop('reference 01', axis=0)
+    report += rmd.result_section(final)
     report += rmd.param_section(params)
     img_dir = os.path.join(report_dir, 'img')
     os.makedirs(report_dir, exist_ok=True)
@@ -52,8 +53,10 @@ This a PoC for automatic report generation...\n\n'''
     report += rmd.sample_section_md(dfg, ref, dr, img_dir)
 
     if report_file_path:
-        print(report_file_path)
+        print('Report for plate {} saved as {}'.format(plate_id, report_file_path))
         rmd.save_md(report_file_path, report)
+        xlsx_file = os.path.splitext(report_file_path)[0] + '_results.xlsx'
+        final.to_excel(xlsx_file)
 
     return report
 
