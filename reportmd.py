@@ -1,10 +1,7 @@
 import math
 from os import path
-from fitdata import fit_sheet
-from fitdata import fit_reference_auto_rm
-from fitdata import backfit
-from image import fit_image
-from image import sample_img
+from fitdata import fit_sheet, fit_reference_auto_rm, backfit
+from image import fit_image, sample_img
 from sample import final_sample_info, sample_check, sample_info, sampleinfo_to_str
 import constants as cc
 import worklist as wk
@@ -150,20 +147,22 @@ def format_results_val(x):
     
     return res
 
+
 def format_results(df):
     df.loc[:, ['Comment']] = df.apply(lambda x: final_sample_info(x['info'], x['Pre-dilution'])[0], axis=1)
     df.loc[:, ['CV [%]']] = df.apply(lambda x:'{:.2f}'.format(x['CV [%]']), axis=1)
-    # df.loc[:, ['Result [cp/ml]']] = df.apply(lambda x: x['Comment'] if math.isnan(x['Result [cp/ml]']) else '{:.4e}'.format(x['Result [cp/ml]']), axis=1)
-    # display(df)
     df.loc[:, ['Result [cp/ml]']] = df.apply(lambda x: format_results_val(x), axis=1)
     df.drop(['info', 'Valid', 'Reader Data [cp/ml]', 'info_ex', 'valid_ex'], axis=1, inplace=True)
     
     return df
 
+
 def result_section(df):
     md = '## Analysis Results\n\n'
 
-    md += format_results(df).to_markdown()
+    df_formated = format_results(df)
+    # print(df_formated)
+    md += df_formated.to_markdown(floatfmt="#.2f")
     md += '\n\n'
     md += '\* sample will be retested\n\n'
     
