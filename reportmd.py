@@ -98,7 +98,7 @@ def sample_section_md(samples, reference, dr, img_dir):
     md = '## Sample evaluation\n\n' 
     k = sample_check(samples, 'k', 1)
     md += sample_to_md(k)
-    md += '  \n'
+    md += '\n'
     sfile = 'control_{0:02d}.svg'.format(1)
     img_file = path.join(img_dir, sfile)
     sample_img(samples, reference, 'k', 1, img_file, show=False)
