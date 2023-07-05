@@ -129,7 +129,7 @@ def fit_reference_auto_rm(x, y, err_threshold=0.998, verbose=False):
     elif r2_max == 0.0:
         fit_stats.loc[len(fit_stats)] = [-1, np.nan, '']
     else:
-        fit_stats.loc[len(fit_stats)] = [-1, r2_max, 'metric < threshold ({:.4f} < {:.4f})'.format(r2_max, err_threshold)]
+        fit_stats.loc[len(fit_stats)] = [-1, r2_max, 'metric < threshold ({:.3f} < {:.3f})'.format(r2_max, err_threshold)]
 
     for i in range(len(x)):
         xd = x.drop([i], axis=0)
@@ -150,7 +150,7 @@ def fit_reference_auto_rm(x, y, err_threshold=0.998, verbose=False):
             continue
 
         fit_stats.loc[len(fit_stats)] = [i, r_squared, '']
-        if verbose: print('{0:.4f}, {1}'.format(r_squared, i))
+        if verbose: print('{0:.3f}, {1}'.format(r_squared, i))
         if (r_squared > r2_max) and not np.isinf(fc_i[1]).any():
             r2_max = r_squared
             fc = fc_i

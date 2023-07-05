@@ -63,6 +63,17 @@ def fit_section_md(df_ref, popt, pcov, out_dir):
 
     md = '## Reference Curve Fit\n\n'
     md += '$\LARGE y = {d + {a - d \over {1 + ({ x \over c })^b}} }$  \n\n'
+
+    param_legend = """\
+`y` &nbsp;&nbsp;&nbsp;$\Delta$ OD  
+`x` &nbsp;&nbsp;&nbsp;concentration [%]  
+`a` &nbsp;&nbsp;&nbsp;minimum value (lowest possible point)  
+`b` &nbsp;&nbsp;&nbsp;slope (at point `c`)  
+`c` &nbsp;&nbsp;&nbsp;turning point of the curve  
+`d` &nbsp;&nbsp;&nbsp;maximum value (highest possible point)  
+    """
+    md += param_legend
+
     md += '!["alt text"](./img/fit.svg)'
 
     md += '\n\n'
@@ -139,7 +150,7 @@ def format_results_val(x):
     if math.isnan(x['Result [cp/ml]']):
         res = x['Comment']
     else:
-        res = '{:.4e}'.format(x['Result [cp/ml]'])
+        res = '{:.3e}'.format(x['Result [cp/ml]'])
     if x['valid_ex']:
         res = '**{}**'.format(res)
     else:
@@ -148,9 +159,16 @@ def format_results_val(x):
     return res
 
 
+
+def format_cv(x):
+    if math.isnan(x):
+        return 'NA'
+    return '{:.1f}'.format(x)
+
+
 def format_results(df):
     df.loc[:, ['Comment']] = df.apply(lambda x: final_sample_info(x['info'], x['Pre-dilution'])[0], axis=1)
-    df.loc[:, ['CV [%]']] = df.apply(lambda x:'{:.2f}'.format(x['CV [%]']), axis=1)
+    df.loc[:, ['CV [%]']] = df.apply(lambda x: format_cv(x['CV [%]']), axis=1)
     df.loc[:, ['Result [cp/ml]']] = df.apply(lambda x: format_results_val(x), axis=1)
     df.drop(['info', 'Valid', 'Reader Data [cp/ml]', 'info_ex', 'valid_ex'], axis=1, inplace=True)
     
@@ -161,8 +179,7 @@ def result_section(df):
     md = '## Analysis Results\n\n'
 
     df_formated = format_results(df)
-    # print(df_formated)
-    md += df_formated.to_markdown(floatfmt="#.2f")
+    md += df_formated.to_markdown(floatfmt="#.1f")
     md += '\n\n'
     md += '\* sample will be retested\n\n'
     

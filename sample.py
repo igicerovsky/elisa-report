@@ -167,19 +167,19 @@ def final_sample_info(all_info, pre_dilution):
     msg = ''
     valid_ex = False
     if info['enum'] == SampleInfo.NAN_HIGH:
-        msg = '>{:.4e}'.format(info['value'] * pre_dilution)
+        msg = '>{:.3e}'.format(info['value'] * pre_dilution)
     elif info['enum'] == SampleInfo.NAN_LOW and pre_dilution <= cc.PRE_DILUTION_THRESHOLD:
         valid_ex = True
-        msg = '<{:.4e}'.format(info['value'] * pre_dilution)
+        msg = '<{:.3e}'.format(info['value'] * pre_dilution)
     elif info['enum'] == SampleInfo.HIGH:
-        msg = '>{:.4e}'.format(info['value'] * pre_dilution)
+        msg = '>{:.3e}'.format(info['value'] * pre_dilution)
     elif info['enum'] == SampleInfo.LOW:
-        msg = '<{:.4e}'.format(info['value'] * pre_dilution)
+        msg = '<{:.3e}'.format(info['value'] * pre_dilution)
         valid_ex = True
     elif info['enum'] == SampleInfo.VALID_PTS:
         msg = '{} valid point'.format(all_info['valid_pts'])
     elif info['enum'] == SampleInfo.CV:
-        msg = 'CV>{:.2f}%({:.2f}%)'.format(cc.CV_THRESHOLD * 100.0, info['value'] * 100.0)
+        msg = 'CV>{:.1f}%({:.1f}%)'.format(cc.CV_THRESHOLD * 100.0, info['value'] * 100.0)
     else:
         msg = ''
         valid_ex = True
