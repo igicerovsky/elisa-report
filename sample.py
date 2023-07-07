@@ -63,6 +63,7 @@ def process_sample(samples, stype, sample_num):
     cv = np.nan
     mean = np.nan
     if len(smp_t['concentration']) > 1:
+        # TODO: perform masking if possible (more than two points are valid)
         cv = variation(smp_t['concentration'], ddof=1)
         mean = np.mean(smp_t['concentration'])
     elif len(smp_t['concentration']) == 1:
