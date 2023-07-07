@@ -90,7 +90,7 @@ def fit_image(x, y, popt, pcov, file_path, confidence_interval=95.0,
         if verbose:
             print('{0}: {1:.3} [{2:.3}, {3:.3}]; err={4:.3}[{5:.2f}%]'.format(pname, p, p - st, p + st, st, 100*st/p))
 
-    if confidence=='None' or confidence=='student-t':
+    if confidence==None or confidence=='student-t':
         if verbose: print('student-t is used for error estimation using {} degrees of freedom'.format(dof))
         popt_high = popt + sigma_popt
         popt_low = popt - sigma_popt
@@ -99,7 +99,7 @@ def fit_image(x, y, popt, pcov, file_path, confidence_interval=95.0,
         popt_high = popt + perr
         popt_low = popt - perr
 
-    num_pts = 100
+    num_pts = 400
     x_min = x.min()
     x_max = x.max()
     t = np.arange(x_min, x_max, (x_max - x_min) / num_pts)
@@ -132,6 +132,7 @@ def fit_image(x, y, popt, pcov, file_path, confidence_interval=95.0,
     plt.xlabel('concentration [cp/ml]')
     plt.ylabel('Optical density')
 
+    t = np.arange(x_min_ext, x_max_ext, (x_max_ext - x_min_ext) / num_pts)
     bound_upper = fitdata.func(t, *popt_high)
     bound_lower = fitdata.func(t, *popt_low)
     # plotting the confidence intervals
