@@ -37,7 +37,7 @@ def sample_numbers(df):
     return sample_nums
 
 
-def mask_reason_fn(val, odmin, odmax, note):
+def mask_value_fn(val, odmin, odmax, note):
     if val < odmin:
         return '{2} {0:.3e} < {1:.3e}'.format(Decimal(val), Decimal(odmin), note)
     if val > odmax:
@@ -47,7 +47,7 @@ def mask_reason_fn(val, odmin, odmax, note):
     return None
 
 
-def mask_reason_short_fn(val, vmin, vmax, dil, note):
+def mask_value_short_fn(val, vmin, vmax, dil, note):
     if val < vmin:
         return '<{:.3e}'.format(Decimal(vmin * dil))
     if val > vmax:
@@ -55,6 +55,18 @@ def mask_reason_short_fn(val, vmin, vmax, dil, note):
     if math.isnan(val):
         return 'Backfit failed.'
     return None
+
+
+def mask_sample_cv(df, valid_pts, cv_threshold):
+    cv_min = variation(df['concentration'], ddof=1)
+    mask_idx = []
+    indices = df.index
+    for i in indices:
+        t = df.iloc[x.drop([i], axis=0)]
+        cv = variation(df['concentration'], ddof=1)
+        if cv < cv_min:
+            mask_idx.append(i)
+    return mask_idx
 
 
 def process_sample(samples, stype, sample_num):
@@ -250,10 +262,10 @@ def init_samples(df, reference_conc):
 
 def mask_sample(df, dr):
     df.loc[:, ['od_mask_reason']] = df.apply(
-        lambda x: mask_reason_fn(x['OD_delta'], dr.od[0], dr.od[1], 'Measured OD'),
+        lambda x: mask_value_fn(x['OD_delta'], dr.od[0], dr.od[1], 'Measured OD'),
         axis=1)
     df.loc[:, ['mask_reason']] = df.apply(
-        lambda x: mask_reason_short_fn(x['backfit'], dr.cb[0], dr.cb[1], x['plate_layout_dil'], ''),
+        lambda x: mask_value_short_fn(x['backfit'], dr.cb[0], dr.cb[1], x['plate_layout_dil'], ''),
         axis=1)
     
     return df
