@@ -8,6 +8,7 @@ from enum import Enum
 from dataclasses import dataclass
 import typing
 import  fitdata as fit
+from itertools import combinations
 
 
 @dataclass
@@ -69,13 +70,38 @@ def mask_sample_cv(df, valid_pts, cv_threshold):
     return mask_idx
 
 
+def mask_sample_cv(df_in, valid_pts, cv_threshold):
+    df = df_in[df_in['mask_reason'].isna()]
+    cv_min = cv_threshold # variation(df['concentration'], ddof=1)
+    non_mask_idx = []
+    indices = df.index
+    if len(indices) <= valid_pts:
+        return [], [], cv_min
+    
+    # Reverse combinations order to break if `CV` < `cv_threshold`
+    for l in reversed(range(valid_pts, len(indices) + 1)):
+        for subset in combinations(indices, l):
+            comb = list(subset)
+            t = df.loc[comb]
+            cv = variation(t['concentration'], ddof=1)
+            if cv < cv_min:
+                non_mask_idx = comb
+                cv_min = cv
+        # break if CV drops below threshold
+        if cv_min < cv_threshold:
+            break
+
+    mask_idx = list(set(indices).symmetric_difference(non_mask_idx))
+    return mask_idx, non_mask_idx, cv_min
+
+
 def process_sample(samples, stype, sample_num):
     sample = get_sample(samples, stype, sample_num)
     smp_t = sample[sample.mask_reason.isna()]
     cv = np.nan
     mean = np.nan
+
     if len(smp_t['concentration']) > 1:
-        # TODO: perform masking if possible (more than two points are valid)
         cv = variation(smp_t['concentration'], ddof=1)
         mean = np.mean(smp_t['concentration'])
     elif len(smp_t['concentration']) == 1:
@@ -104,7 +130,10 @@ def sample_check(samples, stype, sample_num, cv_thresh=cc.CV_THRESHOLD,
     note_cols = smp[~smp['mask_reason'].isna()]
     if len(note_cols)!= 0:
         if (note_cols['mask_reason'] == note_cols['mask_reason'][0]).all():
-            note += note_cols['mask_reason'][0] + ';' + note_cols['od_mask_reason'][0]
+            if note_cols['mask_reason'][0]:
+                note += note_cols['mask_reason'][0]
+            if note_cols['od_mask_reason'][0]:
+                note += ';' + note_cols['od_mask_reason'][0]
 
     return {'sample':smp, 'cv':s[1], 'mean':s[2], 'note':note, 'type':stype, 'num':sample_num, 'valid':valid, 'valid_pts': valid_pts}
 
@@ -268,4 +297,14 @@ def mask_sample(df, dr):
         lambda x: mask_value_short_fn(x['backfit'], dr.cb[0], dr.cb[1], x['plate_layout_dil'], ''),
         axis=1)
     
+    # mask samples for CV < threshold, controll is considered normal sample
+    sample = get_sample(df, 'k', 1)
+    mask_idx, _, _ = mask_sample_cv(sample, cc.MIN_VALID_SAMPLE_POINTS, cc.CV_THRESHOLD)
+    df.loc[mask_idx, ['mask_reason']] = "cv-masked"
+
+    for i in sample_numbers(df):
+        sample = get_sample(df, 's', i)
+        mask_idx, _, _ = mask_sample_cv(sample, cc.MIN_VALID_SAMPLE_POINTS, cc.CV_THRESHOLD)
+        df.loc[mask_idx, ['mask_reason']] = "cv-masked"
+
     return df
