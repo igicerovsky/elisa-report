@@ -150,7 +150,7 @@ def format_results_val(x):
     if math.isnan(x['Result [cp/ml]']):
         res = x['Comment']
     else:
-        res = '{:.3e}'.format(x['Result [cp/ml]'])
+        res = '{:.{dgts}e}'.format(x['Result [cp/ml]'], dgts=cc.RESULT_DIGITS)
     if x['valid_ex']:
         res = '**{}**'.format(res)
     else:
@@ -163,7 +163,7 @@ def format_results_val(x):
 def format_cv(x):
     if math.isnan(x):
         return 'NA'
-    return '{:.1f}'.format(x)
+    return '{:.{dgts}f}'.format(x, dgts=cc.CV_DIGITS)
 
 
 def format_results(df):
@@ -179,7 +179,7 @@ def result_section(df):
     md = '## Analysis Results\n\n'
 
     df_formated = format_results(df)
-    md += df_formated.to_markdown(floatfmt="#.1f")
+    md += df_formated.to_markdown(floatfmt="#.{}f".format(cc.CV_DIGITS))
     md += '\n\n'
     md += '\* sample will be retested\n\n'
     

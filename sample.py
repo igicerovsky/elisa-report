@@ -40,9 +40,9 @@ def sample_numbers(df):
 
 def mask_value_fn(val, odmin, odmax, note):
     if val < odmin:
-        return '{2} {0:.3e} < {1:.3e}'.format(Decimal(val), Decimal(odmin), note)
+        return '{2} {0:.{dgts}e} < {1:.{dgts}e}'.format(Decimal(val), Decimal(odmin), note, dgts=cc.RESULT_DIGITS)
     if val > odmax:
-        return '{2} {0:.3e} > {1:.3e}'.format(Decimal(val), Decimal(odmin), note)
+        return '{2} {0:.{dgts}e} > {1:.{dgts}e}'.format(Decimal(val), Decimal(odmin), note, dgts=cc.RESULT_DIGITS)
     if math.isnan(val):
         return 'NaN'
     return None
@@ -50,9 +50,9 @@ def mask_value_fn(val, odmin, odmax, note):
 
 def mask_value_short_fn(val, vmin, vmax, dil, note):
     if val < vmin:
-        return '<{:.3e}'.format(Decimal(vmin * dil))
+        return '<{:.{dgts}e}'.format(Decimal(vmin * dil), dgts=cc.RESULT_DIGITS)
     if val > vmax:
-        return '>{:.3e}'.format(Decimal(vmax * dil))
+        return '>{:.{dgts}e}'.format(Decimal(vmax * dil), dgts=cc.RESULT_DIGITS)
     if math.isnan(val):
         return 'Backfit failed.'
     return None
@@ -169,7 +169,7 @@ def sample_info(samples, stype, sample_num, dr: DataRange, verbose=False):
     if verbose:
         print('OD=[{}, {}]'.format(dr.od[0], dr.od[1]))
         print('OD_fit=[{:.3}, {:.3}]'.format(Decimal(dr.od_fit[0]), Decimal(dr.od_fit[1])))
-        print('SV=[{:.3e}, {:.3e}]'.format(Decimal(dr.sv[0]), Decimal(dr.sv[1])))
+        print('SV=[{:.{dgts}e}, {:.{dgts}e}]'.format(Decimal(dr.sv[0]), Decimal(dr.sv[1]), dgts=cc.RESULT_DIGITS))
         print('CB=[{}, {}]'.format(dr.cb[0], dr.cb[1]))
     above_ref_od_max = s['OD_delta'] > dr.od_fit[1]
     below_ref_od_min = s['OD_delta'] < dr.od_fit[0]
@@ -209,14 +209,14 @@ def final_sample_info(all_info, pre_dilution):
     msg = ''
     valid_ex = False
     if info['enum'] == SampleInfo.NAN_HIGH:
-        msg = '>{:.3e}'.format(info['value'] * pre_dilution)
+        msg = '>{:.{dgts}e}'.format(info['value'] * pre_dilution, dgts=cc.RESULT_DIGITS)
     elif info['enum'] == SampleInfo.NAN_LOW and pre_dilution <= cc.PRE_DILUTION_THRESHOLD:
         valid_ex = True
-        msg = '<{:.3e}'.format(info['value'] * pre_dilution)
+        msg = '<{:.{dgts}e}'.format(info['value'] * pre_dilution, dgts=cc.RESULT_DIGITS)
     elif info['enum'] == SampleInfo.HIGH:
-        msg = '>{:.3e}'.format(info['value'] * pre_dilution)
+        msg = '>{:.{dgts}e}'.format(info['value'] * pre_dilution, dgts=cc.RESULT_DIGITS)
     elif info['enum'] == SampleInfo.LOW:
-        msg = '<{:.3e}'.format(info['value'] * pre_dilution)
+        msg = '<{:.{dgts}e}'.format(info['value'] * pre_dilution, dgts=cc.RESULT_DIGITS)
         valid_ex = True
     elif info['enum'] == SampleInfo.VALID_PTS:
         msg = '{} valid point'.format(all_info['valid_pts'])
