@@ -14,9 +14,9 @@ def inv_func(y, a, b, c, d):
     return c * (((a - d) / (y - d)) - 1.0) ** (1.0 / b)
 
 
-def fit_reference(func, x, y):
+def fit_reference(fnc, x, y):
     p0 = [y.min(), 0.9, x[len(x) - 2], y.max()]
-    return curve_fit(func, x, y, p0=p0, method='lm', full_output=True, maxfev=10000)
+    return curve_fit(fnc, x, y, p0=p0, method='lm', full_output=True, maxfev=10000)
 
 
 def conc_func(x, dil, *popt):
