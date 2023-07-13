@@ -7,10 +7,50 @@ from sklearn.metrics import r2_score
 
 
 def func(x, a, b, c, d):
+    """Fit function see SOP `220726_SOP_Capsid-AAV9-ELISA_V4` `5.1`
+
+    Parameters
+    ----------
+    x : array_like
+        x-axis values, $\Delta$ OD (450nm - 620nm)
+    a : float
+        minimum value (lowest possible point)  .
+    b : float 
+        slope at inflection point `c`
+    c : float
+        inflection point of the curve  
+    d : float
+        maximum value (highest possible point)
+
+    Returns
+    -------
+    float64
+        concentration [cp/ml]
+    """
     return d + ((a - d) / (1.0 + (x / c) ** b))
 
 
 def inv_func(y, a, b, c, d):
+    """Inverse fit function see SOP `220726_SOP_Capsid-AAV9-ELISA_V4` `5.1`
+
+    Parameters
+    ----------
+    y : array_like
+        x-axis values, concentration [cp/ml]
+    a : float
+        minimum value (lowest possible point)  .
+    b : float 
+        slope at inflection point `c`
+    c : float
+        inflection point of the curve  
+    d : float
+        maximum value (highest possible point)
+
+    Returns
+    -------
+    float64
+         $\Delta$ OD (450nm - 620nm)
+    """
     return c * (((a - d) / (y - d)) - 1.0) ** (1.0 / b)
 
 
@@ -30,7 +70,6 @@ def fit_magic(data):
     print(popt)
     perr = np.sqrt(np.diag(pcov))
     print(perr)
-
 
     plt.scatter(data['Conc'], data['OD'], marker='+', s=48, linewidths=0.8)
     plt.xscale('log')

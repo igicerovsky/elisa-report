@@ -65,11 +65,11 @@ def fit_section_md(df_ref, popt, pcov, out_dir):
     md += '$\LARGE y = {d + {a - d \over {1 + ({ x \over c })^b}} }$  \n\n'
 
     param_legend = """\
-`y` &nbsp;&nbsp;&nbsp;$\Delta$ OD  
-`x` &nbsp;&nbsp;&nbsp;concentration [%]  
+`y` &nbsp;&nbsp;&nbsp;$\Delta$ OD (450nm - 620nm)  
+`x` &nbsp;&nbsp;&nbsp;concentration [cp/ml]  
 `a` &nbsp;&nbsp;&nbsp;minimum value (lowest possible point)  
-`b` &nbsp;&nbsp;&nbsp;slope (at point `c`)  
-`c` &nbsp;&nbsp;&nbsp;turning point of the curve  
+`b` &nbsp;&nbsp;&nbsp;slope at inflection point `c`  
+`c` &nbsp;&nbsp;&nbsp;inflection point of the curve  
 `d` &nbsp;&nbsp;&nbsp;maximum value (highest possible point)  
     """
     md += param_legend
