@@ -47,10 +47,10 @@ def gen_report(valid_plates, worklist, params, layout, reference_conc,
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("-b", "--basename", help="base name", default=None)
-    parser.add_argument("-d", "--workdir", help="working directory of an experiment")
-    # parser.add_argument("-w", "--worklist", help="worklist path (xls)")
-    # parser.add_argument("-p", "--params", help="parameters path (csv)")
-    # parser.add_argument("-m", "--hamilton", help="hamilton output file (xlsx)")
+    parser.add_argument("-d", "--workdir", help="working directory of an experiment", default=None)
+    parser.add_argument("-w", "--worklist", help="worklist path (xls)", default=None)
+    parser.add_argument("-p", "--params", help="parameters path (csv)", default=None)
+
     args = parser.parse_args()
     working_dir = args.workdir
     base_name = args.basename
