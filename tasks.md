@@ -1,46 +1,46 @@
 # Photometer Report Generation Tasks - Python
 
-## Data Processing
+## TODO
 
-- Read excel data
-  - Dataframe rearangement
-  - Indexing according to `220726_SOP_Capsid-AAV9-ELISA_V4`
-- Layouts
-  - Plate layout indexing (multi index columns <1, 12>, rows <A, H>)
-  - Read/reodrer functions for list input
-  - Save/Read routines for reodered list input
-
-### Fit
-
-- Reference
-  - Fitting algorithm [scipy.curve_fit](https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.curve_fit.html#scipy-optimize-curve-fit)
-  - Fitting plot
-  - Error tabular output
-  - Masking: automatic removal of outlayer
-- Measurement
-  - Apply reference fit
-- Automatic fit point removal if outside error interval *eps*
-
-## Final Tabular Output
-
-- Use fit functionality to process all data
-  - Display plate format
-  - Custom plate formats
-
-## Report Generation ([Markdownn](https://www.markdownguide.org/basic-syntax/))
-
-- Tables
-- Images
-- ...
-
-## Report Print to PDF
-
-- weasyprint
-- GTK
-- md2pdf
-  - ??? error programmatically add images
+- Further review process ???
+- Unit tests
+  - modules
+- E2E test
+- Documentation
+  - modules
+- Parameters
+  - `Reference value`
+  - `Dilutions`
 
 ## Done
+
+### Recent
+
+- Batch directory processing  
+
+### KW29-17.07.2023
+
+- SOPs
+- Unit tests & docs (fit function)
+- batch
+
+To check  
+[230628_GN004240-046_-_report_plate_1.md.pdf](https://mytakeda.sharepoint.com/:b:/r/sites/PA.GTProtein-Quantification/Shared%20Documents/General/Team-Members/cerovskyi/230628_GN004240-046_-_report_plate_1.md.pdf?csf=1&web=1&e=Nikrw1)  
+[230628_GN004240-046_-_report_plate_2](https://mytakeda.sharepoint.com/:b:/r/sites/PA.GTProtein-Quantification/Shared%20Documents/General/Team-Members/cerovskyi/230628_GN004240-046_-_report_plate_2.md.pdf?csf=1&web=1&e=xoPKJs)
+
+### KW28-11.07.2023
+
+Review Sebasitian, Felix  
+
+- mask sample point(s) if `CV>CV_THRESHOLD` and `valid sample_ponits <= MIN_VALID_SAMPLE_POINTS` (Igor)
+- `CV[%]` one `{:.1f}` decimal digit (Felix)
+- `Result [cp/ml]` three `{:.3e}` (Felix)
+- `nan` -> `NA` (Felix)
+- control sample image line ending (Sebastian)
+- `CV[%]` column format to 1 decimal digits with trailing zeroes (Sebastian/Robert)
+- Fit parameter description
+
+### Old
 
 - backfit - recovery rate
 - rm reference from final results
@@ -52,12 +52,9 @@
 - reference point removal verbose output to sheet
 - CV from valid (non-masked) values only
 
-## TODO
+## Notes
 
-- Backfit table mark masked value (visualy)
-- Parameter file loading
-  - REF_VAL_MAX
-  - DILUTIONS
-  - CV masking threshold
-  - `fit_reference_auto_rm` verbose output
-  - R_squared add to md to fit section
+- weasyprint
+- GTK
+- md2pdf
+  - ??? error programmatically add images

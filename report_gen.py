@@ -44,17 +44,7 @@ def gen_report(valid_plates, worklist, params, layout, reference_conc,
     return reports, files
 
 
-def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument("-b", "--basename", help="base name", default=None)
-    parser.add_argument("-d", "--workdir", help="working directory of an experiment", default=None)
-    parser.add_argument("-w", "--worklist", help="worklist path (xls)", default=None)
-    parser.add_argument("-p", "--params", help="parameters path (csv)", default=None)
-
-    args = parser.parse_args()
-    working_dir = args.workdir
-    base_name = args.basename
-
+def main_report(working_dir, base_name):
     input_files = make_input_paths(working_dir, base_name)
     worklist_file_path = input_files['worklist']
     params_file_path = input_files['params']
@@ -77,6 +67,20 @@ def main():
         t = crc32(binr)
         print("CRC for '{}' is {}".format(file, t))
     print('Done.')
+
+    
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-b", "--basename", help="base name", default=None)
+    parser.add_argument("-d", "--workdir", help="working directory of an experiment", default=None)
+    parser.add_argument("-w", "--worklist", help="worklist path (xls)", default=None)
+    parser.add_argument("-p", "--params", help="parameters path (csv)", default=None)
+
+    args = parser.parse_args()
+    working_dir = args.workdir
+    base_name = args.basename
+    main_report(working_dir, base_name)
+
 
 if __name__ == "__main__":
     main()
