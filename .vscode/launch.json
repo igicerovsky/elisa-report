@@ -13,9 +13,7 @@
             "justMyCode": true,
             "args": [
                 "-d",
-                "./reports/input/",
-                "-b",
-                "230426_GN004240-033_-_"
+                "./reports/230426_AAV9-ELISA_igi_GN004240-033"
             ]
         }
     ]

@@ -6,7 +6,7 @@ from readdata import read_params
 from fitdata import fit_magic
 from readdata import read_concat_data
 from scipy.optimize import OptimizeWarning
-from mkinout import make_input_paths, make_output_paths
+from mkinout import make_input_paths, make_output_paths, basename_from_inputdir
 from worklist import read_worklist, check_worklist
 from sample import make_concentration
 from reportmain import report_plate
@@ -44,8 +44,8 @@ def gen_report(valid_plates, worklist, params, layout, reference_conc,
     return reports, files
 
 
-def main_report(working_dir, base_name):
-    input_files = make_input_paths(working_dir, base_name)
+def main_report(working_dir):
+    input_files = make_input_paths(working_dir)
     worklist_file_path = input_files['worklist']
     params_file_path = input_files['params']
 
@@ -61,7 +61,8 @@ def main_report(working_dir, base_name):
                         path.join(DATA_DIR, PLATE_LAYOUT_NUM),
                         path.join(DATA_DIR, PLATE_LAYOUT_DIL_ID))
 
-    reports, files = gen_report(valid_plates, wl_raw, params, lay, reference_conc, working_dir, base_name)
+    reports, files = gen_report(valid_plates, wl_raw, params, lay,
+     reference_conc, working_dir, basename_from_inputdir(working_dir))
     for report, file in zip(reports, files):
         binr = bytearray(report,'utf8')
         t = crc32(binr)
@@ -71,15 +72,11 @@ def main_report(working_dir, base_name):
     
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("-b", "--basename", help="base name", default=None)
     parser.add_argument("-d", "--workdir", help="working directory of an experiment", default=None)
-    # parser.add_argument("-w", "--worklist", help="worklist path (xls)", default=None)
-    # parser.add_argument("-p", "--params", help="parameters path (csv)", default=None)
 
     args = parser.parse_args()
     working_dir = args.workdir
-    base_name = args.basename
-    main_report(working_dir, base_name)
+    main_report(working_dir)
 
 
 if __name__ == "__main__":
