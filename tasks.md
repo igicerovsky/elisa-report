@@ -17,6 +17,7 @@
 ### Recent
 
 - Batch directory processing  
+- Input as directory for processing  
 
 ### KW29-17.07.2023
 

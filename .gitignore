@@ -1,10 +1,10 @@
 result/
 
-reports/input/results_1
-reports/input/results_2
-reports/input/results_plate_1
-reports/input/results_plate_2
-reports/input/results_plate_4
-reports/input/results_plate_5
+reports/230426_AAV9-ELISA_igi_GN004240-033/results_1
+reports/230426_AAV9-ELISA_igi_GN004240-033/results_2
+reports/230426_AAV9-ELISA_igi_GN004240-033/results_plate_1
+reports/230426_AAV9-ELISA_igi_GN004240-033/results_plate_2
+reports/230426_AAV9-ELISA_igi_GN004240-033/results_plate_4
+reports/230426_AAV9-ELISA_igi_GN004240-033/results_plate_5
 __pycache__
 reports/all
