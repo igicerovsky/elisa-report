@@ -18,6 +18,8 @@
 
 - Batch directory processing  
 - Input as directory for processing  
+  - ipynb
+  - py
 
 ### KW29-17.07.2023
 
