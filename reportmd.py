@@ -62,7 +62,7 @@ def fit_section_md(df_ref, popt, pcov, out_dir):
     df_fit = fit_sheet(popt, pcov, n)
 
     md = '## Reference Curve Fit\n\n'
-    md += '$\LARGE y = {d + {a - d \over {1 + ({ x \over c })^b}} }$  \n\n'
+    md += '$y = {d + \\frac{a - d}{{1 + (\\frac{ x }{ c })^b}} }$  \n\n'
 
     param_legend = """\
 `y` &nbsp;&nbsp;&nbsp;$\Delta$ OD (450nm - 620nm)  

@@ -20,6 +20,7 @@
 - Input as directory for processing  
   - ipynb
   - py
+- Pandoc `docx` report generation  
 
 ### KW29-17.07.2023
 
