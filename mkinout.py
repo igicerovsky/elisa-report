@@ -12,7 +12,6 @@ from os import path
 
 
 def parse_dir_name(path_name):
-    print(path_name)
     if path.isdir(path_name):
         path_name = path.basename(path_name)
     else:
@@ -30,11 +29,14 @@ def make_base_name(date, gn):
     return date + '_' + gn + '_-_'
 
 
+def basename_from_inputdir(input_dir):
+    p = parse_dir_name(input_dir)
+    return make_base_name(p['date'], p['gn'])
+
+
 def make_input_paths(input_dir):
-    print(input_dir)
-    p =  parse_dir_name(input_dir)
-    print(p)
-    base_name = make_base_name(p['date'], p['gn'])
+    p = parse_dir_name(input_dir)
+    base_name = basename_from_inputdir(input_dir)
     worklist = path.join(input_dir, base_name + 'worklist-ELISA.xls')
     if not path.isfile(worklist):
         raise Exception("Worklist file path is invlaid: {}".format(worklist))
