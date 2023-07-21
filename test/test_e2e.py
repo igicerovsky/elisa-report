@@ -80,4 +80,3 @@ def test_e2e():
         docx_path = path.splitext(report_file_path)[0] + '.docx'
         print('Generating Word {} for {}'.format(docx_path, report_file_path))
         subprocess.run(['c:/work/pandoc/pandoc', '-o', docx_path, '-f', 'markdown', '-t', 'docx', '--resource-path', report_dir, report_file_path])
-        # ! c:/work/pandoc/pandoc -o {docx_path} -f markdown -t docx --resource-path {report_dir} {report_file_path}
