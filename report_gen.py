@@ -33,7 +33,7 @@ def gen_report(valid_plates, worklist, params, layout, reference_conc,
         print('Processing plate {} of {}'.format(plate, len(valid_plates)))
 
         output_files = make_output_paths(working_dir, base_name, plate)
-        hamilton_file_path = output_files['results']
+        hamilton_file_path = output_files['analysis']
         report_file_path = output_files['report']
         report_dir = path.dirname(path.abspath(report_file_path))
         reports.append(report_plate(plate, worklist, params, layout,

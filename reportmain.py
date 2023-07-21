@@ -12,8 +12,7 @@ def check_report_crc(report: str, crc):
 
     if t != crc:
         raise Exception('Report CRC missmatch! {} != {}'.format(t, crc))
-    else:
-         print('Report CRC is OK. ({})'.format(t))
+
 
 def report_plate(plate_id, worklist, params, layouts, reference_conc,
                  input_data_path, report_dir, report_file_path
