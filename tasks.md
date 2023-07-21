@@ -5,7 +5,6 @@
 - Further review process ???
 - Unit tests
   - modules
-- E2E test
 - Documentation
   - modules
 - Parameters
@@ -21,6 +20,9 @@
   - ipynb
   - py
 - Pandoc `docx` report generation  
+  - equation using `\frac`  
+  - included in report generation ipynb
+- E2E test  
 
 ### KW29-17.07.2023
 
