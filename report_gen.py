@@ -3,22 +3,21 @@ import argparse
 import warnings
 
 from readdata import read_params
-from fitdata import fit_magic
-from readdata import read_concat_data
 from scipy.optimize import OptimizeWarning
 from mkinout import make_input_paths, make_output_paths, basename_from_inputdir
 from worklist import read_worklist, check_worklist
 from sample import make_concentration
 from reportmain import report_plate
-from readdata import read_layouts
+from readdata import read_layouts, read_params_json
 from zlib import crc32
+
 
 WARNING_DISABLE = True
 DATA_DIR = './data'
+PARAMS_FILENAME = 'params.json'
 PLATE_LAYOUT_ID = 'plate_layout_ident.csv'
 PLATE_LAYOUT_NUM = 'plate_layout_num.csv'
 PLATE_LAYOUT_DIL_ID = 'plate_layout_dil_id.csv'
-
 
 if WARNING_DISABLE:
     warnings.simplefilter('ignore', RuntimeWarning)
@@ -45,16 +44,15 @@ def gen_report(valid_plates, worklist, params, layout, reference_conc,
 
 
 def main_report(working_dir):
+    print(f'Processing directory {working_dir}')
     input_files = make_input_paths(working_dir)
     worklist_file_path = input_files['worklist']
     params_file_path = input_files['params']
 
-    ref_val_max = 1.7954e+10
-    dilutions = [1.0, 2.0, 4.0, 8.0, 16.0, 32.0, 64.0]
-
     wl_raw = read_worklist(worklist_file_path)
     valid_plates = check_worklist(wl_raw)
     params = read_params(params_file_path)
+    ref_val_max, dilutions = read_params_json(working_dir, DATA_DIR, PARAMS_FILENAME)
     reference_conc = make_concentration(ref_val_max, dilutions)
 
     lay = read_layouts(path.join(DATA_DIR, PLATE_LAYOUT_ID),
@@ -62,7 +60,7 @@ def main_report(working_dir):
                         path.join(DATA_DIR, PLATE_LAYOUT_DIL_ID))
 
     reports, files = gen_report(valid_plates, wl_raw, params, lay,
-     reference_conc, working_dir, basename_from_inputdir(working_dir))
+        reference_conc, working_dir, basename_from_inputdir(working_dir))
     for report, file in zip(reports, files):
         binr = bytearray(report,'utf8')
         t = crc32(binr)

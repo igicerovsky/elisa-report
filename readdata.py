@@ -1,5 +1,7 @@
 import pandas as pd
 from layouthandle import read_plate_layout
+from os import path
+import json
 
 
 def to_multi_index(df_single_index, name):
@@ -87,3 +89,25 @@ def read_layouts(file_id, file_num, file_dil):
     plate_layout_dil_id = read_plate_layout(file_dil)
 
     return concat_layouts(plate_layout_id, plate_layout_num, plate_layout_dil_id)
+
+
+def read_params_json(working_dir, data_dir, params_filename):
+    params_path_default = path.join(data_dir, params_filename)
+    params_path_local = path.join(working_dir, params_filename)
+    params_path = None
+
+    if path.exists(params_path_local):
+        params_path = params_path_local
+        print(f'Loading local params {params_path}')
+    elif path.exists(params_path_default):
+        params_path = params_path_default
+        print(f'Loading default params {params_path}')
+    else:
+        raise Exception(f'Parameters file not found {params_path_local}, {params_path_default}')
+
+    with open(params_path_default) as json_file:
+        data = json.load(json_file)
+        dilutions = data['dilutions']
+        ref_val_max = data['referenceValue']
+
+    return ref_val_max, dilutions
