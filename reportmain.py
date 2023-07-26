@@ -4,6 +4,7 @@ from sample import init_samples, apply_fit, mask_sample, data_range, generate_re
 from fitdata import fit_reference_auto_rm
 from zlib import crc32
 import reportmd as rmd
+import subprocess
 
 
 def check_report_crc(report: str, crc):
@@ -35,7 +36,15 @@ def report_plate(plate_id, worklist, params, layouts, reference_conc,
     dfg = mask_sample(dfg, dr)
     sl = generate_results(dfg, dr)
 
-    report = '''
+    report = '''\
+---
+geometry: margin=1cm
+documentclass: extarticle
+mainfont: Noto Sans
+fontsize: 10pt
+colorlinks: true
+---
+
 # Automatically Generated Markdown report
 
 This a PoC for automatic report generation...\n\n'''
@@ -56,6 +65,17 @@ This a PoC for automatic report generation...\n\n'''
         rmd.save_md(report_file_path, report)
         xlsx_file = os.path.splitext(report_file_path)[0] + '_results.xlsx'
         final.to_excel(xlsx_file)
+
+        report_dir = os.path.dirname(os.path.abspath(report_file_path))
+        docx_path = os.path.splitext(report_file_path)[0] + '.docx'
+        print('Generating Word {} for {}'.format(docx_path, report_file_path))
+        REFERENCE_DOCX = 'C:/work/report-gen/custom-reference.docx'
+        PANDOC_PATH = 'c:/work/pandoc/pandoc'
+        subprocess.run([PANDOC_PATH, '-o', docx_path,
+                         '-f', 'markdown', '-t', 'docx',
+                          '--resource-path', report_dir,
+                          '--reference-doc', REFERENCE_DOCX,
+                          report_file_path])
 
     return report
 

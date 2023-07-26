@@ -66,7 +66,7 @@ def test_e2e():
         WORKING_DIR, basename_from_inputdir(WORKING_DIR))
 
     CHECK_REPORT_CRC = True
-    REPORT_PLATES_CRC = [2402123867, 1865170328]
+    REPORT_PLATES_CRC = [1094899247, 4030313479]
     if CHECK_REPORT_CRC:
         for report, crc in zip(reports, REPORT_PLATES_CRC):
             try:

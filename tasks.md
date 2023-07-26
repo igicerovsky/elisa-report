@@ -13,7 +13,11 @@
 
 ## Done
 
-### Recent
+### KW31-01.08.2023
+
+- convert to pdf `pandoc` using `pdflatex` engine  
+
+### KW30-25.07.2023
 
 - Batch directory processing  
 - Input as directory for processing  
