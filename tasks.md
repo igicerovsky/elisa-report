@@ -2,6 +2,7 @@
 
 ## TODO
 
+- formatting docx, pdf
 - Further review process ???
 - Unit tests
   - modules
