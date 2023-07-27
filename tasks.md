@@ -12,11 +12,20 @@
   - `Reference value`
   - `Dilutions`
 
+## Review
+
+- Sample mean multiply (Andrea) in sample overview; add if easy  
+- Parsing -> sample info (Andrea)
+
 ## Done
 
 ### KW31-01.08.2023
 
 - convert to pdf `pandoc` using `pdflatex` engine  
+- formatting docx, pdf - stage 0
+- Review: Rounding style (Andrea) checked - OK
+- Masking 1 vs 2 values `results_plate_1\230628_GN004240-046_-_report_plate_1.md` (Andrea) checked - OK
+- Parse, format and output datetime to header
 
 ### KW30-25.07.2023
 

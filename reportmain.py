@@ -16,7 +16,7 @@ def check_report_crc(report: str, crc):
 
 
 def report_plate(plate_id, worklist, params, layouts, reference_conc,
-                 input_data_path, report_dir, report_file_path
+                 input_data_path, report_dir, report_file_path, info
                  ):
 
     od = read_concat_data(input_data_path)
@@ -49,7 +49,7 @@ colorlinks: true
 
 This a PoC for automatic report generation...\n\n'''
 
-    report += rmd.header_section('05 May 2023', 'GN004240-033', plate_id, ':)')
+    report += rmd.header_section(info, plate_id, ':)')
     final = rmd.make_final(sl, worklist, plate_id).drop('reference 01', axis=0)
     report += rmd.result_section(final)
     report += rmd.param_section(params)

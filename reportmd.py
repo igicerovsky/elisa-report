@@ -7,6 +7,7 @@ import constants as cc
 import worklist as wk
 import pandas as pd
 from tqdm import tqdm
+from datetime import datetime
 
 
 def make_final(sl, wl_raw, plate_id):
@@ -27,13 +28,16 @@ def make_final(sl, wl_raw, plate_id):
 
 # Header
 
-def header_section(date, id, plate_id, msg):
+def header_section(dc, plate_id, msg):
     md =  '## Header\n\n'
 
-    md += 'Date: {}\n\n'.format(date)
-    md += 'Identification: {}\n\n'.format(id)
-    md += 'Plate: {}\n\n'.format(plate_id)
-    md += 'Comment: {}\n\n'.format(msg)
+    dt = datetime.strptime(dc['date'], "%y%m%d")
+    md += 'Date: **{}**  \n'.format(dt.strftime('%d %b %Y'))
+    md += 'Identification: **{}**  \n'.format(dc['gn'])
+    md += 'Protocol: **{}**  \n'.format(dc['protocol'])
+    md += 'Analyzed by: **{}**  \n'.format(dc['analyst'])
+    md += 'Plate: **{}**  \n'.format(plate_id)
+    md += 'Comment: {}  \n\n'.format(msg)
 
     return md
 

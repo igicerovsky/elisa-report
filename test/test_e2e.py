@@ -2,6 +2,11 @@ from os import path
 import warnings
 from scipy.optimize import OptimizeWarning
 import subprocess
+from sample import make_concentration
+from worklist import read_worklist, check_worklist
+from readdata import read_params
+from reportmain import report_plate, check_report_crc
+from mkinout import make_output_paths, basename_from_inputdir, parse_dir_name
 
 warnings.simplefilter('ignore', RuntimeWarning)
 warnings.simplefilter('ignore', OptimizeWarning)
@@ -29,9 +34,6 @@ def test_e2e():
                         path.join(DATA_DIR, PLATE_LAYOUT_NUM),
                         path.join(DATA_DIR, PLATE_LAYOUT_DIL_ID))
 
-    from worklist import read_worklist, check_worklist
-    from readdata import read_params
-
     g_wl_raw = read_worklist(WORKLIST_FILE_PATH)
     g_valid_plates = check_worklist(g_wl_raw)
     g_params = read_params(PARAMS_FILE_PATH)
@@ -40,11 +42,7 @@ def test_e2e():
     REF_VAL_MAX = 1.7954e+10
     DILUTIONS = [1.0, 2.0, 4.0, 8.0, 16.0, 32.0, 64.0]
 
-    from sample import make_concentration
     g_reference_conc = make_concentration(REF_VAL_MAX, DILUTIONS)
-
-    from reportmain import report_plate, check_report_crc
-    from mkinout import make_output_paths, basename_from_inputdir
 
     def gen_report(valid_plates, worklist, params, layout, reference_conc,
                 working_dir, base_name):
@@ -56,8 +54,11 @@ def test_e2e():
             analysis_file_path = output_files['analysis']
             report_file_path = output_files['report']
             report_dir = path.dirname(path.abspath(report_file_path))
+            info = parse_dir_name(working_dir)
             md = report_plate(plate, worklist, params, layout,
-                        reference_conc, analysis_file_path, report_dir, report_file_path
+                        reference_conc, analysis_file_path,
+                        report_dir, report_file_path,
+                        info
                         )
             reports.append({'md': md, 'path': report_file_path})
         return reports
@@ -66,7 +67,7 @@ def test_e2e():
         WORKING_DIR, basename_from_inputdir(WORKING_DIR))
 
     CHECK_REPORT_CRC = True
-    REPORT_PLATES_CRC = [1094899247, 4030313479]
+    REPORT_PLATES_CRC = [864111381, 3242056329]
     if CHECK_REPORT_CRC:
         for report, crc in zip(reports, REPORT_PLATES_CRC):
             try:

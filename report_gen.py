@@ -4,7 +4,7 @@ import warnings
 
 from readdata import read_params
 from scipy.optimize import OptimizeWarning
-from mkinout import make_input_paths, make_output_paths, basename_from_inputdir
+from mkinout import make_input_paths, make_output_paths, basename_from_inputdir, parse_dir_name
 from worklist import read_worklist, check_worklist
 from sample import make_concentration
 from reportmain import report_plate
@@ -35,7 +35,8 @@ def gen_report(valid_plates, worklist, params, layout, reference_conc,
         hamilton_file_path = output_files['analysis']
         report_file_path = output_files['report']
         report_dir = path.dirname(path.abspath(report_file_path))
-        reports.append(report_plate(plate, worklist, params, layout,
+        info = parse_dir_name(working_dir)
+        reports.append(report_plate(info, worklist, params, layout,
                     reference_conc, hamilton_file_path, report_dir, report_file_path
                     ))
         files.append(report_file_path)
