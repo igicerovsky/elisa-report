@@ -6,7 +6,7 @@ from sample import make_concentration
 from worklist import read_worklist, check_worklist
 from readdata import read_params
 from reportmain import report_plate, check_report_crc
-from mkinout import make_output_paths, basename_from_inputdir, parse_dir_name
+from mkinout import make_output_paths, basename_from_inputdir, parse_dir_name, make_input_analysis
 
 warnings.simplefilter('ignore', RuntimeWarning)
 warnings.simplefilter('ignore', OptimizeWarning)
@@ -51,8 +51,9 @@ def test_e2e():
             print('Processing plate {} of {}'.format(plate, len(valid_plates)))
 
             output_files = make_output_paths(working_dir, base_name, plate)
-            analysis_file_path = output_files['analysis']
+            analysis_file_path = make_input_analysis(working_dir, base_name, plate)
             report_file_path = output_files['report']
+            results_file_path = output_files['plate_results']            
             report_dir = path.dirname(path.abspath(report_file_path))
             info = parse_dir_name(working_dir)
             md = report_plate(plate, worklist, params, layout,

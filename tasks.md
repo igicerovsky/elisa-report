@@ -2,20 +2,18 @@
 
 ## TODO
 
+- Parse original output from photometer
+- Results word document
 - formatting docx, pdf
 - Further review process ???
 - Unit tests
   - modules
 - Documentation
   - modules
-- Parameters
-  - `Reference value`
-  - `Dilutions`
 
 ## Review
 
 - Sample mean multiply (Andrea) in sample overview; add if easy  
-- Parsing -> sample info (Andrea)
 
 ## Done
 
@@ -26,6 +24,10 @@
 - Review: Rounding style (Andrea) checked - OK
 - Masking 1 vs 2 values `results_plate_1\230628_GN004240-046_-_report_plate_1.md` (Andrea) checked - OK
 - Parse, format and output datetime to header
+- Parsing -> sample info from dir name (Andrea)
+- Parameters read from json
+  - `Reference value`
+  - `Dilutions`
 
 ### KW30-25.07.2023
 

@@ -10,3 +10,4 @@ tabulate
 xlrd
 scikit-learn
 tqdm
+chardet

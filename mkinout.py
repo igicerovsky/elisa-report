@@ -38,12 +38,17 @@ def make_input_paths(input_dir):
     return {'worklist': worklist, 'params': params}
 
 
-def make_output_paths(input_dir, base_name, plate_id):
+def make_input_analysis(input_dir, base_name, plate_id):
     analysis =  path.join(input_dir, base_name + 'calc{}.xlsx'.format(plate_id))
     if not path.isfile(analysis):
         raise Exception("Results file path is invlaid! {}".format(analysis))
-    
-    report = path.join(input_dir, 'results_plate_{}'.format(plate_id))
-    report = path.join(report, '{}report_plate_{}.md'.format(base_name, plate_id))
 
-    return {'analysis': analysis, 'report': report}
+    return analysis
+
+
+def make_output_paths(input_dir, base_name, plate_id):
+    base = path.join(input_dir, 'results_plate_{}'.format(plate_id))
+    plate = path.join(base, '{}results_plate_{}.md'.format(base_name, plate_id))
+    report = path.join(base, '{}report_plate_{}.md'.format(base_name, plate_id))
+
+    return {'plate_results': plate, 'report': report}
