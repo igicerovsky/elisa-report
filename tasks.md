@@ -2,7 +2,9 @@
 
 ## TODO
 
-- Parse original output from photometer
+- Use original photometer output
+  - script
+  - batch
 - Results word document
 - formatting docx, pdf
 - Further review process ???
@@ -15,10 +17,13 @@
 
 - Sample mean multiply (Andrea) in sample overview; add if easy  
 
-## Done
-
 ### KW31-01.08.2023
 
+- Bug fix: backfit produces `nan` for `230712_AAV8-ELISA_sey_GN004240-048`
+- Parse original output from photometer
+  - encoding (UTF_16)
+  - file processing
+  - merge to computing framework
 - convert to pdf `pandoc` using `pdflatex` engine  
 - formatting docx, pdf - stage 0
 - Review: Rounding style (Andrea) checked - OK

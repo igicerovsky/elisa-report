@@ -155,7 +155,10 @@ def fit_reference_auto_rm(x, y, err_threshold=0.998, verbose=False):
     if fc:
         bfn = lambda l: inv_func(l, *fc[0])
         x_hat = bfn(y)
-        r2_max = r2_score(x, x_hat)
+        try:
+            r2_max = r2_score(x, x_hat)
+        except:
+            r2_max = 0.0
 
     if verbose:
         print('R-squared is invalid for nonlinear models!')
@@ -183,7 +186,12 @@ def fit_reference_auto_rm(x, y, err_threshold=0.998, verbose=False):
 
         bfn = lambda l: inv_func(l, *fc_i[0])
         x_hat = bfn(yd)
-        r_squared = r2_score(xd, x_hat)
+        try:
+            r_squared = r2_score(xd, x_hat)
+        except:
+            fit_stats.loc[len(fit_stats)] = [i, r_squared, 'Invalid covariance matrix.']
+            continue
+
         if np.isinf(fc_i[1]).any():
             fit_stats.loc[len(fit_stats)] = [i, r_squared, 'Invalid covariance matrix.']
             continue
