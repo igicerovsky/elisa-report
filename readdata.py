@@ -103,7 +103,7 @@ def read_concat_data(data_file_path):
   else:
      raise Exception(f'Invalid inpit data file {data_file_path}')
 
-  df_450, df_630 = read_data_xls(data_file_path)
+  df_450, df_630 = read_fn(data_file_path)
   df_delta = df_450 - df_630
   df_delta_all = to_multi_index(df_delta, "OD_delta")
   df_450_all = to_multi_index(df_450, "OD_450")
