@@ -2,6 +2,49 @@ import pandas as pd
 from layouthandle import read_plate_layout
 from os import path
 import json
+import chardet
+from pathlib import Path
+from io import StringIO
+
+
+def get_encoding(file_name):
+    blob = Path(file_name).read_bytes()
+    result = chardet.detect(blob)
+    charenc = result['encoding']
+
+    return charenc
+
+
+SKIP_LINES = 3
+SKIP_BEGIN = 1
+
+def read_exported_data(file_name):
+    count = 0
+    csv_str = ''
+    char_enc = get_encoding(file_name)
+    with open(file_name, encoding=char_enc) as fp:
+        for line in fp:
+            count += 1
+            if count < SKIP_LINES: continue
+            sline = line.rstrip('\n')
+            cline = sline.replace('\t', ',')
+            cline = cline.rstrip(',')
+            cline = cline[SKIP_BEGIN:]
+            csv_str += cline + '\n'
+            if count == 12: break
+    return csv_str
+
+
+
+def read_data_txt(file_path):
+  strdata = read_exported_data(file_path)
+  csv_io = StringIO(strdata)
+  df = pd.read_csv(csv_io, sep=",")
+  # TODO: move ranges to config file
+  df_450 = get_data_crop(df, range(0, 8), range(1, 13))
+  df_630 = get_data_crop(df, range(0, 8), range(14, 26))
+
+  return df_450, df_630
 
 
 def to_multi_index(df_single_index, name):
@@ -52,6 +95,14 @@ def read_data_xls(file_path):
 
 
 def read_concat_data(data_file_path):
+  ext = path.splitext(data_file_path)[1]
+  if ext == '.txt':
+     read_fn = read_data_txt
+  elif ext == '.xlsx':
+    read_fn = read_data_xls
+  else:
+     raise Exception(f'Invalid inpit data file {data_file_path}')
+
   df_450, df_630 = read_data_xls(data_file_path)
   df_delta = df_450 - df_630
   df_delta_all = to_multi_index(df_delta, "OD_delta")
