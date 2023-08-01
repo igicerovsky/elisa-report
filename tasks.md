@@ -2,6 +2,7 @@
 
 ## TODO
 
+- Hamilton computer integration
 - Use original photometer output
   - script
   - batch
