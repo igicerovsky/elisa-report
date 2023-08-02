@@ -1,9 +1,9 @@
-
 from reportmd import save_md
 import subprocess
 import reportmdassembly as ra
 from os import path
 from mkinout import parse_dir_name
+
 
 PDFLATEX_EXE = 'c:/Users/hwn6193/AppData/Local/Programs/MiKTeX/miktex/bin/x64/pdflatex.exe'
 REFERENCE_DOCX = 'C:/work/report-gen/custom-reference.docx'
@@ -21,8 +21,6 @@ def export_palte_reports(reports, generate_plate_docx, generate_plate_pdf):
         if generate_plate_docx:
             docx_path = path.splitext(report['path'])[0] + '.docx'
             print('Generating Word {} from {}'.format(docx_path, report['path']))
-            # REFERENCE_DOCX = 'C:/work/report-gen/custom-reference.docx'
-            # PANDOC_PATH = 'c:/work/pandoc/pandoc'
             subprocess.run([PANDOC_PATH, '-o', docx_path,
                                 '-f', 'markdown', '-t', 'docx',
                                 '--resource-path', report_dir,
