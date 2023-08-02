@@ -1,4 +1,30 @@
-from os import path
+from os import path, listdir
+from datetime import datetime
+import re
+
+
+def find_analysis(work_dir):
+    files = listdir(work_dir)
+    pd = parse_dir_name(work_dir)
+    rs = r'^{}_{}_.*\.txt$'.format(pd['date'], pd['protocol'])
+    r = re.compile(rs)
+    ll = []
+    for fl in files:
+        m = r.match(fl)
+        if m:
+            ll.append(path.join(work_dir, fl))
+    return ll
+
+
+def parse_photometer_filename(path_name):
+    if not path.isfile(path_name):
+        raise Exception('Not a directory!')
+    fle = path.split(path_name)[1]
+    fl = path.splitext(fle)
+    s = fl[0].split('_')
+    dt = datetime.strptime(s[4]+s[5], "%Y%m%d%H%M%S")
+    dc = { 'datetime': dt, 'plate': s[3], 'protocol': s[1]}
+    return dc
 
 
 def parse_dir_name(path_name):

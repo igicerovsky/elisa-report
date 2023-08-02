@@ -16,7 +16,7 @@ def check_report_crc(report: str, crc):
 
 
 def report_plate(plate_id, worklist, params, layouts, reference_conc,
-                 input_data_path, report_dir, report_file_path, info
+                 input_data_path, report_dir, info
                  ):
 
     od = read_concat_data(input_data_path)
@@ -60,23 +60,6 @@ This a PoC for automatic report generation...\n\n'''
 
     report += rmd.sample_section_md(dfg, ref, dr, img_dir)
 
-    if report_file_path:
-        print('Report for plate {} saved as {}'.format(plate_id, report_file_path))
-        rmd.save_md(report_file_path, report)
-        xlsx_file = os.path.splitext(report_file_path)[0] + '_results.xlsx'
-        final.to_excel(xlsx_file)
-
-        report_dir = os.path.dirname(os.path.abspath(report_file_path))
-        docx_path = os.path.splitext(report_file_path)[0] + '.docx'
-        print('Generating Word {} for {}'.format(docx_path, report_file_path))
-        REFERENCE_DOCX = 'C:/work/report-gen/custom-reference.docx'
-        PANDOC_PATH = 'c:/work/pandoc/pandoc'
-        subprocess.run([PANDOC_PATH, '-o', docx_path,
-                         '-f', 'markdown', '-t', 'docx',
-                          '--resource-path', report_dir,
-                          '--reference-doc', REFERENCE_DOCX,
-                          report_file_path])
-
-    return report
+    return report, final
 
 

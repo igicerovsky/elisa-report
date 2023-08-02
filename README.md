@@ -12,4 +12,4 @@ Install `latex` from any of the [distributions](https://www.latex-project.org/ge
 
 ## Running the script
 
-`python3 report_gen.py -d ./DIR_NAME`  
+`python report_gen.py -d ./DIR_NAME`  

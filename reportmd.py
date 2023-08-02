@@ -159,9 +159,8 @@ def format_results_val(x):
         res = '**{}**'.format(res)
     else:
         res = '( {} )*'.format(res)
-    
-    return res
 
+    return res
 
 
 def format_cv(x):
@@ -175,7 +174,7 @@ def format_results(df):
     df.loc[:, ['CV [%]']] = df.apply(lambda x: format_cv(x['CV [%]']), axis=1)
     df.loc[:, ['Result [cp/ml]']] = df.apply(lambda x: format_results_val(x), axis=1)
     df.drop(['info', 'Valid', 'Reader Data [cp/ml]', 'info_ex', 'valid_ex'], axis=1, inplace=True)
-    
+
     return df
 
 
@@ -186,5 +185,5 @@ def result_section(df):
     md += df_formated.to_markdown(floatfmt="#.{}f".format(cc.CV_DIGITS))
     md += '\n\n'
     md += '\* sample will be retested\n\n'
-    
+
     return md
