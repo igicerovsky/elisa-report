@@ -8,6 +8,7 @@ import worklist as wk
 import pandas as pd
 from tqdm import tqdm
 from datetime import datetime
+import subprocess
 
 
 def make_final(sl, wl_raw, plate_id):
