@@ -12,4 +12,24 @@ Install `latex` from any of the [distributions](https://www.latex-project.org/ge
 
 ## Running the script
 
-`python report_gen.py -d ./DIR_NAME`  
+`DIR_NAME` is path to directory/folder with Hamilton analysis, e.g. `C:/work/report-gen/reports/230426_AAV9-ELISA_igi_GN004240-033`  
+The working directory **must** contain following files in given format:  
+
+- `*DATE*_*GN*_-_worklist-ELISA.xls`
+- `*DATE*_*GN*_-_*PROTOCOL*_Parameters.csv`
+
+where `*DATE*` is date format `%y%m%d` (*230801*)  
+`*GN*` is analysis identifier (*GN004240-033*)  
+`*PROTOCOL*` is protocol name (*AAV9-ELISA*)
+
+Examples:  
+`230426_GN004240-033_-_worklist-ELISA.xls`,  
+`230426_GN004240-033_-_AAV9-ELISA_Parameters.csv`
+
+### Running with pre-calculated `csv` data
+
+`python report_gen.py ./DIR_NAME --csv`  
+
+### Running with exported `txt` data
+
+`python report_gen.py ./DIR_NAME`

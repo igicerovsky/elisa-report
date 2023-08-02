@@ -10,6 +10,8 @@ from sample import make_concentration
 from reportmain import report_plate
 from readdata import read_layouts, read_params_json
 from zlib import crc32
+import reportgen as rg
+from mdhandling import export_palte_reports, export_main_report
 
 
 WARNING_DISABLE = True
@@ -19,33 +21,14 @@ PLATE_LAYOUT_ID = 'plate_layout_ident.csv'
 PLATE_LAYOUT_NUM = 'plate_layout_num.csv'
 PLATE_LAYOUT_DIL_ID = 'plate_layout_dil_id.csv'
 
+
 if WARNING_DISABLE:
     warnings.simplefilter('ignore', RuntimeWarning)
     warnings.simplefilter('ignore', OptimizeWarning)
     warnings.filterwarnings('ignore', category=UserWarning, module='openpyxl')
 
-def gen_report(valid_plates, worklist, params, layout, reference_conc,
-               working_dir, base_name):
-    reports = []
-    files = []
-    for plate in valid_plates:
-        print('Processing plate {} of {}'.format(plate, len(valid_plates)))
 
-        output_files = make_output_paths(working_dir, base_name, plate)
-        analysis_file_path = make_input_analysis(working_dir, base_name, plate)
-        report_file_path = output_files['report']
-        results_file_path = output_files['plate_results']
-        report_dir = path.dirname(path.abspath(report_file_path))
-        info = parse_dir_name(working_dir)
-        reports.append(report_plate(info, worklist, params, layout,
-                    reference_conc, analysis_file_path, report_dir, report_file_path
-                    ))
-        files.append(report_file_path)
-
-    return reports, files
-
-
-def main_report(working_dir):
+def main_report(working_dir, txt_input, docxa:bool = True, docxr:bool = False, pdf:bool = True):
     print(f'Processing directory {working_dir}')
     input_files = make_input_paths(working_dir)
     worklist_file_path = input_files['worklist']
@@ -61,22 +44,33 @@ def main_report(working_dir):
                         path.join(DATA_DIR, PLATE_LAYOUT_NUM),
                         path.join(DATA_DIR, PLATE_LAYOUT_DIL_ID))
 
-    reports, files = gen_report(valid_plates, wl_raw, params, lay,
-        reference_conc, working_dir, basename_from_inputdir(working_dir))
-    for report, file in zip(reports, files):
-        binr = bytearray(report,'utf8')
+    if txt_input:
+        reports =rg. gen_report_raw(wl_raw, params, lay, reference_conc, working_dir)
+    else:
+        reports = rg.gen_report_calc(valid_plates, wl_raw, params, lay,
+                                            reference_conc, working_dir)
+
+    if docxa:
+        export_main_report(reports, working_dir)
+    export_palte_reports(reports, docxr, pdf)
+
+    for report in reports:
+        binr = bytearray(report['md'],'utf8')
         t = crc32(binr)
-        print("CRC for '{}' is {}".format(file, t))
+        print("CRC for '{}' is {}".format(report['path'], t))
     print('Done.')
 
-    
+
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("-d", "--workdir", help="working directory of an experiment", default=None)
+    parser.add_argument("workdir", help="working directory of an experiment", default=None)
+    parser.add_argument('--csv', action='store_true', help="use *.txt files as input")
 
     args = parser.parse_args()
     working_dir = args.workdir
-    main_report(working_dir)
+    txt_input = not args.csv
+
+    main_report(working_dir, txt_input)
 
 
 if __name__ == "__main__":
