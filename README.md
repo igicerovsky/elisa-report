@@ -26,9 +26,9 @@ Examples:
 `230426_GN004240-033_-_worklist-ELISA.xls`,  
 `230426_GN004240-033_-_AAV9-ELISA_Parameters.csv`
 
-### Running with pre-calculated `csv` data
+### Running with pre-calculated `xls` data
 
-`python report_gen.py ./DIR_NAME --csv`  
+`python report_gen.py ./DIR_NAME --calc`  
 
 ### Running with exported `txt` data
 

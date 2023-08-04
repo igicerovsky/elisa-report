@@ -22,8 +22,8 @@ def parse_photometer_filename(path_name):
     fle = path.split(path_name)[1]
     fl = path.splitext(fle)
     s = fl[0].split('_')
-    dt = datetime.strptime(s[4]+s[5], "%Y%m%d%H%M%S")
-    dc = { 'datetime': dt, 'plate': s[3], 'protocol': s[1]}
+    dt = datetime.strptime(s[3]+s[4], "%Y%m%d%H%M%S")
+    dc = { 'datetime': dt, 'plate': s[2], 'protocol': s[1]}
     return dc
 
 

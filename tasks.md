@@ -2,12 +2,9 @@
 
 ## TODO
 
+- version handling
 - Hamilton computer integration
-- Use original photometer output
-  - script
-  - batch
-- Results word document
-- formatting docx, pdf
+
 - Further review process ???
 - Unit tests
   - modules
@@ -17,6 +14,17 @@
 ## Review
 
 - Sample mean multiply (Andrea) in sample overview; add if easy  
+
+### KW32-08.08.2023
+
+- `__` remove in `txt` file
+- Hamilton new version deployment
+- Use original photometer output
+  - script
+  - batch
+- Results word document
+- formatting docx, pdf
+- Documentation `README.md` update
 
 ### KW31-01.08.2023
 
@@ -85,4 +93,6 @@ Review Sebasitian, Felix
 - weasyprint
 - GTK
 - md2pdf
-  - ??? error programmatically add images
+  - ??? error programmatically add images  
+  - 
+[teams link](https://mytakeda.sharepoint.com/:f:/r/sites/GeneTherapyAnalytics2/Freigegebene%20Dokumente/General/3_Teams/3.1_Protein_Quantification/_report_generation?csf=1&web=1&e=BtRjmZ)
