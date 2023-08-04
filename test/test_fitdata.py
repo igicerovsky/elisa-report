@@ -1,4 +1,4 @@
-import fitdata
+from hamreport import fitdata
 import pytest
 import numpy as np
 
