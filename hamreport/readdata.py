@@ -1,5 +1,5 @@
 import pandas as pd
-from layouthandle import read_plate_layout
+from .layouthandle import read_plate_layout
 from os import path
 import json
 import chardet

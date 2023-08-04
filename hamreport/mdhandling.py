@@ -1,8 +1,9 @@
-from reportmd import save_md
-import subprocess
-import reportmdassembly as ra
 from os import path
-from mkinout import parse_dir_name
+import subprocess
+
+from .reportmd import save_md
+from .reportmdassembly import assembly
+from .mkinout import parse_dir_name
 
 
 PDFLATEX_EXE = 'c:/Users/hwn6193/AppData/Local/Programs/MiKTeX/miktex/bin/x64/pdflatex.exe'
@@ -38,7 +39,7 @@ def export_palte_reports(reports, generate_plate_docx, generate_plate_pdf):
 
 def export_main_report(reports, working_dir):
     parsed_dir = parse_dir_name(working_dir)
-    md_assembly = ra.assembly(reports, protocol=parsed_dir['protocol'])
+    md_assembly = assembly(reports, protocol=parsed_dir['protocol'])
     mdfile = '{}_{}.md'.format(parsed_dir['date'], parsed_dir['protocol'])
     md_filepath = path.join(working_dir, mdfile)
     save_md(md_filepath, md_assembly)

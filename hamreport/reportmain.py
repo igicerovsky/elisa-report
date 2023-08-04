@@ -1,10 +1,9 @@
 import os
-from readdata import read_concat_data, concat_data_with_layouts
-from sample import init_samples, apply_fit, mask_sample, data_range, generate_results
-from fitdata import fit_reference_auto_rm
+from .readdata import read_concat_data, concat_data_with_layouts
+from .sample import init_samples, apply_fit, mask_sample, data_range, generate_results
+from .fitdata import fit_reference_auto_rm
 from zlib import crc32
-import reportmd as rmd
-import subprocess
+from .reportmd import header_section, make_final, result_section, fit_section_md, param_section, sample_section_md
 
 
 def check_report_crc(report: str, crc):
@@ -49,16 +48,16 @@ colorlinks: true
 
 This a PoC for automatic report generation...\n\n'''
 
-    report += rmd.header_section(info, plate_id, ':)')
-    final = rmd.make_final(sl, worklist, plate_id).drop('reference 01', axis=0)
-    report += rmd.result_section(final)
-    report += rmd.param_section(params)
+    report += header_section(info, plate_id, ':)')
+    final = make_final(sl, worklist, plate_id).drop('reference 01', axis=0)
+    report += result_section(final)
+    report += param_section(params)
     img_dir = os.path.join(report_dir, 'img')
     os.makedirs(report_dir, exist_ok=True)
     os.makedirs(img_dir, exist_ok=True)
-    report += rmd.fit_section_md(ref, popt, pcov, img_dir) # TODO: !!! global fit_result[3]
+    report += fit_section_md(ref, popt, pcov, img_dir) # TODO: !!! global fit_result[3]
 
-    report += rmd.sample_section_md(dfg, ref, dr, img_dir)
+    report += sample_section_md(dfg, ref, dr, img_dir)
 
     return report, final
 

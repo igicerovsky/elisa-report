@@ -1,18 +1,18 @@
 import math
 from os import path
-from fitdata import fit_sheet, fit_reference_auto_rm, backfit
-from image import fit_image, sample_img
-from sample import final_sample_info, sample_check, sample_info, sampleinfo_to_str
-import constants as cc
-import worklist as wk
+from datetime import datetime
 import pandas as pd
 from tqdm import tqdm
-from datetime import datetime
-import subprocess
+
+from .fitdata import fit_sheet, fit_reference_auto_rm, backfit
+from .image import fit_image, sample_img
+from .sample import final_sample_info, sample_check, sample_info, sampleinfo_to_str
+from .constants import RESULT_DIGITS, SAMPLE_TYPES, CV_DIGITS
+from .worklist import worklist_sample
 
 
 def make_final(sl, wl_raw, plate_id):
-    wl, cd = wk.worklist_sample(wl_raw, plate_id)
+    wl, cd = worklist_sample(wl_raw, plate_id)
 
     final = pd.concat([wl, sl], axis=1)
     final.loc[:, ['Result [cp/ml]']] = final.apply(lambda x: x['Reader Data [cp/ml]'] * x[cd['Dilution']], axis=1)
@@ -99,7 +99,7 @@ def fit_section_md(df_ref, popt, pcov, out_dir):
 
 def sample_to_md(dc):
     s_view = dc['sample'][['OD_delta', 'plate_layout_dil', 'concentration', 'mask_reason']]
-    md = "### Sample: {0} '{1}' {2}\n\n".format(cc.SAMPLE_TYPES[dc['type']], dc['type'], dc['num'])
+    md = "### Sample: {0} '{1}' {2}\n\n".format(SAMPLE_TYPES[dc['type']], dc['type'], dc['num'])
     md += s_view.to_markdown()
     md += '\n\n'
     md += "CV = {:2.3} [%]  \n".format(100 * dc['cv'])
@@ -155,7 +155,7 @@ def format_results_val(x):
     if math.isnan(x['Result [cp/ml]']):
         res = x['Comment']
     else:
-        res = '{:.{dgts}e}'.format(x['Result [cp/ml]'], dgts=cc.RESULT_DIGITS)
+        res = '{:.{dgts}e}'.format(x['Result [cp/ml]'], dgts=RESULT_DIGITS)
     if x['valid_ex']:
         res = '**{}**'.format(res)
     else:
@@ -167,7 +167,7 @@ def format_results_val(x):
 def format_cv(x):
     if math.isnan(x):
         return 'NA'
-    return '{:.{dgts}f}'.format(x, dgts=cc.CV_DIGITS)
+    return '{:.{dgts}f}'.format(x, dgts=CV_DIGITS)
 
 
 def format_results(df):
@@ -183,7 +183,7 @@ def result_section(df):
     md = '## Analysis Results\n\n'
 
     df_formated = format_results(df)
-    md += df_formated.to_markdown(floatfmt="#.{}f".format(cc.CV_DIGITS))
+    md += df_formated.to_markdown(floatfmt="#.{}f".format(CV_DIGITS))
     md += '\n\n'
     md += '\* sample will be retested\n\n'
 

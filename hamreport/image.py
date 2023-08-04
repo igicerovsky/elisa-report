@@ -1,9 +1,9 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.stats import distributions
-import fitdata
-from sample import sample_check
-from fitdata import fit_reference_auto_rm
+
+from .sample import sample_check
+from .fitdata import fit_reference_auto_rm, func
 
 def fit_image(x, y, popt, pcov, file_path, confidence_interval=95.0,
     confidence=None, interval_ratio=2.0,
@@ -103,21 +103,21 @@ def fit_image(x, y, popt, pcov, file_path, confidence_interval=95.0,
     x_min = x.min()
     x_max = x.max()
     t = np.arange(x_min, x_max, (x_max - x_min) / num_pts)
-    plt.plot(t, fitdata.func(t, *popt), color='slategray', linewidth=0.2)
+    plt.plot(t, func(t, *popt), color='slategray', linewidth=0.2)
 
     sx_n = sx[~sx.isna()] if sx is not None else None
     x_min_ext = x.min() / interval_ratio
     if sx is not None: x_min_ext = min(x_min_ext, sx_n.min())
     if x_min != x_min_ext:
         t = np.arange(x_min_ext, x_min, (x_min - x_min_ext) / (num_pts / 10.0))
-        plt.plot(t, fitdata.func(t, *popt), color='red', linestyle=(0, (5, 10)), linewidth=0.2, label='ext')
+        plt.plot(t, func(t, *popt), color='red', linestyle=(0, (5, 10)), linewidth=0.2, label='ext')
 
     x_max_ext = x.max() * interval_ratio
     if sx is not None: x_max_ext = max(x_max_ext, sx_n.max())
     if x_max != x_max_ext:
         t = np.arange(x_max, x_max_ext, (x_max_ext - x_max) / (num_pts / 10.0))
         # no label, only one extension labe
-        plt.plot(t, fitdata.func(t, *popt), color='red', linestyle=(0, (5, 10)), linewidth=0.2)
+        plt.plot(t, func(t, *popt), color='red', linestyle=(0, (5, 10)), linewidth=0.2)
 
     # show NaN concentration values somewhere -> show OD
     sx_na = sx[sx.isna()] if sx is not None else None
@@ -133,8 +133,8 @@ def fit_image(x, y, popt, pcov, file_path, confidence_interval=95.0,
     plt.ylabel('Optical density')
 
     t = np.arange(x_min_ext, x_max_ext, (x_max_ext - x_min_ext) / num_pts)
-    bound_upper = fitdata.func(t, *popt_high)
-    bound_lower = fitdata.func(t, *popt_low)
+    bound_upper = func(t, *popt_high)
+    bound_lower = func(t, *popt_low)
     # plotting the confidence intervals
     plt.fill_between(t, bound_lower, bound_upper,
                     color = 'black', alpha = 0.15)

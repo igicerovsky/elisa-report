@@ -2,16 +2,16 @@ from os import path
 import argparse
 import warnings
 
-from readdata import read_params
+from hamreport.readdata import read_params
 from scipy.optimize import OptimizeWarning
-from mkinout import make_input_paths, make_output_paths, make_input_analysis, basename_from_inputdir, parse_dir_name
-from worklist import read_worklist, check_worklist
-from sample import make_concentration
-from reportmain import report_plate
-from readdata import read_layouts, read_params_json
+from hamreport.mkinout import make_input_paths, make_output_paths, make_input_analysis, basename_from_inputdir, parse_dir_name
+from hamreport.worklist import read_worklist, check_worklist
+from hamreport.sample import make_concentration
+from hamreport.reportmain import report_plate
+from hamreport.readdata import read_layouts, read_params_json
 from zlib import crc32
-import reportgen as rg
-from mdhandling import export_palte_reports, export_main_report
+import hamreport.reportgen as rg
+from hamreport.mdhandling import export_palte_reports, export_main_report
 
 
 WARNING_DISABLE = True

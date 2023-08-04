@@ -1,14 +1,16 @@
-import pandas as pd
-from decimal import Decimal
-import math
-from scipy.stats import variation
-import constants as cc
 import numpy as np
+import pandas as pd
+import math
+import typing
+
+from decimal import Decimal
+from scipy.stats import variation
 from enum import Enum
 from dataclasses import dataclass
-import typing
-import  fitdata as fit
 from itertools import combinations
+
+from .constants import RESULT_DIGITS, CV_THRESHOLD, MIN_VALID_SAMPLE_POINTS, CV_THRESHOLD, PRE_DILUTION_THRESHOLD
+from .fitdata import conc_func, inv_func, backfit
 
 
 @dataclass
@@ -40,9 +42,9 @@ def sample_numbers(df):
 
 def mask_value_fn(val, odmin, odmax, note):
     if val < odmin:
-        return '{2} {0:.{dgts}e} < {1:.{dgts}e}'.format(Decimal(val), Decimal(odmin), note, dgts=cc.RESULT_DIGITS)
+        return '{2} {0:.{dgts}e} < {1:.{dgts}e}'.format(Decimal(val), Decimal(odmin), note, dgts=RESULT_DIGITS)
     if val > odmax:
-        return '{2} {0:.{dgts}e} > {1:.{dgts}e}'.format(Decimal(val), Decimal(odmin), note, dgts=cc.RESULT_DIGITS)
+        return '{2} {0:.{dgts}e} > {1:.{dgts}e}'.format(Decimal(val), Decimal(odmin), note, dgts=RESULT_DIGITS)
     if math.isnan(val):
         return 'NaN'
     return None
@@ -50,24 +52,24 @@ def mask_value_fn(val, odmin, odmax, note):
 
 def mask_value_short_fn(val, vmin, vmax, dil, note):
     if val < vmin:
-        return '<{:.{dgts}e}'.format(Decimal(vmin * dil), dgts=cc.RESULT_DIGITS)
+        return '<{:.{dgts}e}'.format(Decimal(vmin * dil), dgts=RESULT_DIGITS)
     if val > vmax:
-        return '>{:.{dgts}e}'.format(Decimal(vmax * dil), dgts=cc.RESULT_DIGITS)
+        return '>{:.{dgts}e}'.format(Decimal(vmax * dil), dgts=RESULT_DIGITS)
     if math.isnan(val):
         return 'Backfit failed.'
     return None
 
 
-def mask_sample_cv(df, valid_pts, cv_threshold):
-    cv_min = variation(df['concentration'], ddof=1)
-    mask_idx = []
-    indices = df.index
-    for i in indices:
-        t = df.iloc[x.drop([i], axis=0)]
-        cv = variation(df['concentration'], ddof=1)
-        if cv < cv_min:
-            mask_idx.append(i)
-    return mask_idx
+# def mask_sample_cv(df, valid_pts, cv_threshold):
+#     cv_min = variation(df['concentration'], ddof=1)
+#     mask_idx = []
+#     indices = df.index
+#     for i in indices:
+#         t = df.iloc[x.drop([i], axis=0)]
+#         cv = variation(df['concentration'], ddof=1)
+#         if cv < cv_min:
+#             mask_idx.append(i)
+#     return mask_idx
 
 
 def mask_sample_cv(df_in, valid_pts, cv_threshold):
@@ -110,8 +112,8 @@ def process_sample(samples, stype, sample_num):
     return sample, cv, mean
 
 
-def sample_check(samples, stype, sample_num, cv_thresh=cc.CV_THRESHOLD,
-                 min_valid_pts=cc.MIN_VALID_SAMPLE_POINTS):
+def sample_check(samples, stype, sample_num, cv_thresh=CV_THRESHOLD,
+                 min_valid_pts=MIN_VALID_SAMPLE_POINTS):
     s = process_sample(samples, stype, sample_num)
     valid = True
     note = ''
@@ -155,7 +157,7 @@ def sampleinfo_to_str(info, multiplier=1.0):
         return None;
     
     if info['enum'] == SampleInfo.CV:
-        return 'CV>{:.1f}%({:.1f}%)'.format(cc.CV_THRESHOLD * 100, float(info['value']) * 100.0)
+        return 'CV>{:.1f}%({:.1f}%)'.format(CV_THRESHOLD * 100, float(info['value']) * 100.0)
 
     if info['enum'] == SampleInfo.VALID_PTS:
         return '{} valid point'.format(info['value'])
@@ -169,7 +171,7 @@ def sample_info(samples, stype, sample_num, dr: DataRange, verbose=False):
     if verbose:
         print('OD=[{}, {}]'.format(dr.od[0], dr.od[1]))
         print('OD_fit=[{:.3}, {:.3}]'.format(Decimal(dr.od_fit[0]), Decimal(dr.od_fit[1])))
-        print('SV=[{:.{dgts}e}, {:.{dgts}e}]'.format(Decimal(dr.sv[0]), Decimal(dr.sv[1]), dgts=cc.RESULT_DIGITS))
+        print('SV=[{:.{dgts}e}, {:.{dgts}e}]'.format(Decimal(dr.sv[0]), Decimal(dr.sv[1]), dgts=RESULT_DIGITS))
         print('CB=[{}, {}]'.format(dr.cb[0], dr.cb[1]))
     above_ref_od_max = s['OD_delta'] > dr.od_fit[1]
     below_ref_od_min = s['OD_delta'] < dr.od_fit[0]
@@ -179,8 +181,8 @@ def sample_info(samples, stype, sample_num, dr: DataRange, verbose=False):
             msgdc = {'sign': '>', 'value': Decimal(dr.sv[1]), 'enum': SampleInfo.NAN_HIGH}
         if below_ref_od_min.all():
             msgdc = {'sign': '<', 'value': Decimal(dr.sv[0]), 'enum': SampleInfo.NAN_LOW}
-    elif sc['cv'] > cc.CV_THRESHOLD:
-        msgdc = {'sign': '>{:.2f}'.format(cc.CV_THRESHOLD), 'value': sc['cv'], 'enum': SampleInfo.CV}
+    elif sc['cv'] > CV_THRESHOLD:
+        msgdc = {'sign': '>{:.2f}'.format(CV_THRESHOLD), 'value': sc['cv'], 'enum': SampleInfo.CV}
     elif not s['mask_reason'].isna().all():
         t = s[['OD_delta', 'plate_layout_dil', 'concentration', 'backfit']]
         t_not_na = t[~t['backfit'].isna()]
@@ -190,7 +192,7 @@ def sample_info(samples, stype, sample_num, dr: DataRange, verbose=False):
         elif t_not_na['OD_delta'].min() > dr.od_fit[1]:
             msgdc = {'sign': '>', 'value': Decimal(dr.sv[1] * sc['sample']['plate_layout_dil'].max()), 'enum': SampleInfo.HIGH}
     
-    if sc['valid_pts'] < cc.MIN_VALID_SAMPLE_POINTS and sc['valid_pts'] != 0:
+    if sc['valid_pts'] < MIN_VALID_SAMPLE_POINTS and sc['valid_pts'] != 0:
         msgdc = {'sign': '', 'value': sc['valid_pts'], 'enum': SampleInfo.VALID_PTS}
 
     del sc['sample']
@@ -209,19 +211,19 @@ def final_sample_info(all_info, pre_dilution):
     msg = ''
     valid_ex = False
     if info['enum'] == SampleInfo.NAN_HIGH:
-        msg = '>{:.{dgts}e}'.format(info['value'] * pre_dilution, dgts=cc.RESULT_DIGITS)
-    elif info['enum'] == SampleInfo.NAN_LOW and pre_dilution <= cc.PRE_DILUTION_THRESHOLD:
+        msg = '>{:.{dgts}e}'.format(info['value'] * pre_dilution, dgts=RESULT_DIGITS)
+    elif info['enum'] == SampleInfo.NAN_LOW and pre_dilution <= PRE_DILUTION_THRESHOLD:
         valid_ex = True
-        msg = '<{:.{dgts}e}'.format(info['value'] * pre_dilution, dgts=cc.RESULT_DIGITS)
+        msg = '<{:.{dgts}e}'.format(info['value'] * pre_dilution, dgts=RESULT_DIGITS)
     elif info['enum'] == SampleInfo.HIGH:
-        msg = '>{:.{dgts}e}'.format(info['value'] * pre_dilution, dgts=cc.RESULT_DIGITS)
+        msg = '>{:.{dgts}e}'.format(info['value'] * pre_dilution, dgts=RESULT_DIGITS)
     elif info['enum'] == SampleInfo.LOW:
-        msg = '<{:.{dgts}e}'.format(info['value'] * pre_dilution, dgts=cc.RESULT_DIGITS)
+        msg = '<{:.{dgts}e}'.format(info['value'] * pre_dilution, dgts=RESULT_DIGITS)
         valid_ex = True
     elif info['enum'] == SampleInfo.VALID_PTS:
         msg = '{} valid point'.format(all_info['valid_pts'])
     elif info['enum'] == SampleInfo.CV:
-        msg = 'CV>{:.1f}%({:.1f}%)'.format(cc.CV_THRESHOLD * 100.0, info['value'] * 100.0)
+        msg = 'CV>{:.1f}%({:.1f}%)'.format(CV_THRESHOLD * 100.0, info['value'] * 100.0)
     else:
         msg = ''
         valid_ex = True
@@ -254,7 +256,7 @@ def generate_results(df_data, datarange):
 
 
 def data_range(ref, popt):
-    bf = fit.backfit(ref, popt)
+    bf = backfit(ref, popt)
 
     od_min = bf['Optical density'].min()
     od_max = bf['Optical density'].max()
@@ -275,8 +277,8 @@ def data_range(ref, popt):
 
 
 def apply_fit(df, popt):
-    df.loc[:, ['concentration']] = df.apply(lambda x: fit.conc_func(x['OD_delta'], x['plate_layout_dil'], *popt), axis=1)
-    df.loc[:, ['backfit']] = df.apply(lambda x: fit.inv_func(x['OD_delta'], *popt), axis=1)
+    df.loc[:, ['concentration']] = df.apply(lambda x: conc_func(x['OD_delta'], x['plate_layout_dil'], *popt), axis=1)
+    df.loc[:, ['backfit']] = df.apply(lambda x: inv_func(x['OD_delta'], *popt), axis=1)
 
     return df
 
@@ -299,12 +301,12 @@ def mask_sample(df, dr):
     
     # mask samples for CV < threshold, controll is considered normal sample
     sample = get_sample(df, 'k', 1)
-    mask_idx, _, _ = mask_sample_cv(sample, cc.MIN_VALID_SAMPLE_POINTS, cc.CV_THRESHOLD)
+    mask_idx, _, _ = mask_sample_cv(sample, MIN_VALID_SAMPLE_POINTS, CV_THRESHOLD)
     df.loc[mask_idx, ['mask_reason']] = "cv-masked"
 
     for i in sample_numbers(df):
         sample = get_sample(df, 's', i)
-        mask_idx, _, _ = mask_sample_cv(sample, cc.MIN_VALID_SAMPLE_POINTS, cc.CV_THRESHOLD)
+        mask_idx, _, _ = mask_sample_cv(sample, MIN_VALID_SAMPLE_POINTS, CV_THRESHOLD)
         df.loc[mask_idx, ['mask_reason']] = "cv-masked"
 
     return df

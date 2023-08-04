@@ -1,7 +1,8 @@
 from os import path
-from reportmain import report_plate
-from mkinout import make_output_paths, basename_from_inputdir, parse_dir_name
-from mkinout import find_analysis, parse_photometer_filename, make_input_analysis
+
+from .reportmain import report_plate
+from .mkinout import make_output_paths, basename_from_inputdir, parse_dir_name
+from .mkinout import find_analysis, parse_photometer_filename, make_input_analysis
 
 
 def gen_report_raw(worklist, params, layout, reference_conc, working_dir):

@@ -1,12 +1,11 @@
-from reportmd import format_results
-import constants as cc
+from .constants import CV_DIGITS
 
 
 def plate_section_ex(df, plate):
     # df is formatted!
     md = f'### Plate {plate}\n\n'
 
-    md += df.to_markdown(floatfmt="#.{}f".format(cc.CV_DIGITS))
+    md += df.to_markdown(floatfmt="#.{}f".format(CV_DIGITS))
     md += '\n\n'
     md += '\* sample will be retested\n\n'
 
