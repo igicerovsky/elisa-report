@@ -64,11 +64,11 @@ def main_report(working_dir, txt_input, docxa:bool = True, docxr:bool = False, p
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("workdir", help="working directory of an experiment", default=None)
-    parser.add_argument('--csv', action='store_true', help="use *.txt files as input")
+    parser.add_argument('--calc', action='store_true', help="use calc files as input")
 
     args = parser.parse_args()
     working_dir = args.workdir
-    txt_input = not args.csv
+    txt_input = not args.calc
 
     main_report(working_dir, txt_input)
 

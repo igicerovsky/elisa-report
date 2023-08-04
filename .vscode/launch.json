@@ -12,8 +12,7 @@
             "console": "integratedTerminal",
             "justMyCode": true,
             "args": [
-                "-d",
-                "./reports/230426_AAV9-ELISA_igi_GN004240-033"
+                "./reports/export/230801_AAV9-ELISA_sey_GN004240-053"
             ]
         }
     ]
