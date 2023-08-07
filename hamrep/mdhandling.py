@@ -7,7 +7,7 @@ from .mkinout import parse_dir_name
 
 
 PDFLATEX_EXE = 'c:/Users/hwn6193/AppData/Local/Programs/MiKTeX/miktex/bin/x64/pdflatex.exe'
-REFERENCE_DOCX = 'C:/work/report-gen/custom-reference.docx'
+REFERENCE_DOCX = './data/custom-reference.docx'
 PANDOC_PATH = 'c:/work/pandoc/pandoc'
 
 

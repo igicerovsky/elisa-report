@@ -2,13 +2,13 @@ from os import path
 import warnings
 from scipy.optimize import OptimizeWarning
 import subprocess
-from hamreport.sample import make_concentration
-from hamreport.worklist import read_worklist, check_worklist
-from hamreport.readdata import read_params
-from hamreport.reportmain import report_plate, check_report_crc
-from hamreport.mkinout import make_output_paths, basename_from_inputdir, parse_dir_name, make_input_analysis, make_input_paths
-from hamreport.readdata import read_layouts
-from hamreport.reportgen import gen_report_calc
+from hamrep.sample import make_concentration
+from hamrep.worklist import read_worklist, check_worklist
+from hamrep.readdata import read_params
+from hamrep.reportmain import report_plate, check_report_crc
+from hamrep.mkinout import make_output_paths, basename_from_inputdir, parse_dir_name, make_input_analysis, make_input_paths
+from hamrep.readdata import read_layouts
+from hamrep.reportgen import gen_report_calc
 
 
 warnings.simplefilter('ignore', RuntimeWarning)

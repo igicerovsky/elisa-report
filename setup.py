@@ -7,7 +7,7 @@ LONG_DESCRIPTION = 'Genrate report from Hamilton potometer output'
 # Setting up
 setup(
        # the name must match the folder name 'verysimplemodule'
-        name="hamreport", 
+        name="hamrep", 
         version=VERSION,
         author="Igor Cerovsky",
         author_email="<igor.cerovsky@takeda.com>",
@@ -17,7 +17,7 @@ setup(
         include_package_data=True,
         install_requires=[], # add any additional packages that 
         # needs to be installed along with your package.
-        
+    
         keywords=['python', 'hamilton', 'report'],
         classifiers= [
             "Development Status :: 3 - Alpha",

@@ -33,3 +33,7 @@ Examples:
 ### Running with exported `txt` data
 
 `python report_gen.py ./DIR_NAME`
+
+## Buld distribution of `hamrep`
+
+Exwcute `python -m build --sdist --wheel` :)
