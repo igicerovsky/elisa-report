@@ -11,7 +11,7 @@ REFERENCE_DOCX = './data/custom-reference.docx'
 PANDOC_PATH = 'c:/work/pandoc/pandoc'
 
 
-def export_palte_reports(reports, generate_plate_docx, generate_plate_pdf):
+def export_plate_reports(reports, generate_plate_docx, generate_plate_pdf):
     for report in reports:
         print('Report for plate {} saved as {}'.format(report['plate'], report['path']))
         save_md(report['path'], report['md'])

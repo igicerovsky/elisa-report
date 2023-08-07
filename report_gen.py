@@ -11,7 +11,7 @@ from hamrep.worklist import read_worklist, check_worklist
 from hamrep.sample import make_concentration
 from hamrep.reportmain import report_plate
 from hamrep.readdata import read_layouts, read_params_json
-from hamrep.mdhandling import export_palte_reports, export_main_report
+from hamrep.mdhandling import export_plate_reports, export_main_report
 import hamrep.reportgen as rg
 
 
@@ -53,7 +53,7 @@ def main_report(working_dir, txt_input, docxa:bool = True, docxr:bool = False, p
 
     if docxa:
         export_main_report(reports, working_dir)
-    export_palte_reports(reports, docxr, pdf)
+    export_plate_reports(reports, docxr, pdf)
 
     for report in reports:
         binr = bytearray(report['md'],'utf8')
