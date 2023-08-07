@@ -2,9 +2,8 @@
 
 ## TODO
 
-- version handling
 - Hamilton computer integration
-
+- decouple pandoc generation code
 - Further review process ???
 - Unit tests
   - modules
@@ -17,6 +16,9 @@
 
 ### KW32-08.08.2023
 
+- Pythom module distribution package
+- version handling
+- dummy test script for Hamilton integration check
 - `__` remove in `txt` file
 - Hamilton new version deployment
 - Use original photometer output

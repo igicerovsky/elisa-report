@@ -10,6 +10,10 @@ Install `pandoc`
 
 Install `latex` from any of the [distributions](https://www.latex-project.org/get/#tex-distributions)  
 
+## Buld distribution of `hamrep`
+
+Execute `python -m build --sdist --wheel` :)
+
 ## Running the script
 
 `DIR_NAME` is path to directory/folder with Hamilton analysis, e.g. `C:/work/report-gen/reports/230426_AAV9-ELISA_igi_GN004240-033`  
@@ -34,6 +38,3 @@ Examples:
 
 `python report_gen.py ./DIR_NAME`
 
-## Buld distribution of `hamrep`
-
-Exwcute `python -m build --sdist --wheel` :)
