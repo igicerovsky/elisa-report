@@ -38,3 +38,8 @@ Examples:
 
 `python report_gen.py ./DIR_NAME`
 
+## HAMILTON
+
+Folder with Hamilton related stuff.
+
+[Hamilton](<C:\Users\hwn6193\OneDrive - Takeda\2 Geräte\Hamilton_System>)

@@ -1,0 +1,5 @@
+{
+    "pandocbin": "c:/work/pandoc/pandoc",
+    "pdflatexbin": "c:/Users/hwn6193/AppData/Local/Programs/MiKTeX/miktex/bin/x64/pdflatex",
+    "referencedocx": "./data/custom-reference.docx"
+}

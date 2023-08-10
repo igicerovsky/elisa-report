@@ -2,8 +2,7 @@
 
 ## TODO
 
-- Hamilton computer integration
-- decouple pandoc generation code
+- Add exception handlind for pandoc calls
 - Further review process ???
 - Unit tests
   - modules
@@ -13,6 +12,15 @@
 ## Review
 
 - Sample mean multiply (Andrea) in sample overview; add if easy  
+
+### KW33-15.08.2023
+
+- package `hamrep` setup and versionning (including module refactoring)
+- Hamilton computer integration
+  - command line run on data produced by Hamilton
+  - intergration into Hamilton software
+- decouple pandoc generation code (`./data/config.json` contains paths to pandoc, latex, reference doc)
+- README.md update
 
 ### KW32-08.08.2023
 

@@ -56,10 +56,3 @@ def test_e2e():
                 check_report_crc(report['md'], crc)
             except Exception as e:
                 print('{} for {}'.format(e, report['path']))
-
-    for report in reports:
-        report_file_path = path.abspath(report['path'])
-        report_dir = path.dirname(path.abspath(report_file_path))
-        docx_path = path.splitext(report_file_path)[0] + '.docx'
-        print('Generating Word {} for {}'.format(docx_path, report_file_path))
-        subprocess.run(['c:/work/pandoc/pandoc', '-o', docx_path, '-f', 'markdown', '-t', 'docx', '--resource-path', report_dir, report_file_path])

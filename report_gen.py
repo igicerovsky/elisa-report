@@ -1,18 +1,19 @@
 from os import path
 import argparse
 import warnings
+import json
 
 from scipy.optimize import OptimizeWarning
 from zlib import crc32
 
 from hamrep.readdata import read_params
-from hamrep.mkinout import make_input_paths, make_output_paths, make_input_analysis, basename_from_inputdir, parse_dir_name
+from hamrep.mkinout import make_input_paths
 from hamrep.worklist import read_worklist, check_worklist
 from hamrep.sample import make_concentration
-from hamrep.reportmain import report_plate
 from hamrep.readdata import read_layouts, read_params_json
-from hamrep.mdhandling import export_plate_reports, export_main_report
+from hamrep.mdhandling import md2docx, md2pdf, export_main_report
 import hamrep.reportgen as rg
+from hamrep.reportmd import save_md
 
 
 WARNING_DISABLE = True
@@ -31,6 +32,13 @@ if WARNING_DISABLE:
 
 def main_report(working_dir, txt_input, docxa:bool = True, docxr:bool = False, pdf:bool = True):
     print(f'Processing directory {working_dir}')
+
+    with open(path.join(DATA_DIR, "config.json")) as json_file:
+        jd = json.load(json_file)
+        reference_doc = jd['referencedocx']
+        pdflatex_bin = jd['pdflatexbin']
+        pandoc_bin = jd['pandocbin']
+
     input_files = make_input_paths(working_dir)
     worklist_file_path = input_files['worklist']
     params_file_path = input_files['params']
@@ -52,13 +60,25 @@ def main_report(working_dir, txt_input, docxa:bool = True, docxr:bool = False, p
                                             reference_conc, working_dir)
 
     if docxa:
-        export_main_report(reports, working_dir)
-    export_plate_reports(reports, docxr, pdf)
+        export_main_report(reports, working_dir, pandoc_bin, reference_doc)
 
     for report in reports:
+        print('Report for plate {} saved as {}'.format(report['plate'], report['path']))
+        save_md(report['path'], report['md'])
+
+        # TODO: save unformatted results
+        xlsx_file = path.splitext(report['path'])[0] + '_results.xlsx'
+        report['df'].to_excel(xlsx_file)
+
+        if docxr:
+            md2docx(pandoc_bin, reference_doc, report['path'])
+        if pdf:
+            md2pdf(pandoc_bin, pdflatex_bin, report['path'])
+
         binr = bytearray(report['md'],'utf8')
         t = crc32(binr)
         print("CRC for '{}' is {}".format(report['path'], t))
+
     print('Done.')
 
 
