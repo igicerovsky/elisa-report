@@ -35,9 +35,9 @@ def main_report(working_dir, txt_input, docxa:bool = True, docxr:bool = False, p
 
     with open(path.join(DATA_DIR, "config.json")) as json_file:
         jd = json.load(json_file)
-        reference_doc = jd['referencedocx']
-        pdflatex_bin = jd['pdflatexbin']
-        pandoc_bin = jd['pandocbin']
+        reference_doc = jd['reference_docx']
+        pdflatex_bin = jd['pdflatex_bin']
+        pandoc_bin = jd['pandoc_bin']
 
     input_files = make_input_paths(working_dir)
     worklist_file_path = input_files['worklist']
@@ -54,7 +54,7 @@ def main_report(working_dir, txt_input, docxa:bool = True, docxr:bool = False, p
                         path.join(DATA_DIR, PLATE_LAYOUT_DIL_ID))
 
     if txt_input:
-        reports =rg. gen_report_raw(wl_raw, params, lay, reference_conc, working_dir)
+        reports = rg. gen_report_raw(wl_raw, params, lay, reference_conc, working_dir)
     else:
         reports = rg.gen_report_calc(valid_plates, wl_raw, params, lay,
                                             reference_conc, working_dir)
@@ -86,6 +86,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("workdir", help="working directory of an experiment", default=None)
     parser.add_argument('--calc', action='store_true', help="use calc files as input")
+    parser.add_argument('--cfg', help="use calc files as input", default='./data/config.json')
 
     args = parser.parse_args()
     working_dir = args.workdir
