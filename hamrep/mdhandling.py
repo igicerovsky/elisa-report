@@ -10,21 +10,27 @@ def md2docx(pandoc_bin, reference_doc, md_filepath):
     docx_path = path.splitext(md_filepath)[0] + '.docx'
     print('Generating Word {} from {}'.format(docx_path, md_filepath))
     report_dir = path.dirname(path.abspath(md_filepath))
-    subprocess.run([pandoc_bin, '-o', docx_path,
-                        '-f', 'markdown', '-t', 'docx',
-                        '--resource-path', report_dir,
-                        '--reference-doc', reference_doc,
-                        md_filepath])
+    try:
+        subprocess.run([pandoc_bin, '-o', docx_path,
+                            '-f', 'markdown', '-t', 'docx',
+                            '--resource-path', report_dir,
+                            '--reference-doc', reference_doc,
+                            md_filepath])
+    except Exception as e:
+        print(e)
 
 
 def md2pdf(pandoc_bin, pdflatex_bin, md_filepath):
     pdf_path = path.splitext(md_filepath)[0] + '.pdf'
     print(f'Generating PDF {pdf_path} from {md_filepath}')
     report_dir = path.dirname(path.abspath(md_filepath))
-    subprocess.run([pandoc_bin, '-o', pdf_path,
-                    '--resource-path', report_dir,
-                    '--pdf-engine', pdflatex_bin,
-                    md_filepath])
+    try:
+        subprocess.run([pandoc_bin, '-o', pdf_path,
+                        '--resource-path', report_dir,
+                        '--pdf-engine', pdflatex_bin,
+                        md_filepath])
+    except Exception as e:
+        print(e)
 
 
 def export_main_report(reports, working_dir, pandoc_bin, reference_doc):
