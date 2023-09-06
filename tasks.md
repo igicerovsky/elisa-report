@@ -1,8 +1,8 @@
+
 # Photometer Report Generation Tasks - Python
 
 ## TODO
 
-- Add exception handlind for pandoc calls
 - Further review process ???
 - Unit tests
   - modules
@@ -12,6 +12,13 @@
 ## Review
 
 - Sample mean multiply (Andrea) in sample overview; add if easy  
+
+## Done
+
+### KW36-04.09.2023 
+
+- Word formatting, reference document for `pandoc`
+- Exception handling for pandoc calls
 
 ### KW33-15.08.2023
 

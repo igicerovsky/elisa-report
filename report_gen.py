@@ -66,10 +66,6 @@ def main_report(working_dir, txt_input, docxa:bool = True, docxr:bool = False, p
         print('Report for plate {} saved as {}'.format(report['plate'], report['path']))
         save_md(report['path'], report['md'])
 
-        # TODO: save unformatted results
-        xlsx_file = path.splitext(report['path'])[0] + '_results.xlsx'
-        report['df'].to_excel(xlsx_file)
-
         if docxr:
             md2docx(pandoc_bin, reference_doc, report['path'])
         if pdf:
