@@ -136,6 +136,21 @@ def fit_sheet(popt, pcov, n, confidence_interval=95.0):
 
 
 def backfit(df, param):
+    """Computes backfit for reference dataframe
+
+    Parameters
+    ----------
+    df : pandas.dataframe
+        datframe with reference cutve
+    param : array
+        fit parameters
+
+    Returns
+    -------
+    pandas.dataframe
+        backfit dataframe for report
+    """
+
     bf = df[['OD_delta', 'plate_layout_conc']].copy()
     bf = bf.reindex(['plate_layout_conc', 'OD_delta'], axis=1)
     bf.rename(columns={
