@@ -3,6 +3,8 @@
 
 ## TODO
 
+- Pre-dilution shall be read from separate file and used in computation of final results (read in `make_final` function?)
+- Blank sample `b` not in `*_report_plate[n].md`
 - Further review process ???
 - Unit tests
   - modules

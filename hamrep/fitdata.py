@@ -1,3 +1,9 @@
+"""Math & Fit functions for nonlinear
+
+Module containing math from '220726_SOP_Capsid-AAV9-ELISA_V4' 
+to fit the reference data and compute bacfit for analysis data 
+as well as exporting data to Pandas dataframe object.
+"""
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
