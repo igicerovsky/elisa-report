@@ -15,22 +15,27 @@ def make_final(sl, wl_raw, plate_id):
     wl, cd = worklist_sample(wl_raw, plate_id)
 
     final = pd.concat([wl, sl], axis=1)
-    final.loc[:, ['Result [cp/ml]']] = final.apply(lambda x: x['Reader Data [cp/ml]'] * x[cd['Dilution']], axis=1)
+    final.loc[:, ['Result [cp/ml]']] = final.apply(
+        lambda x: x['Reader Data [cp/ml]'] * x[cd['Dilution']], axis=1)
     final.loc[:, ['CV [%]']] = final.apply(lambda x: x['CV [%]'] * 100, axis=1)
     # reorder columns
-    final = final.reindex([cd['SampleID'], cd['Dilution'], cd['Viscosity'], 'Reader Data [cp/ml]', 'Result [cp/ml]', 'CV [%]', 'Valid', 'info'], axis=1)
-    final.rename(columns={cd['SampleID']: 'Sample Name', cd['Dilution']: 'Pre-dilution'}, inplace=True)
+    final = final.reindex([cd['SampleID'], cd['Dilution'], cd['Viscosity'],
+                          'Reader Data [cp/ml]', 'Result [cp/ml]', 'CV [%]', 'Valid', 'info'], axis=1)
+    final.rename(columns={cd['SampleID']: 'Sample Name',
+                 cd['Dilution']: 'Pre-dilution'}, inplace=True)
     final.drop('Viscosity_{}'.format(plate_id), axis=1, inplace=True)
     final.index.name = 'Sample type'
-    final.loc[:, ['info_ex']] = final.apply(lambda x: final_sample_info(x['info'], x['Pre-dilution'])[0], axis=1)
-    final.loc[:, ['valid_ex']] = final.apply(lambda x: final_sample_info(x['info'], x['Pre-dilution'])[1], axis=1)
+    final.loc[:, ['info_ex']] = final.apply(
+        lambda x: final_sample_info(x['info'], x['Pre-dilution'])[0], axis=1)
+    final.loc[:, ['valid_ex']] = final.apply(
+        lambda x: final_sample_info(x['info'], x['Pre-dilution'])[1], axis=1)
     return final
 
 
 # Header
 
 def header_section(dc, plate_id, msg):
-    md =  '## Header\n\n'
+    md = '## Header\n\n'
 
     dt = datetime.strptime(dc['date'], "%y%m%d")
     md += 'Date: **{}**  \n'.format(dt.strftime('%d %b %Y'))
@@ -46,7 +51,7 @@ def header_section(dc, plate_id, msg):
 # Parameters
 
 def param_section(df_params):
-    md =  '## Parameters\n\n'
+    md = '## Parameters\n\n'
 
     md += 'Parameters:\n\n' + df_params.to_markdown() + '\n\n'
 
@@ -56,13 +61,13 @@ def param_section(df_params):
 # Fit reference curve
 
 def fit_section_md(df_ref, popt, pcov, out_dir):
-    x = df_ref.reset_index(level=[0,1])['plate_layout_conc']
-    y = df_ref.reset_index(level=[0,1])['OD_delta']
+    x = df_ref.reset_index(level=[0, 1])['plate_layout_conc']
+    y = df_ref.reset_index(level=[0, 1])['OD_delta']
     fit_result = fit_reference_auto_rm(x, y)
     result_img = path.join(out_dir, 'fit.svg')
     fit_image(x, y, fit_result[0][0], fit_result[0][1], result_img,
-      confidence='student-t', rm_index=fit_result[1], verbose=False, show=False)
- 
+              confidence='student-t', rm_index=fit_result[1], verbose=False, show=False)
+
     n = len(x) - len(fit_result[1])
     df_fit = fit_sheet(popt, pcov, n)
 
@@ -98,20 +103,28 @@ def fit_section_md(df_ref, popt, pcov, out_dir):
 # Sample section
 
 def sample_to_md(dc):
-    s_view = dc['sample'][['OD_delta', 'plate_layout_dil', 'concentration', 'mask_reason']]
-    md = "### Sample: {0} '{1}' {2}\n\n".format(SAMPLE_TYPES[dc['type']], dc['type'], dc['num'])
+    s_view = dc['sample'][['OD_delta', 'plate_layout_dil',
+                           'concentration', 'mask_reason']]
+    md = "### Sample: {0} '{1}' {2}\n\n".format(
+        SAMPLE_TYPES[dc['type']], dc['type'], dc['num'])
     md += s_view.to_markdown()
     md += '\n\n'
     md += "CV = {:2.3} [%]  \n".format(100 * dc['cv'])
     md += "mean = {:.4} [cp/ml]  \n".format(dc['mean'])
     md += "valid = {}  \n".format(dc['valid'])
     if dc['note']:
-         md += "note: {}  ".format(dc['note'])
+        md += "note: {}  ".format(dc['note'])
 
     return md
 
+
+def blank_to_md():
+    md = '### Blank'
+    return md
+
+
 def sample_section_md(samples, reference, dr, img_dir):
-    md = '## Sample evaluation\n\n' 
+    md = '## Sample evaluation\n\n'
     k = sample_check(samples, 'k', 1)
     md += sample_to_md(k)
     md += '\n'
@@ -134,11 +147,13 @@ def sample_section_md(samples, reference, dr, img_dir):
         md += '\n'
         sfile = 'sample_{0:02d}.svg'.format(i)
         img_file = path.join(img_dir, sfile)
-        sample_img(samples, reference, stype, i, img_file=img_file, show=False, verbose=False)
+        sample_img(samples, reference, stype, i,
+                   img_file=img_file, show=False, verbose=False)
         md += '![{0}](./img/{0})\n'.format(sfile)
         if i != sample_n[-1]:
             md += '\n'
     return md
+
 
 def save_md(file_path, md_txt):
     try:
@@ -171,10 +186,13 @@ def format_cv(x):
 
 
 def format_results(df):
-    df.loc[:, ['Comment']] = df.apply(lambda x: final_sample_info(x['info'], x['Pre-dilution'])[0], axis=1)
+    df.loc[:, ['Comment']] = df.apply(lambda x: final_sample_info(
+        x['info'], x['Pre-dilution'])[0], axis=1)
     df.loc[:, ['CV [%]']] = df.apply(lambda x: format_cv(x['CV [%]']), axis=1)
-    df.loc[:, ['Result [cp/ml]']] = df.apply(lambda x: format_results_val(x), axis=1)
-    df.drop(['info', 'Valid', 'Reader Data [cp/ml]', 'info_ex', 'valid_ex'], axis=1, inplace=True)
+    df.loc[:, ['Result [cp/ml]']
+           ] = df.apply(lambda x: format_results_val(x), axis=1)
+    df.drop(['info', 'Valid', 'Reader Data [cp/ml]',
+            'info_ex', 'valid_ex'], axis=1, inplace=True)
 
     return df
 

@@ -17,7 +17,7 @@
 
 ## Done
 
-### KW36-04.09.2023 
+### KW36-04.09.2023
 
 - Word formatting, reference document for `pandoc`
 - Exception handling for pandoc calls
