@@ -7,7 +7,7 @@ from .reportmd import header_section, make_final, result_section, fit_section_md
 
 
 def check_report_crc(report: str, crc):
-    res = bytearray(report,'utf8')
+    res = bytearray(report, 'utf8')
     t = crc32(res)
 
     if t != crc:
@@ -23,9 +23,10 @@ def report_plate(plate_id, worklist, params, layouts, reference_conc,
 
     dfg = init_samples(df_all, reference_conc)
 
-    ref = dfg.loc[(dfg['plate_layout_ident']=='r')]
-    x = ref.reset_index(level=[0,1])['plate_layout_conc']
-    y = ref.reset_index(level=[0,1])['OD_delta']
+    ref = dfg.loc[(dfg['plate_layout_ident'] == 'r')]
+    blank = df_all.loc[(df_all['plate_layout_ident'] == 'b')]
+    x = ref.reset_index(level=[0, 1])['plate_layout_conc']
+    y = ref.reset_index(level=[0, 1])['OD_delta']
     fit = fit_reference_auto_rm(x, y, verbose=False)
     popt = fit[0][0]
     pcov = fit[0][1]
@@ -55,10 +56,9 @@ This a PoC for automatic report generation...\n\n'''
     img_dir = os.path.join(report_dir, 'img')
     os.makedirs(report_dir, exist_ok=True)
     os.makedirs(img_dir, exist_ok=True)
-    report += fit_section_md(ref, popt, pcov, img_dir) # TODO: !!! global fit_result[3]
+    # TODO: !!! global fit_result[3]
+    report += fit_section_md(ref, popt, pcov, img_dir)
 
-    report += sample_section_md(dfg, ref, dr, img_dir)
+    report += sample_section_md(dfg, ref, blank, dr, img_dir)
 
     return report, final
-
-

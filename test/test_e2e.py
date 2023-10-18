@@ -5,8 +5,8 @@ import subprocess
 from hamrep.sample import make_concentration
 from hamrep.worklist import read_worklist, check_worklist
 from hamrep.readdata import read_params
-from hamrep.reportmain import report_plate, check_report_crc
-from hamrep.mkinout import make_output_paths, basename_from_inputdir, parse_dir_name, make_input_analysis, make_input_paths
+from hamrep.reportmain import check_report_crc
+from hamrep.mkinout import make_input_paths
 from hamrep.readdata import read_layouts
 from hamrep.reportgen import gen_report_calc
 
@@ -25,15 +25,13 @@ def test_e2e():
 
     DATA_DIR = './data'
 
-
     PLATE_LAYOUT_ID = 'plate_layout_ident.csv'
     PLATE_LAYOUT_NUM = 'plate_layout_num.csv'
     PLATE_LAYOUT_DIL_ID = 'plate_layout_dil_id.csv'
 
-
     lay = read_layouts(path.join(DATA_DIR, PLATE_LAYOUT_ID),
-                        path.join(DATA_DIR, PLATE_LAYOUT_NUM),
-                        path.join(DATA_DIR, PLATE_LAYOUT_DIL_ID))
+                       path.join(DATA_DIR, PLATE_LAYOUT_NUM),
+                       path.join(DATA_DIR, PLATE_LAYOUT_DIL_ID))
 
     wl_raw = read_worklist(WORKLIST_FILE_PATH)
     valid_plates = check_worklist(wl_raw)
@@ -46,7 +44,7 @@ def test_e2e():
     reference_conc = make_concentration(REF_VAL_MAX, DILUTIONS)
 
     reports = gen_report_calc(valid_plates, wl_raw, params, lay,
-                                            reference_conc, working_dir)
+                              reference_conc, working_dir)
 
     CHECK_REPORT_CRC = True
     REPORT_PLATES_CRC = [864111381, 3242056329]

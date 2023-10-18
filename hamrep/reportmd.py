@@ -107,6 +107,7 @@ def sample_to_md(dc):
                            'concentration', 'mask_reason']]
     md = "### Sample: {0} '{1}' {2}\n\n".format(
         SAMPLE_TYPES[dc['type']], dc['type'], dc['num'])
+    s_view.index.name = 'Well'
     md += s_view.to_markdown()
     md += '\n\n'
     md += "CV = {:2.3} [%]  \n".format(100 * dc['cv'])
@@ -118,13 +119,18 @@ def sample_to_md(dc):
     return md
 
 
-def blank_to_md():
-    md = '### Blank'
+def blank_to_md(blank):
+    md = '### Blank\n\n'
+    blank.index.name = 'Well'
+    md += blank[['OD_delta', 'OD_450', 'OD_630']].to_markdown()
+    md += '\n'
     return md
 
 
-def sample_section_md(samples, reference, dr, img_dir):
+def sample_section_md(samples, reference, blank, dr, img_dir):
     md = '## Sample evaluation\n\n'
+    md += blank_to_md(blank)
+    md += '\n'
     k = sample_check(samples, 'k', 1)
     md += sample_to_md(k)
     md += '\n'
