@@ -198,10 +198,12 @@ def sample_info(samples, stype, sample_num, dr: DataRange, verbose=False):
 
         if t_not_na['OD_delta'].max() < dr.od_fit[0]:
             msgdc = {'sign': '<', 'value': Decimal(
-                dr.sv[0] * sc['sample']['plate_layout_dil'].min()), 'enum': SampleInfo.LOW}
+                dr.sv[0]), 'enum': SampleInfo.LOW}
+            # dr.sv[0] * sc['sample']['plate_layout_dil'].min()), 'enum': SampleInfo.LOW}
         elif t_not_na['OD_delta'].min() > dr.od_fit[1]:
             msgdc = {'sign': '>', 'value': Decimal(
-                dr.sv[1] * sc['sample']['plate_layout_dil'].max()), 'enum': SampleInfo.HIGH}
+                # dr.sv[1] * sc['sample']['plate_layout_dil'].max()), 'enum': SampleInfo.HIGH}
+                dr.sv[1]), 'enum': SampleInfo.HIGH}
 
     if sc['valid_pts'] < MIN_VALID_SAMPLE_POINTS and sc['valid_pts'] != 0:
         msgdc = {'sign': '',
