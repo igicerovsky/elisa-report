@@ -1,7 +1,6 @@
 from os import path
 import warnings
 from scipy.optimize import OptimizeWarning
-import subprocess
 from hamrep.sample import make_concentration
 from hamrep.worklist import read_worklist, check_worklist
 from hamrep.readdata import read_params
@@ -16,7 +15,7 @@ warnings.simplefilter('ignore', OptimizeWarning)
 warnings.filterwarnings('ignore', category=UserWarning, module='openpyxl')
 
 
-def test_e2e():
+def test_e2e_calc():
     working_dir = './reports/230426_AAV9-ELISA_igi_GN004240-033'
 
     input_files = make_input_paths(working_dir)
