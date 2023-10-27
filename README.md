@@ -39,6 +39,27 @@ Examples:
 `230426_GN004240-033_-_worklist-ELISA.xls`  
 `230426_GN004240-033_-_AAV9-ELISA_Parameters.csv`
 
+### Parameters file `params.json`
+
+Parameters file `params.json` is a json format file containing configurable parameters. It could be located in either default folder `./data` or in local analysis folder. If the file located in the **analysis** folder it has precedence (is meant to be modified by user). Though, if the parameters file is not found in analysis folder it is read from the default location in the `./data` folder.  
+The file shall contain entries listed below.
+
+```json
+{
+  "referenceValueAAV9": 1.7954e+10,
+  "referenceValueAAV8": 2.1167E+10,
+  "referenceValue": 1.0E+10,
+  "dilutions": [
+    1.0,
+    2.0,
+    4.0,
+    8.0,
+    16.0,
+    32.0,
+    64.0
+  ]
+}```
+
 ### Running with exported photometer `txt` data
 
 This is a prefered way to run the preocessing of the results and following report generation.
@@ -48,6 +69,8 @@ python report_gen.py ./DIR_NAME
 ```
 
 ### Running with pre-calculated `xls` data
+
+This approach is deprecated, and will be removed in future versions.
 
 ```bash
 python report_gen.py ./DIR_NAME --calc

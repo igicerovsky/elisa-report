@@ -159,9 +159,20 @@ def read_params_json(working_dir, data_dir, params_filename):
         raise Exception(
             f'Parameters file not found {params_path_local}, {params_path_default}')
 
+    ref_type = None
+    if working_dir.lower().find('aav9') != -1:
+        ref_type = 'referenceValueAAV9'
+        print('Reading reference value for AAV9.')
+    elif working_dir.lower().find('aav8') != -1:
+        print('Reading reference value for AAV8.')
+        ref_type = 'referenceValueAAV8'
+    else:
+        print('Reading custom reference value.')
+        ref_type = 'referenceValue'
+
     with open(params_path_default) as json_file:
         data = json.load(json_file)
         dilutions = data['dilutions']
-        ref_val_max = data['referenceValue']
+        ref_val_max = data[ref_type]
 
     return ref_val_max, dilutions

@@ -3,8 +3,10 @@
 
 ## TODO
 
-- ( >1.436e+13 )* `reports\all\231017_AAV8-ELISA_sey_GN004240-056_v2` where does it come from?
-- Pre-dilution shall be read from separate file and used in computation of final results (read in `make_final` function?)
+- merge documentation from Hamilton computer
+- deployment to Hamilton
+- save final results with `,` decimal delimiter for Andrea
+- ( >1.436e+13 )* ?`reports\all\231017_AAV8-ELISA_sey_GN004240-056_v2` where does it come from?
 - Blank sample `b` not in `*_report_plate[n].md`
   - update unit tests
 - Further review process ???
@@ -19,10 +21,18 @@
 
 ## Done
 
-### KW42-16.09.2023
+### KW43-23.10.2023
+
+- update reading reference values AAV8, AAV9, default
+  - update `parameters.json`
+  - update code
+  - update documentation
+
+### KW42-16.10.2023
 
 - Blank sample `b` not in `*_report_plate[n].md`
   - implementation
+- Pre-dilution shall be read from separate file and used in computation of final results (read in `make_final` function?)
 
 ### KW36-04.09.2023
 
