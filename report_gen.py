@@ -44,7 +44,6 @@ def main_report(working_dir, txt_input, docxa: bool = True, docxr: bool = False,
     params_file_path = input_files['params']
 
     wl_raw = predil_worklist(worklist_file_path)
-    valid_plates = check_worklist(wl_raw)
     params = read_params(params_file_path)
     ref_val_max, dilutions = read_params_json(
         working_dir, DATA_DIR, PARAMS_FILENAME)
@@ -58,6 +57,7 @@ def main_report(working_dir, txt_input, docxa: bool = True, docxr: bool = False,
         reports = rg. gen_report_raw(
             wl_raw, params, lay, reference_conc, working_dir)
     else:
+        valid_plates = check_worklist(wl_raw)
         reports = rg.gen_report_calc(valid_plates, wl_raw, params, lay,
                                      reference_conc, working_dir)
 
