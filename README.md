@@ -42,6 +42,7 @@ Examples:
 ### Parameters file `params.json`
 
 Parameters file `params.json` is a json format file containing configurable parameters. It could be located in either default folder `./data` or in local analysis folder. If the file located in the **analysis** folder it has precedence (is meant to be modified by user). Though, if the parameters file is not found in analysis folder it is read from the default location in the `./data` folder.  
+`referenceValue*` is identified automatically from the `DIR_NAME`. If the `DIR_NAME` contains strin `AAV8` or `AAV8` reference value for given AAV* is used, otherwise a default value `referenceValue` is used. **If default reference value is used, user is responsible to multiply the result correspondlingly.**  
 The file shall contain entries listed below.
 
 ```json
