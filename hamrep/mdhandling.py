@@ -57,7 +57,9 @@ def md2pdf(pandoc_bin, pdflatex_bin, md_filepath):
     print(f'Generating PDF {pdf_path} from {md_filepath}')
     report_dir = path.dirname(path.abspath(md_filepath))
     try:
-        subprocess.run([pandoc_bin, '-o', pdf_path,
+        subprocess.run([pandoc_bin,
+                        '-f', 'markdown-implicit_figures',
+                        '-o', pdf_path,
                         '--resource-path', report_dir,
                         '--pdf-engine', pdflatex_bin,
                         md_filepath])
