@@ -29,6 +29,7 @@
   - new e2e test using `txt` input
 - Blank sample `b` not in `*_report_plate[n].md`
   - update unit tests
+- fix order of images in pdf
 
 ### KW42-16.10.2023
 
