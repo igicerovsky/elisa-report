@@ -45,7 +45,7 @@ def main_report(working_dir, txt_input, docxa: bool = True, docxr: bool = False,
 
     wl_raw = predil_worklist(worklist_file_path)
     params = read_params(params_file_path)
-    ref_val_max, dilutions = read_params_json(
+    ref_val_max, dilutions, limits = read_params_json(
         working_dir, DATA_DIR, PARAMS_FILENAME)
     reference_conc = make_concentration(ref_val_max, dilutions)
 
@@ -55,14 +55,15 @@ def main_report(working_dir, txt_input, docxa: bool = True, docxr: bool = False,
 
     if txt_input:
         reports = rg. gen_report_raw(
-            wl_raw, params, lay, reference_conc, working_dir)
+            wl_raw, params, lay, reference_conc, working_dir, limits)
     else:
         valid_plates = check_worklist(wl_raw)
         reports = rg.gen_report_calc(valid_plates, wl_raw, params, lay,
                                      reference_conc, working_dir)
 
     if docxa:
-        export_main_report(reports, working_dir, pandoc_bin, reference_doc)
+        export_main_report(reports, working_dir, pandoc_bin,
+                           reference_doc, limits)
 
     for report in reports:
         print('Report for plate {} saved as {}'.format(

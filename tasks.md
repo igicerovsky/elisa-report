@@ -19,6 +19,18 @@
 
 ## Done
 
+### KW44-30.10.2023
+
+- Validity limits write to md to section `Evaluation criteria` (according to aav8[9]); final report
+- Validity limits for AAV8
+  - apply to control only
+  - <1.119E+11, 1.648E+11> [cp/ml] (see GN000168-055)
+  - if not valid (*value*); comment `test invalid`
+- Validity limits 3s AAV9
+  - apply to control only
+  - <1.888E+12, 2.703E+12> [cp/ml]
+  - if not valid (*value*); comment `test invalid`
+
 ### KW43-23.10.2023
 
 - update reading reference values AAV8, AAV9, default

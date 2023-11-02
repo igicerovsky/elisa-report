@@ -12,8 +12,8 @@ def plate_section_ex(df, plate):
     return md
 
 
-def assembly(reports, protocol):
-    md =  f'# GT Analytics - Capsid {protocol}\n\nSOP-051200\n\n'
+def assembly(reports, protocol, limits):
+    md = f'# GT Analytics - Capsid {protocol}\n\nSOP-051200\n\n'
 
     md += '## Objective\n\n'
     md += '???-capsid concentration is determined in unknown samples.  \n\n'
@@ -27,7 +27,8 @@ def assembly(reports, protocol):
         md += plate_section_ex(r['df'], r['plate'])
 
     md += '## Evaluation criteria\n\n'
-    md += 'Validity of the assay: Intermediary control sample limits (3s) are: 1,888 - 2,703E+12cp/ml  \n\n'
+    md += 'Validity of the assay: Intermediary control sample limits (3s) are: {:.3e} - {:.3e} cp/ml  \n\n'.format(
+        limits[0], limits[1])
 
     md += '## Comments\n\n'
     md += 'Add comment here...\n'

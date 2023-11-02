@@ -151,6 +151,7 @@ class SampleInfo(str, Enum):
     HIGH = 'value above reference'
     CV = 'CV above threshold'
     VALID_PTS = 'few valid points'
+    LIMITS_3S = 'test invalid'
 
 
 def sampleinfo_to_str(info, multiplier=1.0):
@@ -166,10 +167,14 @@ def sampleinfo_to_str(info, multiplier=1.0):
     if info['enum'] == SampleInfo.VALID_PTS:
         return '{} valid point'.format(info['value'])
 
+    if info['enum'] == SampleInfo.LIMITS_3S:
+        return '{}'.format('test invalid')
+
     return '{}{:.4e}'.format(info['sign'], float(info['value']) * multiplier)
 
 
-def sample_info(samples, stype, sample_num, dr: DataRange, verbose=False):
+def sample_info(samples, stype, sample_num, dr: DataRange,
+                limits: tuple = None, verbose=False):
     s = get_sample(samples, stype, sample_num)
     sc = sample_check(samples, stype, sample_num)
     if verbose:
@@ -209,6 +214,16 @@ def sample_info(samples, stype, sample_num, dr: DataRange, verbose=False):
         msgdc = {'sign': '',
                  'value': sc['valid_pts'], 'enum': SampleInfo.VALID_PTS}
 
+    # if stype == 'k':
+    #     if not limits:
+    #         raise (Exception('Please provide controll limits!'))
+    #     if sc['mean'] < limits[0]:
+    #         msgdc = {'sign': '<',
+    #                  'value': limits[0], 'enum': SampleInfo.LIMITS_3S}
+    #     elif sc['mean'] > limits[1]:
+    #         msgdc = {'sign': '>',
+    #                  'value': limits[1], 'enum': SampleInfo.LIMITS_3S}
+
     del sc['sample']
     del sc['note']
     sc['info'] = msgdc
@@ -244,6 +259,8 @@ def final_sample_info(all_info, pre_dilution):
     elif info['enum'] == SampleInfo.CV:
         msg = 'CV>{:.1f}%({:.1f}%)'.format(
             CV_THRESHOLD * 100.0, info['value'] * 100.0)
+    elif info['enum'] == SampleInfo.LIMITS_3S:
+        msg = '{}'.format('test invalid')
     else:
         msg = ''
         valid_ex = True
@@ -251,12 +268,12 @@ def final_sample_info(all_info, pre_dilution):
     return msg, valid_ex
 
 
-def generate_results(df_data, datarange):
+def generate_results(df_data, datarange, limits):
     dfres = pd.DataFrame(
         columns=['id', 'CV [%]', 'Reader Data [cp/ml]', 'Note', 'Valid', 'info'])
     knum = 1
     s = sample_check(df_data, 'k', knum)
-    si = sample_info(df_data, 'k', knum, datarange)
+    si = sample_info(df_data, 'k', knum, datarange, limits)
     dfres.loc[len(dfres)] = ['control {:02d}'.format(
         knum), s['cv'], s['mean'], s['note'], s['valid'], si]
 

@@ -42,8 +42,9 @@ def test_e2e_calc():
 
     reference_conc = make_concentration(REF_VAL_MAX, DILUTIONS)
 
+    LIMITS = (1.888E+12, 2.703E+12)
     reports = gen_report_calc(valid_plates, wl_raw, params, lay,
-                              reference_conc, working_dir)
+                              reference_conc, working_dir, LIMITS)
 
     CHECK_REPORT_CRC = True
     REPORT_PLATES_CRC = [864111381, 3242056329]

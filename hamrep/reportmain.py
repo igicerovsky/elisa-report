@@ -15,7 +15,7 @@ def check_report_crc(report: str, crc):
 
 
 def report_plate(plate_id, worklist, params, layouts, reference_conc,
-                 input_data_path, report_dir, info
+                 input_data_path, report_dir, info, limits
                  ):
 
     od = read_concat_data(input_data_path)
@@ -34,7 +34,7 @@ def report_plate(plate_id, worklist, params, layouts, reference_conc,
 
     dfg = apply_fit(dfg, popt)
     dfg = mask_sample(dfg, dr)
-    sl = generate_results(dfg, dr)
+    sl = generate_results(dfg, dr, limits)
 
     report = '''\
 ---

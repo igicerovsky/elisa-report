@@ -32,7 +32,7 @@ def test_e2e():
 
     wl_raw = predil_worklist(worklist_file_path)
     params = read_params(params_file_path)
-    ref_val_max, dilutions = read_params_json(
+    ref_val_max, dilutions, limits = read_params_json(
         ANALYSIS_DIR, DATA_DIR, PARAMS_FILENAME)
     reference_conc = make_concentration(ref_val_max, dilutions)
 
@@ -41,7 +41,7 @@ def test_e2e():
                        path.join(DATA_DIR, PLATE_LAYOUT_DIL_ID))
 
     reports = rg. gen_report_raw(
-        wl_raw, params, lay, reference_conc, ANALYSIS_DIR)
+        wl_raw, params, lay, reference_conc, ANALYSIS_DIR, limits)
 
     CHECK_REPORT_CRC = True
     REPORT_PLATES_CRC = [4195121021, 1426265408, 2440240818]

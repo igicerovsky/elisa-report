@@ -43,6 +43,7 @@ def predil_worklist(worklist_file):
     worklist_predil_path = path.splitext(
         worklist_file)[0] + MANUAL_DILUTION_EXT_NAME + '.xlsx'
     if path.isfile(worklist_predil_path):
+        print(f'Reading pre-dilution from {worklist_predil_path}')
         wl_pdil = read_worklist(worklist_predil_path)
 
         wl['Dilution_1'] = wl['Dilution_1'] * wl_pdil['Dilution_1']
