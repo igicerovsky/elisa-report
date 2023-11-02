@@ -1,19 +1,25 @@
 {
-  "referenceValueAAV9": 1.7954e+10,
-  "referenceValueAAV8": 2.1167E+10,
-  "limits_AAV9": [
-    1.888E+12,
-    2.703E+12
-  ],
-  "limits_AAV8": [
-    1.119E+11,
-    1.648E+11
-  ],
-  "limits": [
-    1.0E+10,
-    1.0E+12
-  ],
-  "r]eferenceValue": 1.0E+10,
+  "AAV9": {
+    "referenceValue": 1.7954e+10,
+    "limits": [
+      1.888E+12,
+      2.703E+12
+    ]
+  },
+  "AAV8": {
+    "referenceValue": 2.1167E+10,
+    "limits": [
+      1.119E+11,
+      1.648E+11
+    ]
+  },
+  "default": {
+    "referenceValue": 1.0E+10,
+    "limits": [
+      1.0E+10,
+      1.0E+12
+    ]
+  },
   "dilutions": [
     1.0,
     2.0,

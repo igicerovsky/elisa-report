@@ -160,24 +160,21 @@ def read_params_json(working_dir, data_dir, params_filename):
             f'Parameters file not found {params_path_local}, {params_path_default}')
 
     ref_type = None
-    limits_type = None
+    a_type = None
     if working_dir.lower().find('aav9') != -1:
-        ref_type = 'referenceValueAAV9'
-        limits_type = 'limits_AAV9'
-        print('Applying reference value for AAV9.')
+        a_type = 'AAV9'
+        print('Applying parameters for AAV9.')
     elif working_dir.lower().find('aav8') != -1:
-        print('Applying reference value for AAV8.')
-        ref_type = 'referenceValueAAV8'
-        limits_type = 'limits_AAV8'
+        a_type = 'AAV8'
+        print('Applying parameters for AAV8.')
     else:
-        print('Applying default/custom reference value.')
-        ref_type = 'referenceValue'
-        limits_type = 'limits'
+        print('Applying default/custom parameters.')
+        a_type = 'default'
 
     with open(params_path_default) as json_file:
         data = json.load(json_file)
         dilutions = data['dilutions']
-        ref_val_max = data[ref_type]
-        limits = data[limits_type]
+        ref_val_max = data[a_type]['referenceValue']
+        limits = data[a_type]['limits']
 
     return ref_val_max, dilutions, limits
