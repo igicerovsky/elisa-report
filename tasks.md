@@ -28,6 +28,7 @@
   - if not valid (*value*); comment `test invalid`
   - write to md to section `Evaluation criteria` (according to aav8[9]); final report
   - update unit e2e tests
+- `params.json` refactoring AAV8, AAV9 parameters grouping
 
 ### KW43-23.10.2023
 
