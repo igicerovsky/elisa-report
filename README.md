@@ -95,6 +95,18 @@ python report_gen.py ./DIR_NAME --calc
 
 ## HAMILTON
 
+To export data in **TXT** format run the SoftMax Pro softare, and open given analysis. Then from the main menu choose 'Export' and select the 'Export to XML XLS TXT' option.  
+
+![softmax_menu](media\softmax_menu.png)
+
+![softmax_export_opt](media\softmax_export_opt.png)
+
+**Export measurements for all plates.**  
+
+**Make sure the exported file name matches the folder name structure.**  
+folder name example `230922_AAV9-ELISA_fff_GN004360-086`  
+corresponding file name example `230922_AAV9-ELISA_1_20230922_103137.txt`  
+
 Folder with Hamilton related stuff.
 
 [Hamilton](<C:\Users\hwn6193\OneDrive - Takeda\2 Geräte\Hamilton_System>)
