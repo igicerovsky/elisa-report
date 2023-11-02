@@ -95,7 +95,7 @@ python report_gen.py ./DIR_NAME --calc
 
 ## HAMILTON
 
-To export data in **TXT** format run the SoftMax Pro softare, and open given analysis. Then from the main menu choose 'Export' and select the 'Export to XML XLS TXT' option.  
+To export data in **TXT** format run the *SoftMax Pro* softare, and open given analysis. From the main menu choose 'Export' and select the `Export to XML XLS TXT` option.  
 
 ![softmax_menu](media\softmax_menu.png)
 
