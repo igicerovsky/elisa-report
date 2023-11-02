@@ -3,7 +3,6 @@
 
 ## TODO
 
-- merge documentation from Hamilton computer
 - deployment to Hamilton
 - save final results with `,` decimal delimiter for Andrea
 - ( >1.436e+13 )* ?`reports\all\231017_AAV8-ELISA_sey_GN004240-056_v2` where does it come from?
@@ -16,20 +15,19 @@
 ## Review
 
 - Sample mean multiply (Andrea) in sample overview; add if easy  
+- merge documentation from Hamilton computer
 
 ## Done
 
 ### KW44-30.10.2023
 
-- Validity limits write to md to section `Evaluation criteria` (according to aav8[9]); final report
-- Validity limits for AAV8
+- Validity limits
   - apply to control only
-  - <1.119E+11, 1.648E+11> [cp/ml] (see GN000168-055)
+  - AAV8 3s limits <1.119E+11, 1.648E+11> [cp/ml] (see GN000168-055)
+  - AAV9 3s limits <1.888E+12, 2.703E+12> [cp/ml]
   - if not valid (*value*); comment `test invalid`
-- Validity limits 3s AAV9
-  - apply to control only
-  - <1.888E+12, 2.703E+12> [cp/ml]
-  - if not valid (*value*); comment `test invalid`
+  - write to md to section `Evaluation criteria` (according to aav8[9]); final report
+  - update unit e2e tests
 
 ### KW43-23.10.2023
 
