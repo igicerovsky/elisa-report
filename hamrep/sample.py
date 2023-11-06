@@ -277,25 +277,25 @@ def final_sample_info(all_info, pre_dilution, limits):
 
 def generate_results(df_data, datarange, limits):
     dfres = pd.DataFrame(
-        columns=['id', 'CV [%]', 'Reader Data [cp/ml]', 'Note', 'Valid', 'type', 'info'])
+        columns=['id', 'CV [%]', 'Reader Data [cp/ml]', 'Note', 'Valid', 'info'])
     knum = 1
     s = sample_check(df_data, 'k', knum)
     si = sample_info(df_data, 'k', knum, datarange, limits)
     dfres.loc[len(dfres)] = ['control {:02d}'.format(
-        knum), s['cv'], s['mean'], s['note'], s['valid'], s['type'], si]
+        knum), s['cv'], s['mean'], s['note'], s['valid'], si]
 
     rnum = 1
     s = sample_check(df_data, 'r', rnum)
     si = sample_info(df_data, 'r', knum, datarange)
     dfres.loc[len(dfres)] = ['reference {:02d}'.format(
-        knum), s['cv'], s['mean'], s['note'], s['valid'], s['type'], si]
+        knum), s['cv'], s['mean'], s['note'], s['valid'], si]
 
     for i in sample_numbers(df_data):
         stype = 's'
         s = sample_check(df_data, 's', i)
         si = sample_info(df_data, 's', i, datarange)
         dfres.loc[len(dfres)] = ['sample {:02d}'.format(
-            i), s['cv'], s['mean'], s['note'], s['valid'], s['type'], si]
+            i), s['cv'], s['mean'], s['note'], s['valid'], si]
 
     dfres.set_index(dfres['id'], inplace=True)
     dfres = dfres.drop('id', axis=1)

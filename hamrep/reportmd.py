@@ -20,7 +20,7 @@ def make_final(sl, wl_raw, plate_id, limits):
     final.loc[:, ['CV [%]']] = final.apply(lambda x: x['CV [%]'] * 100, axis=1)
     # reorder columns
     final = final.reindex([cd['SampleID'], cd['Dilution'], cd['Viscosity'],
-                          'Reader Data [cp/ml]', 'Result [cp/ml]', 'CV [%]', 'Valid', 'type', 'info'], axis=1)
+                          'Reader Data [cp/ml]', 'Result [cp/ml]', 'CV [%]', 'Valid', 'info'], axis=1)
     final.rename(columns={cd['SampleID']: 'Sample Name',
                  cd['Dilution']: 'Pre-dilution'}, inplace=True)
     final.drop('Viscosity_{}'.format(plate_id), axis=1, inplace=True)
