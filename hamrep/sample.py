@@ -214,16 +214,6 @@ def sample_info(samples, stype, sample_num, dr: DataRange,
         msgdc = {'sign': '',
                  'value': sc['valid_pts'], 'enum': SampleInfo.VALID_PTS}
 
-    if stype == 'k':
-        if not limits:
-            raise (Exception('Please provide controll limits!'))
-        if sc['mean'] < limits[0]:
-            msgdc = {'sign': '<',
-                     'value': limits[0], 'enum': SampleInfo.LIMITS_3S}
-        elif sc['mean'] > limits[1]:
-            msgdc = {'sign': '>',
-                     'value': limits[1], 'enum': SampleInfo.LIMITS_3S}
-
     del sc['sample']
     del sc['note']
     sc['info'] = msgdc
@@ -231,10 +221,27 @@ def sample_info(samples, stype, sample_num, dr: DataRange,
     return sc
 
 
-def final_sample_info(all_info, pre_dilution):
-    info = all_info['info']
+def control_info(val, limits):
+    msgdc = {}
+    if not limits:
+        raise (Exception('Please provide controll limits!'))
+    if val < limits[0]:
+        msgdc = {'sign': '<',
+                 'value': limits[0], 'enum': SampleInfo.LIMITS_3S}
+    elif val > limits[1]:
+        msgdc = {'sign': '>',
+                 'value': limits[1], 'enum': SampleInfo.LIMITS_3S}
+    return msgdc
+
+
+def final_sample_info(all_info, pre_dilution, limits):
     if not all_info:
         raise Exception("Invalid sample info!")
+    info = all_info['info']
+    # check 3s limits
+    if all_info['type'] == 'k':
+        info = control_info(all_info['mean'] * pre_dilution, limits)
+
     if not info:
         return '', True
 
@@ -270,25 +277,25 @@ def final_sample_info(all_info, pre_dilution):
 
 def generate_results(df_data, datarange, limits):
     dfres = pd.DataFrame(
-        columns=['id', 'CV [%]', 'Reader Data [cp/ml]', 'Note', 'Valid', 'info'])
+        columns=['id', 'CV [%]', 'Reader Data [cp/ml]', 'Note', 'Valid', 'type', 'info'])
     knum = 1
     s = sample_check(df_data, 'k', knum)
     si = sample_info(df_data, 'k', knum, datarange, limits)
     dfres.loc[len(dfres)] = ['control {:02d}'.format(
-        knum), s['cv'], s['mean'], s['note'], s['valid'], si]
+        knum), s['cv'], s['mean'], s['note'], s['valid'], s['type'], si]
 
     rnum = 1
     s = sample_check(df_data, 'r', rnum)
     si = sample_info(df_data, 'r', knum, datarange)
     dfres.loc[len(dfres)] = ['reference {:02d}'.format(
-        knum), s['cv'], s['mean'], s['note'], s['valid'], si]
+        knum), s['cv'], s['mean'], s['note'], s['valid'], s['type'], si]
 
     for i in sample_numbers(df_data):
         stype = 's'
         s = sample_check(df_data, 's', i)
         si = sample_info(df_data, 's', i, datarange)
         dfres.loc[len(dfres)] = ['sample {:02d}'.format(
-            i), s['cv'], s['mean'], s['note'], s['valid'], si]
+            i), s['cv'], s['mean'], s['note'], s['valid'], s['type'], si]
 
     dfres.set_index(dfres['id'], inplace=True)
     dfres = dfres.drop('id', axis=1)

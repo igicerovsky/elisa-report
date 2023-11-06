@@ -11,7 +11,7 @@ from .constants import RESULT_DIGITS, SAMPLE_TYPES, CV_DIGITS
 from .worklist import worklist_sample
 
 
-def make_final(sl, wl_raw, plate_id):
+def make_final(sl, wl_raw, plate_id, limits):
     wl, cd = worklist_sample(wl_raw, plate_id)
 
     final = pd.concat([wl, sl], axis=1)
@@ -20,15 +20,15 @@ def make_final(sl, wl_raw, plate_id):
     final.loc[:, ['CV [%]']] = final.apply(lambda x: x['CV [%]'] * 100, axis=1)
     # reorder columns
     final = final.reindex([cd['SampleID'], cd['Dilution'], cd['Viscosity'],
-                          'Reader Data [cp/ml]', 'Result [cp/ml]', 'CV [%]', 'Valid', 'info'], axis=1)
+                          'Reader Data [cp/ml]', 'Result [cp/ml]', 'CV [%]', 'Valid', 'type', 'info'], axis=1)
     final.rename(columns={cd['SampleID']: 'Sample Name',
                  cd['Dilution']: 'Pre-dilution'}, inplace=True)
     final.drop('Viscosity_{}'.format(plate_id), axis=1, inplace=True)
     final.index.name = 'Sample type'
     final.loc[:, ['info_ex']] = final.apply(
-        lambda x: final_sample_info(x['info'], x['Pre-dilution'])[0], axis=1)
+        lambda x: final_sample_info(x['info'], x['Pre-dilution'], limits)[0], axis=1)
     final.loc[:, ['valid_ex']] = final.apply(
-        lambda x: final_sample_info(x['info'], x['Pre-dilution'])[1], axis=1)
+        lambda x: final_sample_info(x['info'], x['Pre-dilution'], limits)[1], axis=1)
     return final
 
 
@@ -193,9 +193,9 @@ def format_cv(x):
     return '{:.{dgts}f}'.format(x, dgts=CV_DIGITS)
 
 
-def format_results(df):
+def format_results(df, limits):
     df.loc[:, ['Comment']] = df.apply(lambda x: final_sample_info(
-        x['info'], x['Pre-dilution'])[0], axis=1)
+        x['info'], x['Pre-dilution'], limits)[0], axis=1)
     df.loc[:, ['CV [%]']] = df.apply(lambda x: format_cv(x['CV [%]']), axis=1)
     df.loc[:, ['Result [cp/ml]']
            ] = df.apply(lambda x: format_results_val(x), axis=1)
@@ -205,10 +205,10 @@ def format_results(df):
     return df
 
 
-def result_section(df):
+def result_section(df, limits):
     md = '## Analysis Results\n\n'
 
-    df_formated = format_results(df)
+    df_formated = format_results(df, limits)
     md += df_formated.to_markdown(floatfmt="#.{}f".format(CV_DIGITS))
     md += '\n\n'
     md += '\* sample will be retested\n\n'

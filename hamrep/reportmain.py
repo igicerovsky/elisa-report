@@ -50,8 +50,9 @@ colorlinks: true
 This a PoC for automatic report generation...\n\n'''
 
     report += header_section(info, plate_id, ':)')
-    final = make_final(sl, worklist, plate_id).drop('reference 01', axis=0)
-    report += result_section(final)
+    final = make_final(sl, worklist, plate_id, limits).drop(
+        'reference 01', axis=0)
+    report += result_section(final, limits)
     report += param_section(params)
     img_dir = os.path.join(report_dir, 'img')
     os.makedirs(report_dir, exist_ok=True)
