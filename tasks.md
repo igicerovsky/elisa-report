@@ -3,6 +3,7 @@
 
 ## TODO
 
+- update e2e test for 3s limits
 - deployment to Hamilton
 - save final results with `,` decimal delimiter for Andrea
 - ( >1.436e+13 )* ?`reports\all\231017_AAV8-ELISA_sey_GN004240-056_v2` where does it come from?
