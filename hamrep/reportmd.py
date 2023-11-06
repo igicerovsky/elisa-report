@@ -179,6 +179,8 @@ def format_results_val(x):
         res = '{:.{dgts}e}'.format(x['Result [cp/ml]'], dgts=RESULT_DIGITS)
     if x['valid_ex']:
         res = '**{}**'.format(res)
+    elif x['info_ex'] == 'test invalid':
+        res = '[ {} ]'.format(res)
     else:
         res = '( {} )*'.format(res)
 

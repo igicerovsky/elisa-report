@@ -214,15 +214,15 @@ def sample_info(samples, stype, sample_num, dr: DataRange,
         msgdc = {'sign': '',
                  'value': sc['valid_pts'], 'enum': SampleInfo.VALID_PTS}
 
-    # if stype == 'k':
-    #     if not limits:
-    #         raise (Exception('Please provide controll limits!'))
-    #     if sc['mean'] < limits[0]:
-    #         msgdc = {'sign': '<',
-    #                  'value': limits[0], 'enum': SampleInfo.LIMITS_3S}
-    #     elif sc['mean'] > limits[1]:
-    #         msgdc = {'sign': '>',
-    #                  'value': limits[1], 'enum': SampleInfo.LIMITS_3S}
+    if stype == 'k':
+        if not limits:
+            raise (Exception('Please provide controll limits!'))
+        if sc['mean'] < limits[0]:
+            msgdc = {'sign': '<',
+                     'value': limits[0], 'enum': SampleInfo.LIMITS_3S}
+        elif sc['mean'] > limits[1]:
+            msgdc = {'sign': '>',
+                     'value': limits[1], 'enum': SampleInfo.LIMITS_3S}
 
     del sc['sample']
     del sc['note']
