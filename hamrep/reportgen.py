@@ -7,7 +7,12 @@ from .mkinout import find_analysis, parse_photometer_filename, make_input_analys
 
 def gen_report_raw(worklist, params, layout, reference_conc, working_dir, limits):
     reports = []
-    alist = find_analysis(working_dir)
+    pdr = parse_dir_name(working_dir)
+    match_pattern = r'^{}_{}_.*\.txt$'.format(pdr['date'], pdr['protocol'])
+    alist = find_analysis(working_dir, match_pattern)
+    if not alist:
+        raise (Exception(
+            f'Analysis data file not found using match pattern {match_pattern}. Please export analysis results.'))
     print(alist)
     for analysis_file in alist:
         dc = parse_photometer_filename(analysis_file)

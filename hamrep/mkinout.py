@@ -9,11 +9,10 @@ from datetime import datetime
 import re
 
 
-def find_analysis(work_dir):
+def find_analysis(work_dir, match_pattern):
     files = listdir(work_dir)
-    pd = parse_dir_name(work_dir)
-    rs = r'^{}_{}_.*\.txt$'.format(pd['date'], pd['protocol'])
-    r = re.compile(rs)
+    # rs = r'^{}_{}_.*\.txt$'.format(pd['date'], pd['protocol'])
+    r = re.compile(match_pattern)
     ll = []
     for fl in files:
         m = r.match(fl)
