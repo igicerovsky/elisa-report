@@ -135,11 +135,11 @@ def sample_check(samples, stype, sample_num, cv_thresh=CV_THRESHOLD,
 
     note_cols = smp[~smp['mask_reason'].isna()]
     if len(note_cols) != 0:
-        if (note_cols['mask_reason'] == note_cols['mask_reason'][0]).all():
-            if note_cols['mask_reason'][0]:
-                note += note_cols['mask_reason'][0]
-            if note_cols['od_mask_reason'][0]:
-                note += ';' + note_cols['od_mask_reason'][0]
+        if (note_cols['mask_reason'] == note_cols['mask_reason'].iloc[0]).all():
+            if note_cols['mask_reason'].iloc[0]:
+                note += note_cols['mask_reason'].iloc[0]
+            if note_cols['od_mask_reason'].iloc[0]:
+                note += ';' + note_cols['od_mask_reason'].iloc[0]
 
     return {'sample': smp, 'cv': s[1], 'mean': s[2], 'note': note, 'type': stype, 'num': sample_num, 'valid': valid, 'valid_pts': valid_pts}
 
