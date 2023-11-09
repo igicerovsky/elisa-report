@@ -144,9 +144,9 @@ def read_layouts(file_id, file_num, file_dil):
     return concat_layouts(plate_layout_id, plate_layout_num, plate_layout_dil_id)
 
 
-def read_params_json(working_dir, data_dir, params_filename):
-    params_path_default = path.join(data_dir, params_filename)
-    params_path_local = path.join(working_dir, params_filename)
+def read_params_json(analysis_dir, config_dir, params_filename, a_type):
+    params_path_default = path.join(config_dir, params_filename)
+    params_path_local = path.join(analysis_dir, params_filename)
     params_path = None
 
     if path.exists(params_path_local):
@@ -158,19 +158,6 @@ def read_params_json(working_dir, data_dir, params_filename):
     else:
         raise Exception(
             f'Parameters file not found {params_path_local}, {params_path_default}')
-
-    ref_type = None
-    a_type = None
-    if working_dir.lower().find('aav9') != -1:
-        a_type = 'AAV9'
-        print('Applying parameters for AAV9.')
-    elif working_dir.lower().find('aav8') != -1:
-        a_type = 'AAV8'
-        print('Applying parameters for AAV8.')
-    else:
-        print('Applying default/custom parameters.')
-        a_type = 'default'
-
     with open(params_path_default) as json_file:
         data = json.load(json_file)
         dilutions = data['dilutions']

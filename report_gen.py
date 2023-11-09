@@ -57,38 +57,50 @@ def read_config(filename):
                 raise KeyError(key)
 
 
-def main_report(working_dir, txt_input, config_dir, docxa: bool = True, docxr: bool = False, pdf: bool = True):
-    print(f'Processing directory {working_dir}')
+def aav_type(analysis_dir):
+    a_type = None
+    if analysis_dir.lower().find('aav9') != -1:
+        a_type = 'AAV9'
+        print('Applying parameters for AAV9.')
+    elif analysis_dir.lower().find('aav8') != -1:
+        a_type = 'AAV8'
+        print('Applying parameters for AAV8.')
+    else:
+        print('Applying default/custom parameters.')
+        a_type = 'default'
+    return a_type
+
+
+def main_report(analysis_dir, txt_input, config_dir, docxa: bool = True, docxr: bool = False, pdf: bool = True):
+    print(f'Processing directory {analysis_dir}')
 
     read_config(path.join(config_dir, "config.json"))
 
-    input_files = make_input_paths(working_dir)
+    input_files = make_input_paths(analysis_dir)
     worklist_file_path = input_files['worklist']
     params_file_path = input_files['params']
 
     wl_raw = predil_worklist(worklist_file_path)
     params = read_params(params_file_path)
+    a_type = aav_type(analysis_dir)
     ref_val_max, dilutions, limits = read_params_json(
-        working_dir, config_dir, CONFIG_FILENAME)
+        analysis_dir, config_dir, CONFIG_FILENAME, a_type)
     reference_conc = make_concentration(ref_val_max, dilutions)
 
     lay = read_layouts(path.join(config_dir, config['plate_layout_id']),
                        path.join(config_dir, config['plate_layout_num']),
                        path.join(config_dir, config['plate_layout_dil_id']))
-    # lay = read_layouts(path.join(config_dir, PLATE_LAYOUT_ID),
-    #                    path.join(config_dir, PLATE_LAYOUT_NUM),
-    #                    path.join(config_dir, PLATE_LAYOUT_DIL_ID))
 
     if txt_input:
         reports = rg. gen_report_raw(
-            wl_raw, params, lay, reference_conc, working_dir, limits)
+            wl_raw, params, lay, reference_conc, analysis_dir, limits)
     else:
         valid_plates = check_worklist(wl_raw)
         reports = rg.gen_report_calc(valid_plates, wl_raw, params, lay,
-                                     reference_conc, working_dir)
+                                     reference_conc, analysis_dir)
 
     if docxa:
-        export_main_report(reports, working_dir, config['pandoc_bin'],
+        export_main_report(reports, analysis_dir, config['pandoc_bin'],
                            config['reference_docx'], limits)
 
     for report in reports:

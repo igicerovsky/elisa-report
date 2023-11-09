@@ -11,6 +11,7 @@ from hamrep.readdata import read_layouts, read_params_json
 import hamrep.reportgen as rg
 from hamrep.reportmain import check_report_crc
 from hamrep.reportmdassembly import assembly
+from report_gen import aav_type
 
 
 DATA_DIR = './data'
@@ -31,8 +32,9 @@ def generic_test(analysis_dir, report_plates_crc, assembly_crc):
 
     wl_raw = predil_worklist(worklist_file_path)
     params = read_params(params_file_path)
+    a_type = aav_type(analysis_dir)
     ref_val_max, dilutions, limits = read_params_json(
-        analysis_dir, DATA_DIR, PARAMS_FILENAME)
+        analysis_dir, DATA_DIR, PARAMS_FILENAME, a_type)
     reference_conc = make_concentration(ref_val_max, dilutions)
 
     lay = read_layouts(path.join(DATA_DIR, PLATE_LAYOUT_ID),

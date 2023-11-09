@@ -57,7 +57,7 @@ python report_gen.py DIR_NAME --cfg C:/work/report-gen/data
 Configuration file `config.json` is a json format file containing configurable parameters. It could be located in either default folder `./data` or in local analysis folder. If the file located in the **analysis** folder it has precedence (is meant to be modified by a user). Though, if the parameters file is not found in analysis folder it is read from the default location in the `./data` folder.  
 `referenceValue` is identified automatically from the `DIR_NAME` (see above). If the `DIR_NAME` contains a string `AAV8` or `AAV9` reference value for given AAV* is used, otherwise a default value `referenceValue` is used. **If default reference value is used, user is responsible to multiply the result correspondlingly.**  
 
-Validity limits are defined for AAV9, AAV8 or default. Test validity is checked according to 3σ limits. Control result shall be within interval <`limits_min`, `limits_max`>.  Default limits should not be used, and are defined so that the `report_gen` doesn't thow exception (fail).  
+Validity limits are defined for AAV9, AAV8 or default. Test validity is checked according to 3σ limits. Control result shall be within interval <`limits[0]`, `limits[1]`>.  Default limits should not be used, and are defined so that the `report_gen` doesn't thow exception (fail).  
 
 The file shall contain entries listed below.
 
