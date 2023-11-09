@@ -21,6 +21,7 @@
 ## Done
 
 - raise exception if analysis file is not found in analysis folder (exported `txt` file from Hamilton)
+- fix pandas deprecated indexing to  iloc
 
 ### KW44-30.10.2023
 
