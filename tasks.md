@@ -3,7 +3,7 @@
 
 ## TODO
 
-- update e2e test for 3s limits
+- global config
 - deployment to Hamilton
 - save final results with `,` decimal delimiter for Andrea
 - ( >1.436e+13 )* ?`reports\all\231017_AAV8-ELISA_sey_GN004240-056_v2` where does it come from?
@@ -22,6 +22,9 @@
 
 - raise exception if analysis file is not found in analysis folder (exported `txt` file from Hamilton)
 - fix pandas deprecated indexing to  iloc
+- update e2e test
+  - for 3s limits
+  - aav*[8, 9]
 
 ### KW44-30.10.2023
 
