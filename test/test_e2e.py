@@ -14,7 +14,7 @@ from hamrep.reportmdassembly import assembly
 
 
 DATA_DIR = './data'
-PARAMS_FILENAME = 'params.json'
+PARAMS_FILENAME = 'config.json'
 PLATE_LAYOUT_ID = 'plate_layout_ident.csv'
 PLATE_LAYOUT_NUM = 'plate_layout_num.csv'
 PLATE_LAYOUT_DIL_ID = 'plate_layout_dil_id.csv'
@@ -43,10 +43,7 @@ def generic_test(analysis_dir, report_plates_crc, assembly_crc):
         wl_raw, params, lay, reference_conc, analysis_dir, limits)
 
     for report, crc in zip(reports, report_plates_crc):
-        try:
-            check_report_crc(report['md'], crc)
-        except Exception as e:
-            print('{} for {}'.format(e, report['path']))
+        check_report_crc(report['md'], crc)
 
     parsed_dir = parse_dir_name(analysis_dir)
     md_assembly = assembly(
@@ -57,13 +54,13 @@ def generic_test(analysis_dir, report_plates_crc, assembly_crc):
 
 def test_e2e_aav9():
     analysis_dir = 'reports/export/230801_AAV9-ELISA_sey_GN004240-053'
-    report_plates_crc = [4195121021, 1426265408, 2440240818]
+    report_plates_crc = [2535847545, 3489686272, 2582870018]
     assembly_crc = 224918877
     generic_test(analysis_dir, report_plates_crc, assembly_crc)
 
 
 def test_e2e_aav8():
     analysis_dir = 'reports/all/231024_AAV8-ELISA_sey_GN004240-058'
-    report_plates_crc = [0]
-    assembly_crc = 0
+    report_plates_crc = [4079393068]
+    assembly_crc = 3084650447
     generic_test(analysis_dir, report_plates_crc, assembly_crc)

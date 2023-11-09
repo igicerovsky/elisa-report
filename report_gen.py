@@ -16,13 +16,8 @@ import hamrep.reportgen as rg
 from hamrep.reportmd import save_md
 
 
+CONFIG_FILENAME = 'config.json'
 WARNING_DISABLE = True
-DATA_DIR = './data'
-PARAMS_FILENAME = 'params.json'
-PLATE_LAYOUT_ID = 'plate_layout_ident.csv'
-PLATE_LAYOUT_NUM = 'plate_layout_num.csv'
-PLATE_LAYOUT_DIL_ID = 'plate_layout_dil_id.csv'
-
 
 if WARNING_DISABLE:
     warnings.simplefilter('ignore', RuntimeWarning)
@@ -30,14 +25,42 @@ if WARNING_DISABLE:
     warnings.filterwarnings('ignore', category=UserWarning, module='openpyxl')
 
 
-def main_report(working_dir, txt_input, docxa: bool = True, docxr: bool = False, pdf: bool = True):
+config = {
+    "default": {
+        "referenceValue": 1.0E+10,
+        "limits": [
+            1.0E+10,
+            1.0E+12
+        ]
+    },
+    "dilutions": [
+        1.0,
+        2.0,
+        4.0,
+        8.0,
+        16.0,
+        32.0,
+        64.0
+    ]
+}
+
+
+def read_config(filename):
+    keys = ['pandoc_bin', 'pdflatex_bin', 'reference_docx', 'params_filename',
+            'plate_layout_id', 'plate_layout_num', 'plate_layout_dil_id', 'numeric_warning_disable',
+            'AAV8', 'AAV9', 'default', 'dilutions']
+    with open(filename) as json_config:
+        for key, value in json.load(json_config).items():
+            if key in keys:
+                config[key] = value
+            else:
+                raise KeyError(key)
+
+
+def main_report(working_dir, txt_input, config_dir, docxa: bool = True, docxr: bool = False, pdf: bool = True):
     print(f'Processing directory {working_dir}')
 
-    with open(path.join(DATA_DIR, "config.json")) as json_file:
-        jd = json.load(json_file)
-        reference_doc = jd['reference_docx']
-        pdflatex_bin = jd['pdflatex_bin']
-        pandoc_bin = jd['pandoc_bin']
+    read_config(path.join(config_dir, "config.json"))
 
     input_files = make_input_paths(working_dir)
     worklist_file_path = input_files['worklist']
@@ -46,12 +69,15 @@ def main_report(working_dir, txt_input, docxa: bool = True, docxr: bool = False,
     wl_raw = predil_worklist(worklist_file_path)
     params = read_params(params_file_path)
     ref_val_max, dilutions, limits = read_params_json(
-        working_dir, DATA_DIR, PARAMS_FILENAME)
+        working_dir, config_dir, CONFIG_FILENAME)
     reference_conc = make_concentration(ref_val_max, dilutions)
 
-    lay = read_layouts(path.join(DATA_DIR, PLATE_LAYOUT_ID),
-                       path.join(DATA_DIR, PLATE_LAYOUT_NUM),
-                       path.join(DATA_DIR, PLATE_LAYOUT_DIL_ID))
+    lay = read_layouts(path.join(config_dir, config['plate_layout_id']),
+                       path.join(config_dir, config['plate_layout_num']),
+                       path.join(config_dir, config['plate_layout_dil_id']))
+    # lay = read_layouts(path.join(config_dir, PLATE_LAYOUT_ID),
+    #                    path.join(config_dir, PLATE_LAYOUT_NUM),
+    #                    path.join(config_dir, PLATE_LAYOUT_DIL_ID))
 
     if txt_input:
         reports = rg. gen_report_raw(
@@ -62,8 +88,8 @@ def main_report(working_dir, txt_input, docxa: bool = True, docxr: bool = False,
                                      reference_conc, working_dir)
 
     if docxa:
-        export_main_report(reports, working_dir, pandoc_bin,
-                           reference_doc, limits)
+        export_main_report(reports, working_dir, config['pandoc_bin'],
+                           config['reference_docx'], limits)
 
     for report in reports:
         print('Report for plate {} saved as {}'.format(
@@ -71,9 +97,11 @@ def main_report(working_dir, txt_input, docxa: bool = True, docxr: bool = False,
         save_md(report['path'], report['md'])
 
         if docxr:
-            md2docx(pandoc_bin, reference_doc, report['path'])
+            md2docx(config['pandoc_bin'],
+                    config['reference_docx'], report['path'])
         if pdf:
-            md2pdf(pandoc_bin, pdflatex_bin, report['path'])
+            md2pdf(config['pandoc_bin'],
+                   config['pdflatex_bin'], report['path'])
 
         binr = bytearray(report['md'], 'utf8')
         t = crc32(binr)
@@ -85,17 +113,18 @@ def main_report(working_dir, txt_input, docxa: bool = True, docxr: bool = False,
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        "workdir", help="working directory of an experiment", default=None)
+        "analysis", help="analysis directory", default=None)
     parser.add_argument('--calc', action='store_true',
                         help="use calc files as input")
-    parser.add_argument('--cfg', help="use calc files as input",
-                        default='./data/config.json')
+    parser.add_argument('--cfg', help="config and params directory",
+                        default='./data')
 
     args = parser.parse_args()
-    working_dir = args.workdir
+    analysis_dir = args.analysis
     txt_input = not args.calc
+    config_dir = args.cfg
 
-    main_report(working_dir, txt_input)
+    main_report(analysis_dir, txt_input, config_dir)
 
 
 if __name__ == "__main__":

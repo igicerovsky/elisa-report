@@ -3,7 +3,6 @@
 
 ## TODO
 
-- global config
 - deployment to Hamilton
 - save final results with `,` decimal delimiter for Andrea
 - ( >1.436e+13 )* ?`reports\all\231017_AAV8-ELISA_sey_GN004240-056_v2` where does it come from?
@@ -25,6 +24,11 @@
 - update e2e test
   - for 3s limits
   - aav*[8, 9]
+- config directory as parameter
+- config as global variable
+- merge `config.json` with `params.json` into `config.json`
+  - update README.md
+  - update e2e tests
 
 ### KW44-30.10.2023
 
