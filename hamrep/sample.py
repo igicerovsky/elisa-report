@@ -9,6 +9,7 @@ from enum import Enum
 from dataclasses import dataclass
 from itertools import combinations
 
+from .config import config as cfg
 from .constants import RESULT_DIGITS, CV_THRESHOLD, MIN_VALID_SAMPLE_POINTS, CV_THRESHOLD, PRE_DILUTION_THRESHOLD
 from .fitdata import conc_func, inv_func, backfit
 
@@ -60,18 +61,6 @@ def mask_value_short_fn(val, vmin, vmax, dil, note):
     if math.isnan(val):
         return 'Backfit failed.'
     return None
-
-
-# def mask_sample_cv(df, valid_pts, cv_threshold):
-#     cv_min = variation(df['concentration'], ddof=1)
-#     mask_idx = []
-#     indices = df.index
-#     for i in indices:
-#         t = df.iloc[x.drop([i], axis=0)]
-#         cv = variation(df['concentration'], ddof=1)
-#         if cv < cv_min:
-#             mask_idx.append(i)
-#     return mask_idx
 
 
 def mask_sample_cv(df_in, valid_pts, cv_threshold):
@@ -275,12 +264,13 @@ def final_sample_info(all_info, pre_dilution, limits):
     return msg, valid_ex
 
 
-def generate_results(df_data, datarange, limits):
+def generate_results(df_data, datarange):
     dfres = pd.DataFrame(
         columns=['id', 'CV [%]', 'Reader Data [cp/ml]', 'Note', 'Valid', 'info'])
     knum = 1
     s = sample_check(df_data, 'k', knum)
-    si = sample_info(df_data, 'k', knum, datarange, limits)
+    si = sample_info(df_data, 'k', knum, datarange,
+                     cfg[cfg['a_type']]['limits'])
     dfres.loc[len(dfres)] = ['control {:02d}'.format(
         knum), s['cv'], s['mean'], s['note'], s['valid'], si]
 

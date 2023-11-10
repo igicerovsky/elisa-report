@@ -15,8 +15,7 @@ def check_report_crc(report: str, crc):
 
 
 def report_plate(plate_id, worklist, params, layouts, reference_conc,
-                 input_data_path, report_dir, info, limits
-                 ):
+                 input_data_path, report_dir, info):
 
     od = read_concat_data(input_data_path)
     df_all = concat_data_with_layouts(od, layouts)
@@ -34,7 +33,7 @@ def report_plate(plate_id, worklist, params, layouts, reference_conc,
 
     dfg = apply_fit(dfg, popt)
     dfg = mask_sample(dfg, dr)
-    sl = generate_results(dfg, dr, limits)
+    sl = generate_results(dfg, dr)
 
     report = '''\
 ---
@@ -50,9 +49,9 @@ colorlinks: true
 This a PoC for automatic report generation...\n\n'''
 
     report += header_section(info, plate_id, ':)')
-    final = make_final(sl, worklist, plate_id, limits).drop(
+    final = make_final(sl, worklist, plate_id).drop(
         'reference 01', axis=0)
-    report += result_section(final, limits)
+    report += result_section(final)
     report += param_section(params)
     img_dir = os.path.join(report_dir, 'img')
     os.makedirs(report_dir, exist_ok=True)

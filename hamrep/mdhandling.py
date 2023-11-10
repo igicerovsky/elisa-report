@@ -67,7 +67,7 @@ def md2pdf(pandoc_bin, pdflatex_bin, md_filepath):
         print(e)
 
 
-def export_main_report(reports, working_dir, pandoc_bin, reference_doc, limits):
+def export_main_report(reports, working_dir, pandoc_bin, reference_doc):
     """Creates main report
 
     Concatenate reports from plates to a summary report.
@@ -86,7 +86,7 @@ def export_main_report(reports, working_dir, pandoc_bin, reference_doc, limits):
 
     parsed_dir = parse_dir_name(working_dir)
     md_assembly = assembly(
-        reports, protocol=parsed_dir['protocol'], limits=limits)
+        reports, protocol=parsed_dir['protocol'])
     mdfile = '{}_{}.md'.format(parsed_dir['date'], parsed_dir['protocol'])
     md_filepath = path.join(working_dir, mdfile)
     save_md(md_filepath, md_assembly)

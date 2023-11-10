@@ -9,9 +9,11 @@ from .image import fit_image, sample_img
 from .sample import final_sample_info, sample_check, sample_info, sampleinfo_to_str
 from .constants import RESULT_DIGITS, SAMPLE_TYPES, CV_DIGITS
 from .worklist import worklist_sample
+from .config import config as cfg
 
 
-def make_final(sl, wl_raw, plate_id, limits):
+def make_final(sl, wl_raw, plate_id):
+    limits = cfg[cfg['a_type']]['limits']
     wl, cd = worklist_sample(wl_raw, plate_id)
 
     final = pd.concat([wl, sl], axis=1)
@@ -205,7 +207,8 @@ def format_results(df, limits):
     return df
 
 
-def result_section(df, limits):
+def result_section(df):
+    limits = cfg[cfg['a_type']]['limits']
     md = '## Analysis Results\n\n'
 
     df_formated = format_results(df, limits)

@@ -1,4 +1,5 @@
 from .constants import CV_DIGITS
+from .config import config as cfg
 
 
 def plate_section_ex(df, plate):
@@ -12,7 +13,7 @@ def plate_section_ex(df, plate):
     return md
 
 
-def assembly(reports, protocol, limits):
+def assembly(reports, protocol):
     md = f'# GT Analytics - Capsid {protocol}\n\nSOP-051200\n\n'
 
     md += '## Objective\n\n'
@@ -27,6 +28,7 @@ def assembly(reports, protocol, limits):
         md += plate_section_ex(r['df'], r['plate'])
 
     md += '## Evaluation criteria\n\n'
+    limits = cfg[cfg['a_type']]['limits']
     md += 'Validity of the assay: Intermediary control sample limits (3s) are: {:.3e} - {:.3e} cp/ml  \n\n'.format(
         limits[0], limits[1])
 

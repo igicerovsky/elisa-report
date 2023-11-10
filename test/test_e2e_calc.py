@@ -8,6 +8,8 @@ from hamrep.reportmain import check_report_crc
 from hamrep.mkinout import make_input_paths
 from hamrep.readdata import read_layouts
 from hamrep.reportgen import gen_report_calc
+from hamrep.config import config as cfg
+from hamrep.config import analysis_type, read_config
 
 
 warnings.simplefilter('ignore', RuntimeWarning)
@@ -16,21 +18,25 @@ warnings.filterwarnings('ignore', category=UserWarning, module='openpyxl')
 
 
 def test_e2e_calc():
-    working_dir = './reports/230426_AAV9-ELISA_igi_GN004240-033'
+    analysis_dir = './reports/230426_AAV9-ELISA_igi_GN004240-033'
 
-    input_files = make_input_paths(working_dir)
+    input_files = make_input_paths(analysis_dir)
     WORKLIST_FILE_PATH = input_files['worklist']
     PARAMS_FILE_PATH = input_files['params']
 
-    DATA_DIR = './data'
+    CONFIG_DIR = './data'
+    CONFIG_FILENAME = 'config.json'
 
     PLATE_LAYOUT_ID = 'plate_layout_ident.csv'
     PLATE_LAYOUT_NUM = 'plate_layout_num.csv'
     PLATE_LAYOUT_DIL_ID = 'plate_layout_dil_id.csv'
 
-    lay = read_layouts(path.join(DATA_DIR, PLATE_LAYOUT_ID),
-                       path.join(DATA_DIR, PLATE_LAYOUT_NUM),
-                       path.join(DATA_DIR, PLATE_LAYOUT_DIL_ID))
+    analysis_type(analysis_dir)
+    read_config(path.join(CONFIG_DIR, CONFIG_FILENAME))
+
+    lay = read_layouts(path.join(CONFIG_DIR, PLATE_LAYOUT_ID),
+                       path.join(CONFIG_DIR, PLATE_LAYOUT_NUM),
+                       path.join(CONFIG_DIR, PLATE_LAYOUT_DIL_ID))
 
     wl_raw = read_worklist(WORKLIST_FILE_PATH)
     valid_plates = check_worklist(wl_raw)
@@ -42,9 +48,8 @@ def test_e2e_calc():
 
     reference_conc = make_concentration(REF_VAL_MAX, DILUTIONS)
 
-    LIMITS = (1.888E+12, 2.703E+12)
     reports = gen_report_calc(valid_plates, wl_raw, params, lay,
-                              reference_conc, working_dir, LIMITS)
+                              reference_conc, analysis_dir)
 
     CHECK_REPORT_CRC = True
     REPORT_PLATES_CRC = [864111381, 3242056329]

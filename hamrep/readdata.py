@@ -144,7 +144,7 @@ def read_layouts(file_id, file_num, file_dil):
     return concat_layouts(plate_layout_id, plate_layout_num, plate_layout_dil_id)
 
 
-def read_params_json(analysis_dir, config_dir, params_filename, a_type):
+def read_params_json(analysis_dir, config_dir, params_filename, atype):
     params_path_default = path.join(config_dir, params_filename)
     params_path_local = path.join(analysis_dir, params_filename)
     params_path = None
@@ -161,7 +161,7 @@ def read_params_json(analysis_dir, config_dir, params_filename, a_type):
     with open(params_path_default) as json_file:
         data = json.load(json_file)
         dilutions = data['dilutions']
-        ref_val_max = data[a_type]['referenceValue']
-        limits = data[a_type]['limits']
+        ref_val_max = data[atype]['referenceValue']
+        limits = data[atype]['limits']
 
     return ref_val_max, dilutions, limits
