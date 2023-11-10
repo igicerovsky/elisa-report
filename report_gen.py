@@ -27,7 +27,8 @@ if WARNING_DISABLE:
 
 
 def main_report(analysis_dir, txt_input, config_dir, docxa: bool = True, docxr: bool = False, pdf: bool = True):
-    print(f'Processing directory {analysis_dir}')
+    print(f'Analysis diretory directory {analysis_dir}')
+    print(f'Configuration directory {config_dir}')
 
     analysis_type(analysis_dir)
     read_config(path.join(config_dir, CONFIG_FILENAME))
