@@ -11,13 +11,10 @@ from hamrep.readdata import read_layouts
 import hamrep.reportgen as rg
 from hamrep.reportmain import check_report_crc
 from hamrep.reportmdassembly import assembly
-from report_gen import analysis_type
 from hamrep.config import config as cfg
-from hamrep.config import analysis_type, read_config
-
+from hamrep.config import init_config, REFVAL_NAME, DIL_NAME
 
 CONFIG_DIR = './data'
-CONFIG_FILENAME = 'config.json'
 PLATE_LAYOUT_ID = 'plate_layout_ident.csv'
 PLATE_LAYOUT_NUM = 'plate_layout_num.csv'
 PLATE_LAYOUT_DIL_ID = 'plate_layout_dil_id.csv'
@@ -32,13 +29,12 @@ def generic_test(analysis_dir, report_plates_crc, assembly_crc):
     worklist_file_path = input_files['worklist']
     params_file_path = input_files['params']
 
-    analysis_type(analysis_dir)
-    read_config(path.join(CONFIG_DIR, CONFIG_FILENAME))
+    init_config(analysis_dir, CONFIG_DIR)
 
     wl_raw = predil_worklist(worklist_file_path)
     params = read_params(params_file_path)
     reference_conc = make_concentration(
-        cfg[cfg['a_type']]['referenceValue'], cfg['dilutions'])
+        cfg[REFVAL_NAME], cfg[DIL_NAME])
 
     lay = read_layouts(path.join(CONFIG_DIR, PLATE_LAYOUT_ID),
                        path.join(CONFIG_DIR, PLATE_LAYOUT_NUM),

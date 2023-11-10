@@ -10,10 +10,11 @@ from .sample import final_sample_info, sample_check, sample_info, sampleinfo_to_
 from .constants import RESULT_DIGITS, SAMPLE_TYPES, CV_DIGITS
 from .worklist import worklist_sample
 from .config import config as cfg
+from .config import LIMITS_NAME
 
 
 def make_final(sl, wl_raw, plate_id):
-    limits = cfg[cfg['a_type']]['limits']
+    limits = cfg[LIMITS_NAME]
     wl, cd = worklist_sample(wl_raw, plate_id)
 
     final = pd.concat([wl, sl], axis=1)
@@ -208,7 +209,7 @@ def format_results(df, limits):
 
 
 def result_section(df):
-    limits = cfg[cfg['a_type']]['limits']
+    limits = cfg[LIMITS_NAME]
     md = '## Analysis Results\n\n'
 
     df_formated = format_results(df, limits)

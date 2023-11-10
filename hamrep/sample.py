@@ -12,6 +12,7 @@ from itertools import combinations
 from .config import config as cfg
 from .constants import RESULT_DIGITS, CV_THRESHOLD, MIN_VALID_SAMPLE_POINTS, CV_THRESHOLD, PRE_DILUTION_THRESHOLD
 from .fitdata import conc_func, inv_func, backfit
+from .config import LIMITS_NAME
 
 
 @dataclass
@@ -270,7 +271,7 @@ def generate_results(df_data, datarange):
     knum = 1
     s = sample_check(df_data, 'k', knum)
     si = sample_info(df_data, 'k', knum, datarange,
-                     cfg[cfg['a_type']]['limits'])
+                     cfg[LIMITS_NAME])
     dfres.loc[len(dfres)] = ['control {:02d}'.format(
         knum), s['cv'], s['mean'], s['note'], s['valid'], si]
 

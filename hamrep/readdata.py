@@ -5,6 +5,7 @@ import json
 import chardet
 from pathlib import Path
 from io import StringIO
+from .config import REFVAL_NAME, LIMITS_NAME, DIL_NAME
 
 
 def get_encoding(file_name):
@@ -160,8 +161,8 @@ def read_params_json(analysis_dir, config_dir, params_filename, atype):
             f'Parameters file not found {params_path_local}, {params_path_default}')
     with open(params_path_default) as json_file:
         data = json.load(json_file)
-        dilutions = data['dilutions']
-        ref_val_max = data[atype]['referenceValue']
-        limits = data[atype]['limits']
+        dilutions = data[DIL_NAME]
+        ref_val_max = data[atype][REFVAL_NAME]
+        limits = data[atype][LIMITS_NAME]
 
     return ref_val_max, dilutions, limits

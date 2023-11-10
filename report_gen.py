@@ -14,10 +14,9 @@ from hamrep.readdata import read_layouts
 from hamrep.mdhandling import md2docx, md2pdf, export_main_report
 from hamrep.reportmd import save_md
 from hamrep.config import config as cfg
-from hamrep.config import analysis_type, read_config
+from hamrep.config import init_config, REFVAL_NAME, DIL_NAME
 import hamrep.reportgen as rg
 
-CONFIG_FILENAME = 'config.json'
 WARNING_DISABLE = True
 
 if WARNING_DISABLE:
@@ -30,8 +29,7 @@ def main_report(analysis_dir, txt_input, config_dir, docxa: bool = True, docxr: 
     print(f'Analysis diretory directory {analysis_dir}')
     print(f'Configuration directory {config_dir}')
 
-    analysis_type(analysis_dir)
-    read_config(path.join(config_dir, CONFIG_FILENAME))
+    init_config(analysis_dir, config_dir)
 
     input_files = make_input_paths(analysis_dir)
     worklist_file_path = input_files['worklist']
@@ -40,7 +38,7 @@ def main_report(analysis_dir, txt_input, config_dir, docxa: bool = True, docxr: 
     wl_raw = predil_worklist(worklist_file_path)
     params = read_params(params_file_path)
     reference_conc = make_concentration(
-        cfg[cfg['a_type']]['referenceValue'], cfg['dilutions'])
+        cfg[REFVAL_NAME], cfg[DIL_NAME])
 
     lay = read_layouts(path.join(config_dir, cfg['plate_layout_id']),
                        path.join(config_dir, cfg['plate_layout_num']),

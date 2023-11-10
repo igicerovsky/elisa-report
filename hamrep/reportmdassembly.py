@@ -1,5 +1,6 @@
 from .constants import CV_DIGITS
 from .config import config as cfg
+from .config import LIMITS_NAME
 
 
 def plate_section_ex(df, plate):
@@ -28,7 +29,7 @@ def assembly(reports, protocol):
         md += plate_section_ex(r['df'], r['plate'])
 
     md += '## Evaluation criteria\n\n'
-    limits = cfg[cfg['a_type']]['limits']
+    limits = cfg[LIMITS_NAME]
     md += 'Validity of the assay: Intermediary control sample limits (3s) are: {:.3e} - {:.3e} cp/ml  \n\n'.format(
         limits[0], limits[1])
 

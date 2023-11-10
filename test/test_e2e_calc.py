@@ -9,7 +9,7 @@ from hamrep.mkinout import make_input_paths
 from hamrep.readdata import read_layouts
 from hamrep.reportgen import gen_report_calc
 from hamrep.config import config as cfg
-from hamrep.config import analysis_type, read_config
+from hamrep.config import init_config
 
 
 warnings.simplefilter('ignore', RuntimeWarning)
@@ -25,14 +25,11 @@ def test_e2e_calc():
     PARAMS_FILE_PATH = input_files['params']
 
     CONFIG_DIR = './data'
-    CONFIG_FILENAME = 'config.json'
-
     PLATE_LAYOUT_ID = 'plate_layout_ident.csv'
     PLATE_LAYOUT_NUM = 'plate_layout_num.csv'
     PLATE_LAYOUT_DIL_ID = 'plate_layout_dil_id.csv'
 
-    analysis_type(analysis_dir)
-    read_config(path.join(CONFIG_DIR, CONFIG_FILENAME))
+    init_config(analysis_dir, CONFIG_DIR)
 
     lay = read_layouts(path.join(CONFIG_DIR, PLATE_LAYOUT_ID),
                        path.join(CONFIG_DIR, PLATE_LAYOUT_NUM),

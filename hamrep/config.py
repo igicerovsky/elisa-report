@@ -1,4 +1,11 @@
+from os import path
 import json
+
+CONFIG_FILENAME = 'config.json'
+
+REFVAL_NAME = 'referenceValue'
+LIMITS_NAME = 'limits'
+DIL_NAME = 'dilutions'
 
 config = {
     "default": {
@@ -20,10 +27,17 @@ config = {
 }
 
 
+def init_config(analysis_dir, config_dir):
+    read_config(path.join(config_dir, CONFIG_FILENAME))
+    a_type = analysis_type(analysis_dir)
+    config[REFVAL_NAME] = config[a_type][REFVAL_NAME]
+    config[LIMITS_NAME] = config[a_type][LIMITS_NAME]
+
+
 def read_config(filename):
     keys = ['pandoc_bin', 'pdflatex_bin', 'reference_docx', 'params_filename',
             'plate_layout_id', 'plate_layout_num', 'plate_layout_dil_id', 'numeric_warning_disable',
-            'AAV8', 'AAV9', 'default', 'dilutions']
+            'AAV8', 'AAV9', 'default', DIL_NAME]
     with open(filename) as json_config:
         for key, value in json.load(json_config).items():
             if key in keys:
