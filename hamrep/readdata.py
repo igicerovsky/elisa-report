@@ -68,8 +68,6 @@ def index_plate_layout(plate_layout):
 def to_plate_layout(lst):
     l_2d = to_matrix(lst, 8)
     plate_layout = pd.DataFrame(l_2d).T
-    # plate_layout.set_index([['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']], inplace=True)
-    # plate_layout.columns = range(1, plate_layout.columns.size + 1)
 
     return index_plate_layout(plate_layout)
 

@@ -3,6 +3,9 @@
 
 ## TODO
 
+- use correct SOP names for `AAV*`
+  - die aktuellen Nummern beim AAV8-Elisa lauten: SOP-236462, MHF DMD-211877
+  - Beim AAV9-Elisa muss es auch noch umgeschrieben werden. Hier lauten die Nummern: SOP-234702, MHF DMD-211328
 - save final results with `,` decimal delimiter for Andrea
 - ( >1.436e+13 )* ?`reports\all\231017_AAV8-ELISA_sey_GN004240-056_v2` where does it come from?
 - Further review process ???
