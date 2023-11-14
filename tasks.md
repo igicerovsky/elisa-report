@@ -3,9 +3,6 @@
 
 ## TODO
 
-- use correct SOP names for `AAV*`
-  - die aktuellen Nummern beim AAV8-Elisa lauten: SOP-236462, MHF DMD-211877
-  - Beim AAV9-Elisa muss es auch noch umgeschrieben werden. Hier lauten die Nummern: SOP-234702, MHF DMD-211328
 - save final results with `,` decimal delimiter for Andrea
 - ( >1.436e+13 )* ?`reports\all\231017_AAV8-ELISA_sey_GN004240-056_v2` where does it come from?
 - Further review process ???
@@ -21,6 +18,11 @@
 
 ## Done
 
+- use correct SOP, MHF names for `AAV*`
+  - add to config
+  - Die aktuellen Nummern beim AAV8-Elisa lauten: `SOP-236462`, MHF `DMD-211877`
+  - Beim AAV9-Elisa lauten die Nummern: `SOP-234702`, MHF `DMD-211328`
+  - update README, test
 - raise exception if analysis file is not found in analysis folder (exported `txt` file from Hamilton)
 - fix pandas deprecated indexing to  iloc
 - update e2e test
@@ -29,7 +31,7 @@
 - config
   - directory as parameter
   - global variable
-  - init_config() function
+  - `init_config()` function
 - merge `config.json` with `params.json` into `config.json`
   - update README.md
   - update e2e tests

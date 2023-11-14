@@ -1,6 +1,6 @@
 from .constants import CV_DIGITS
 from .config import config as cfg
-from .config import LIMITS_NAME
+from .config import LIMITS_NAME, SOP_NAME, MHF_NAME
 
 
 def plate_section_ex(df, plate):
@@ -14,14 +14,16 @@ def plate_section_ex(df, plate):
     return md
 
 
-def assembly(reports, protocol):
+def assembly(reports, protocol, **kwargs):
     md = f'# GT Analytics - Capsid {protocol}\n\nSOP-051200\n\n'
 
     md += '## Objective\n\n'
-    md += '???-capsid concentration is determined in unknown samples.  \n\n'
+    md += 'Capsid concentration is determined for unknown samples.  \n\n'
 
     md += '## Method Status\n\n'
-    md += 'For detailed Method status see either SOP-051200 and/or method History File RPT-000047.  \n\n'
+    sop = cfg[SOP_NAME]
+    mhf = cfg[MHF_NAME]
+    md += f'For detailed method status see either {sop} and/or method history file {mhf}.  \n\n'
 
     md += '## Results - Current Reference\n\n'
 
@@ -33,7 +35,8 @@ def assembly(reports, protocol):
     md += 'Validity of the assay: Intermediary control sample limits (3s) are: {:.3e} - {:.3e} cp/ml  \n\n'.format(
         limits[0], limits[1])
 
-    md += '## Comments\n\n'
-    md += 'Add comment here...\n'
+    if kwargs and kwargs['comment']:
+        md += '## Comments\n\n'
+        md += 'Add comment here...\n'
 
     return md

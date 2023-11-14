@@ -56,12 +56,12 @@ def generic_test(analysis_dir, report_plates_crc, assembly_crc):
 def test_e2e_aav9():
     analysis_dir = 'reports/export/230801_AAV9-ELISA_sey_GN004240-053'
     report_plates_crc = [2535847545, 3489686272, 2582870018]
-    assembly_crc = 224918877
+    assembly_crc = 683964551
     generic_test(analysis_dir, report_plates_crc, assembly_crc)
 
 
 def test_e2e_aav8():
     analysis_dir = 'reports/all/231024_AAV8-ELISA_sey_GN004240-058'
     report_plates_crc = [4079393068]
-    assembly_crc = 3084650447
+    assembly_crc = 3017776492
     generic_test(analysis_dir, report_plates_crc, assembly_crc)

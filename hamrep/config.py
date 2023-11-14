@@ -6,6 +6,8 @@ CONFIG_FILENAME = 'config.json'
 REFVAL_NAME = 'referenceValue'
 LIMITS_NAME = 'limits'
 DIL_NAME = 'dilutions'
+SOP_NAME = 'SOP'
+MHF_NAME = 'MHF'
 
 config = {
     "default": {
@@ -32,6 +34,8 @@ def init_config(analysis_dir, config_dir):
     a_type = analysis_type(analysis_dir)
     config[REFVAL_NAME] = config[a_type][REFVAL_NAME]
     config[LIMITS_NAME] = config[a_type][LIMITS_NAME]
+    config[SOP_NAME] = config[a_type][SOP_NAME]
+    config[MHF_NAME] = config[a_type][MHF_NAME]
 
 
 def read_config(filename):
