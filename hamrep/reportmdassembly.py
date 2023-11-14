@@ -15,13 +15,13 @@ def plate_section_ex(df, plate):
 
 
 def assembly(reports, protocol, **kwargs):
-    md = f'# GT Analytics - Capsid {protocol}\n\nSOP-051200\n\n'
+    sop = cfg[SOP_NAME]
+    md = f'# GT Analytics - Capsid {protocol}\n\n{sop}\n\n'
 
     md += '## Objective\n\n'
     md += 'Capsid concentration is determined for unknown samples.  \n\n'
 
     md += '## Method Status\n\n'
-    sop = cfg[SOP_NAME]
     mhf = cfg[MHF_NAME]
     md += f'For detailed method status see either {sop} and/or method history file {mhf}.  \n\n'
 

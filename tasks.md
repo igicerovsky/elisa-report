@@ -18,6 +18,13 @@
 
 ## Done
 
+### KW47-13.11.2023
+
+- bug fix SOP num in filal report at beginning
+- bug fix reference docx join path
+
+### KW46-7.11.2023
+
 - use correct SOP, MHF names for `AAV*`
   - add to config
   - Die aktuellen Nummern beim AAV8-Elisa lauten: `SOP-236462`, MHF `DMD-211877`

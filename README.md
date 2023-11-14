@@ -72,6 +72,8 @@ The file shall contain entries listed below.
     "plate_layout_dil_id": "plate_layout_dil_id.csv",
     "numeric_warning_disable": true,
     "AAV9": {
+        "SOP": "SOP-234702",
+        "MHF": "DMD-211328",
         "referenceValue": 1.7954e+10,
         "limits": [
             1.888E+12,
@@ -79,6 +81,8 @@ The file shall contain entries listed below.
         ]
     },
     "AAV8": {
+        "SOP": "SOP-236462",
+        "MHF": "DMD-211877",
         "referenceValue": 2.1167E+10,
         "limits": [
             1.119E+11,

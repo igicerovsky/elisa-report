@@ -54,7 +54,7 @@ def main_report(analysis_dir, txt_input, config_dir, docxa: bool = True, docxr: 
 
     if docxa:
         export_main_report(reports, analysis_dir, cfg['pandoc_bin'],
-                           cfg['reference_docx'])
+                           path.join(config_dir, cfg['reference_docx']))
 
     for report in reports:
         print('Report for plate {} saved as {}'.format(
