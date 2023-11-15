@@ -9,45 +9,7 @@ DIL_NAME = 'dilutions'
 SOP_NAME = 'SOP'
 MHF_NAME = 'MHF'
 
-config = {
-    "default": {
-        "referenceValue": 1.0E+10,
-        "limits": [
-            1.0E+10,
-            1.0E+12
-        ]
-    },
-    "dilutions": [
-        1.0,
-        2.0,
-        4.0,
-        8.0,
-        16.0,
-        32.0,
-        64.0
-    ]
-}
-
-
-def init_config(analysis_dir, config_dir):
-    read_config(path.join(config_dir, CONFIG_FILENAME))
-    a_type = analysis_type(analysis_dir)
-    config[REFVAL_NAME] = config[a_type][REFVAL_NAME]
-    config[LIMITS_NAME] = config[a_type][LIMITS_NAME]
-    config[SOP_NAME] = config[a_type][SOP_NAME]
-    config[MHF_NAME] = config[a_type][MHF_NAME]
-
-
-def read_config(filename):
-    keys = ['pandoc_bin', 'pdflatex_bin', 'reference_docx', 'params_filename',
-            'plate_layout_id', 'plate_layout_num', 'plate_layout_dil_id', 'numeric_warning_disable',
-            'AAV8', 'AAV9', 'default', DIL_NAME]
-    with open(filename) as json_config:
-        for key, value in json.load(json_config).items():
-            if key in keys:
-                config[key] = value
-            else:
-                raise KeyError(key)
+config = dict()
 
 
 def analysis_type(analysis_dir):
@@ -61,3 +23,33 @@ def analysis_type(analysis_dir):
         config['a_type'] = 'default'
         print('Applying default/custom parameters.')
     return config['a_type']
+
+
+def init_config(analysis_dir, config_dir):
+    a_type = analysis_type(analysis_dir)
+    read_config(path.join(config_dir, CONFIG_FILENAME), a_type)
+
+
+def read_config(filename, a_type):
+    keys = ['pandoc_bin', 'pdflatex_bin', 'reference_docx', 'params_filename',
+            'plate_layout_id', 'plate_layout_num', 'plate_layout_dil_id', 'numeric_warning_disable',
+            DIL_NAME]
+    k_type = ['AAV8', 'AAV9', 'default']
+    with open(filename) as json_config:
+        items = json.load(json_config).items()
+        for key, value in items:
+            if key in keys:
+                config[key] = value
+            elif not (key in k_type):
+                raise KeyError(key)
+        dc = dict(items)
+        if a_type in dc:
+            config[REFVAL_NAME] = dc[a_type][REFVAL_NAME]
+            config[LIMITS_NAME] = dc[a_type][LIMITS_NAME]
+            config[SOP_NAME] = dc[a_type][SOP_NAME]
+            config[MHF_NAME] = dc[a_type][MHF_NAME]
+        elif not (key in keys):
+            raise (Exception(
+                f"Analysis type '{a_type}' copuld not be identified! Shall be one of {k_type}. "))
+
+    return config
