@@ -20,6 +20,7 @@
 
 ### KW47-13.11.2023
 
+- remove trailing `/\` from input path
 - bug fix SOP num in filal report at beginning
 - bug fix reference docx join path
 

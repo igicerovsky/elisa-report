@@ -85,7 +85,7 @@ def main():
                         default='./data')
 
     args = parser.parse_args()
-    analysis_dir = args.analysis
+    analysis_dir = args.analysis.rstrip("/\\")
     txt_input = not args.calc
     config_dir = args.cfg
 
