@@ -166,7 +166,7 @@ def sample_section_md(samples, reference, blank, dr, img_dir):
 
 def save_md(file_path, md_txt):
     try:
-        with open(file_path, 'w') as fl:
+        with open(file_path, 'w', encoding='utf-8') as fl:
             fl.write(md_txt)
     except Exception as e:
         print('Error: ' + str(e))
