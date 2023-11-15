@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 
-VERSION = '0.0.7'
+VERSION = '0.0.8'
 DESCRIPTION = 'Hamilton report generation'
 LONG_DESCRIPTION = 'Genrate report from Hamilton photometer output'
 
