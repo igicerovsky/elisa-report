@@ -240,10 +240,15 @@ def final_sample_info(all_info, pre_dilution, limits):
     if info['enum'] == SampleInfo.NAN_HIGH:
         msg = '>{:.{dgts}e}'.format(
             info['value'] * pre_dilution, dgts=RESULT_DIGITS)
-    elif info['enum'] == SampleInfo.NAN_LOW and pre_dilution <= PRE_DILUTION_THRESHOLD:
-        valid_ex = True
-        msg = '<{:.{dgts}e}'.format(
-            info['value'] * pre_dilution, dgts=RESULT_DIGITS)
+    elif info['enum'] == SampleInfo.NAN_LOW:
+        if pre_dilution <= PRE_DILUTION_THRESHOLD:
+            valid_ex = True
+            msg = '<{:.{dgts}e}'.format(
+                info['value'] * pre_dilution, dgts=RESULT_DIGITS)
+        else:
+            valid_ex = False
+            msg = '<{:.{dgts}e}'.format(
+                info['value'] * pre_dilution, dgts=RESULT_DIGITS)
     elif info['enum'] == SampleInfo.HIGH:
         msg = '>{:.{dgts}e}'.format(
             info['value'] * pre_dilution, dgts=RESULT_DIGITS)

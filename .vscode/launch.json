@@ -12,7 +12,9 @@
             "console": "integratedTerminal",
             "justMyCode": true,
             "args": [
-                "./reports/all/231024_AAV8-ELISA_sey_GN004240-058"
+                "./reports/all/231122_AAV9-ELISA_sey_GN004240-064\\",
+                "--cfg",
+                "C:/work/report-gen/data"
             ]
         }
     ]

@@ -3,6 +3,7 @@
 
 ## TODO
 
+- `PRE_DILUTION_THRESHOLD = 10` is sample valid if dilution is `>` pre dilution threshold?
 - save final results with `,` decimal delimiter for Andrea
 - ( >1.436e+13 )* ?`reports\all\231017_AAV8-ELISA_sey_GN004240-056_v2` where does it come from?
 - Further review process ???
@@ -22,7 +23,7 @@
 
 - write markdown with `encoding='utf-8'`
 - remove trailing `/\` from input path
-- bug fix SOP num in filal report at beginning
+- bug fix SOP num in final report at beginning
 - bug fix reference docx join path
 
 ### KW46-7.11.2023

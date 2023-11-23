@@ -26,7 +26,7 @@ if WARNING_DISABLE:
 
 
 def main_report(analysis_dir, txt_input, config_dir, docxa: bool = True, docxr: bool = False, pdf: bool = True):
-    print(f'Analysis diretory directory {analysis_dir}')
+    print(f'Analysis diretory {analysis_dir}')
     print(f'Configuration directory {config_dir}')
 
     init_config(analysis_dir, config_dir)

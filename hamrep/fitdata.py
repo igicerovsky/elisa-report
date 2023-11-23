@@ -251,7 +251,7 @@ def fit_reference_auto_rm(x, y, err_threshold=0.998, verbose=False):
             r_squared = r2_score(xd, x_hat)
         except:
             fit_stats.loc[len(fit_stats)] = [i, r_squared,
-                                             'Invalid covariance matrix.']
+                                             'Invalid r2_score.']
             continue
 
         if np.isinf(fc_i[1]).any():
