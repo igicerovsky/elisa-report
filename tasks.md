@@ -19,6 +19,11 @@
 
 ## Done
 
+### KW47-20.11.2023
+
+- non valid values `****` in experiment 231122_AAV9-ELISA_sey_GN004240-064 `PRE_DILUTION_THRESHOLD = 10`  
+- update unit tests for pre-dilution invalid results
+
 ### KW47-13.11.2023
 
 - write markdown with `encoding='utf-8'`
