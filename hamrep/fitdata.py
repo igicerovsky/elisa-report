@@ -247,6 +247,7 @@ def fit_reference_auto_rm(x, y, err_threshold=0.998, verbose=False):
 
         def bfn(l): return inv_func(l, *fc_i[0])
         x_hat = bfn(yd)
+        r_squared = np.inf
         try:
             r_squared = r2_score(xd, x_hat)
         except:

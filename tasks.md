@@ -3,7 +3,6 @@
 
 ## TODO
 
-- `PRE_DILUTION_THRESHOLD = 10` is sample valid if dilution is `>` pre dilution threshold?
 - save final results with `,` decimal delimiter for Andrea
 - ( >1.436e+13 )* ?`reports\all\231017_AAV8-ELISA_sey_GN004240-056_v2` where does it come from?
 - Further review process ???
@@ -18,6 +17,11 @@
 - merge documentation from Hamilton computer
 
 ## Done
+
+### KW47-27.11.2023
+
+- `PRE_DILUTION_THRESHOLD = 10` is sample valid if dilution is `>` pre dilution threshold?
+- r_squared in fit data fix if exception is thrown
 
 ### KW47-20.11.2023
 
