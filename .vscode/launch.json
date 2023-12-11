@@ -12,9 +12,31 @@
             "console": "integratedTerminal",
             "justMyCode": true,
             "args": [
-                "./reports/all/231122_AAV9-ELISA_sey_GN004240-064\\",
+                "./reports/all/231130_AAV9-ELISA_fff_GN004360-100",
                 "--cfg",
                 "C:/work/report-gen/data"
+            ]
+        },
+        {
+            "name": "gui",
+            "type": "python",
+            "request": "launch",
+            "program": "report_gui.py",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "args": []
+        },
+        {
+            "name": "gg",
+            "type": "python",
+            "request": "launch",
+            "program": "report_gen.py",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "args": [
+                "--cfg",
+                "C:/work/report-gen/data",
+                "--gui"
             ]
         }
     ]

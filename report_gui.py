@@ -1,12 +1,13 @@
-from os import path, getcwd
+import os
+import sys
 import argparse
 import warnings
 
+from tkinter import *
+from tkinter import filedialog, messagebox
+
 from scipy.optimize import OptimizeWarning
 from zlib import crc32
-
-from tkinter import *
-from tkinter import filedialog
 
 from hamrep.readdata import read_params
 from hamrep.mkinout import make_input_paths
@@ -19,6 +20,7 @@ from hamrep.config import config as cfg
 from hamrep.config import init_config, REFVAL_NAME, DIL_NAME
 import hamrep.reportgen as rg
 
+
 WARNING_DISABLE = True
 
 if WARNING_DISABLE:
@@ -27,8 +29,7 @@ if WARNING_DISABLE:
     warnings.filterwarnings('ignore', category=UserWarning, module='openpyxl')
 
 
-def main_report(analysis_dir, config_dir, docxa: bool = True, docxr: bool = False, pdf: bool = True,
-                txt_input=True):
+def main_report(analysis_dir, config_dir, txt_input=True, docxa: bool = True, docxr: bool = False, pdf: bool = True):
     print(f'Analysis diretory {analysis_dir}')
     print(f'Configuration directory {config_dir}')
 
@@ -43,9 +44,9 @@ def main_report(analysis_dir, config_dir, docxa: bool = True, docxr: bool = Fals
     reference_conc = make_concentration(
         cfg[REFVAL_NAME], cfg[DIL_NAME])
 
-    lay = read_layouts(path.join(config_dir, cfg['plate_layout_id']),
-                       path.join(config_dir, cfg['plate_layout_num']),
-                       path.join(config_dir, cfg['plate_layout_dil_id']))
+    lay = read_layouts(os.path.join(config_dir, cfg['plate_layout_id']),
+                       os.path.join(config_dir, cfg['plate_layout_num']),
+                       os.path.join(config_dir, cfg['plate_layout_dil_id']))
 
     if txt_input:
         reports = rg.gen_report_raw(
@@ -57,7 +58,7 @@ def main_report(analysis_dir, config_dir, docxa: bool = True, docxr: bool = Fals
 
     if docxa:
         export_main_report(reports, analysis_dir, cfg['pandoc_bin'],
-                           path.join(config_dir, cfg['reference_docx']))
+                           os.path.join(config_dir, cfg['reference_docx']))
 
     for report in reports:
         print('Report for plate {} saved as {}'.format(
@@ -79,43 +80,43 @@ def main_report(analysis_dir, config_dir, docxa: bool = True, docxr: bool = Fals
 
 
 def browse_analysis():
-    filename = filedialog.askdirectory(initialdir=getcwd(),
+    filename = filedialog.askdirectory(initialdir=os.getcwd(),
                                        title="Select a Hamilton Analysis Folder")
-    global analysis_file, entry_analysis
     analysis_file.set(filename)
     entry_analysis.update()
     global window
     window.destroy()
 
 
-def browse_config(config_folder):
+def browse_config():
     filename = filedialog.askdirectory(initialdir=config_folder,  # os.patrh.join(os.getcwd(), 'data'),
                                        title="Select a Config Folder")
-    global analysis_file
     analysis_file.set(filename)
 
 
-def gui(config_dir):
-    global window
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--cfg', help="config and params directory",
+                        default=None)
+    args = parser.parse_args()
+
     window = Tk()
     window.title('HAMILTON Analysis')
     window.geometry("800x100")
+    # window.config(background="white")
 
-    global analysis_file
     analysis_file = StringVar()
     analysis_file.set('...')
-    global config_folder
     config_folder = StringVar()
-    if config_dir:
-        config_folder.set(config_dir)
+    if args.cfg:
+        config_folder.set(args.cfg)
     else:
-        config_folder.set(path.join(getcwd(), 'data'))
+        config_folder.set(os.path.join(os.getcwd(), 'data'))
 
     button_analysis = Button(window, text="Browse Analysis Folder",
                              command=browse_analysis)
     button_analysis.grid(column=0, row=0)
 
-    global entry_analysis
     entry_analysis = Entry(textvariable=analysis_file,
                            state=DISABLED, width=110)
     entry_analysis.grid(row=0, column=1,
@@ -130,28 +131,3 @@ def gui(config_dir):
     window.mainloop()
 
     main_report(analysis_file.get(), config_folder.get())
-
-
-def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument(
-        "--analysis", help="analysis directory", default=None)
-    parser.add_argument('--cfg', help="config and params directory",
-                        default='./data')
-    parser.add_argument('--gui', action='store_true',
-                        help="use calc files as input")
-
-    args = parser.parse_args()
-    analysis_dir = args.analysis
-    if analysis_dir:
-        analysis_dir.rstrip("/\\")
-    config_dir = args.cfg
-
-    if args.analysis:
-        main_report(analysis_dir, config_dir)
-    else:
-        gui(config_dir)
-
-
-if __name__ == "__main__":
-    main()

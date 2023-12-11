@@ -3,6 +3,7 @@
 
 ## TODO
 
+- check correctness of the exported `*.txt` filename for given plate
 - save final results with `,` decimal delimiter for Andrea
 - ( >1.436e+13 )* ?`reports\all\231017_AAV8-ELISA_sey_GN004240-056_v2` where does it come from?
 - Further review process ???
@@ -14,9 +15,13 @@
 ## Review
 
 - Sample mean multiply (Andrea) in sample overview; add if easy  
-- merge documentation from Hamilton computer
 
 ## Done
+
+### KW47-04.12.2023
+
+- GUI with desktop link
+- Ewald email 30.11.2023 (OD value vs backfitted concentration)
 
 ### KW47-27.11.2023
 
