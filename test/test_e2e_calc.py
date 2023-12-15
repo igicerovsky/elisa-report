@@ -18,7 +18,7 @@ warnings.filterwarnings('ignore', category=UserWarning, module='openpyxl')
 
 
 def test_e2e_calc():
-    analysis_dir = './reports/230426_AAV9-ELISA_igi_GN004240-033'
+    analysis_dir = './test/analysis/230426_AAV9-ELISA_igi_GN004240-033'
 
     input_files = make_input_paths(analysis_dir)
     WORKLIST_FILE_PATH = input_files['worklist']

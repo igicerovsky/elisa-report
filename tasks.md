@@ -18,6 +18,11 @@
 
 ## Done
 
+### KW47-11.12.2023
+
+- GUI refactorring: only select folder dialog is displayed, ten back to stdout
+- data / tests cleaning: moving files outside project folder except units tests data
+
 ### KW47-04.12.2023
 
 - GUI with desktop link
