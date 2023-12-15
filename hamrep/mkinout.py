@@ -43,6 +43,9 @@ def parse_photometer_filename(path_name):
     fle = path.split(path_name)[1]
     fl = path.splitext(fle)
     s = fl[0].split('_')
+    if len(s) != 5:
+        raise Exception(
+            f'Plate file is invalid! {fle}\n It shall contain 5 items delimited by \'_\'')
     dt = datetime.strptime(s[3]+s[4], "%Y%m%d%H%M%S")
     dc = {'datetime': dt, 'plate': s[2], 'protocol': s[1]}
     return dc
