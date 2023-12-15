@@ -20,6 +20,7 @@
 
 ### KW47-11.12.2023
 
+- additional checks for corretness of input files
 - GUI refactorring: only select folder dialog is displayed, ten back to stdout
 - data / tests cleaning: moving files outside project folder except units tests data
 
