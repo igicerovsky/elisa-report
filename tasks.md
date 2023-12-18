@@ -3,6 +3,8 @@
 
 ## TODO
 
+- masked values check [Ewald email Fri 12/15/2023 2:34 PM]
+- add description of graphs to README.md, symbol meaning (croos, circle, -) [Ewald Fri 12/15/2023 2:04 PM]
 - check correctness of the exported `*.txt` filename for given plate
 - save final results with `,` decimal delimiter for Andrea
 - ( >1.436e+13 )* ?`reports\all\231017_AAV8-ELISA_sey_GN004240-056_v2` where does it come from?
@@ -20,6 +22,7 @@
 
 ### KW47-11.12.2023
 
+- bug fix: `ext` legend not always shown
 - additional checks for corretness of input files
 - GUI refactorring: only select folder dialog is displayed, ten back to stdout
 - data / tests cleaning: moving files outside project folder except units tests data

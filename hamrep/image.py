@@ -122,19 +122,24 @@ def fit_image(x, y, popt, pcov, file_path, confidence_interval=95.0,
     x_min_ext = x.min() / interval_ratio
     if sx is not None:
         x_min_ext = min(x_min_ext, sx_n.min())
+    ext_legend = False
     if x_min != x_min_ext:
         t = np.arange(x_min_ext, x_min, (x_min - x_min_ext) / (num_pts / 10.0))
         plt.plot(t, func(t, *popt), color='red',
                  linestyle=(0, (5, 10)), linewidth=0.2, label='ext')
+        ext_legend = True
 
     x_max_ext = x.max() * interval_ratio
     if sx is not None:
         x_max_ext = max(x_max_ext, sx_n.max())
     if x_max != x_max_ext:
         t = np.arange(x_max, x_max_ext, (x_max_ext - x_max) / (num_pts / 10.0))
-        # no label, only one extension labe
+        # no label, only one extension label
+        ext_label = None
+        if not ext_legend:
+            ext_label = 'ext'
         plt.plot(t, func(t, *popt), color='red',
-                 linestyle=(0, (5, 10)), linewidth=0.2)
+                 linestyle=(0, (5, 10)), linewidth=0.2, label=ext_label)
 
     # show NaN concentration values somewhere -> show OD
     sx_na = sx[sx.isna()] if sx is not None else None
