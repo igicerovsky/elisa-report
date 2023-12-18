@@ -3,7 +3,6 @@
 
 ## TODO
 
-- masked values check [Ewald email Fri 12/15/2023 2:34 PM]
 - add description of graphs to README.md, symbol meaning (croos, circle, -) [Ewald Fri 12/15/2023 2:04 PM]
 - check correctness of the exported `*.txt` filename for given plate
 - save final results with `,` decimal delimiter for Andrea
@@ -22,6 +21,7 @@
 
 ### KW47-11.12.2023
 
+- masked values check [Ewald email Fri 12/15/2023 2:34 PM] `mask_reason = concentration_backfit * plate_layout_dil`
 - bug fix: `ext` legend not always shown
 - additional checks for corretness of input files
 - GUI refactorring: only select folder dialog is displayed, ten back to stdout
