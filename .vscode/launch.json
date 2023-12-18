@@ -13,7 +13,7 @@
             "justMyCode": true,
             "args": [
                 "--analysis",
-                "./reports/all/231130_AAV9-ELISA_fff_GN004360-100",
+                "c:/work/hamilton/analysis/231205_AAV9-ELISA_sey_GN004240-066",
                 "--cfg",
                 "C:/work/report-gen/data"
             ]

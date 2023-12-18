@@ -1,6 +1,6 @@
 # GT Analytics - Capsid AAV9-ELISA
 
-SOP-051200
+SOP-234702
 
 ## Objective
 
