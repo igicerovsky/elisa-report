@@ -99,11 +99,11 @@ def gui(config_dir, init_folder):
     global window
     window = Tk()
     window.title('HAMILTON Analysis')
-    window.geometry("800x100")
+    window.geometry("800x80")
 
     global analysis_file
     analysis_file = StringVar()
-    analysis_file.set('...')
+    analysis_file.set('')
     global config_folder
     config_folder = StringVar()
     if config_dir:
@@ -129,7 +129,9 @@ def gui(config_dir, init_folder):
                       padx=10, pady=10)
     window.mainloop()
 
-    main_report(analysis_file.get(), config_folder.get())
+    afile = analysis_file.get()
+    if afile:
+        main_report(afile, config_folder.get())
 
 
 def main():
@@ -139,7 +141,7 @@ def main():
     parser.add_argument('--cfg', help="config and params directory",
                         default='./data')
     parser.add_argument('--gui', action='store_true',
-                        help="use gui dialog for input")
+                        help="use gui dialog for input", default=False)
     parser.add_argument('--ifld', help="initial analysis folder", default=None)
 
     args = parser.parse_args()
