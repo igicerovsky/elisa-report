@@ -27,8 +27,7 @@ if WARNING_DISABLE:
     warnings.filterwarnings('ignore', category=UserWarning, module='openpyxl')
 
 
-def main_report(analysis_dir, config_dir, docxa: bool = True, docxr: bool = False, pdf: bool = True,
-                txt_input=True):
+def main_report(analysis_dir, config_dir, docxa: bool = True, docxr: bool = False, pdf: bool = True):
     print(f'Analysis diretory {analysis_dir}')
     print(f'Configuration directory {config_dir}')
 
@@ -47,13 +46,8 @@ def main_report(analysis_dir, config_dir, docxa: bool = True, docxr: bool = Fals
                        path.join(config_dir, cfg['plate_layout_num']),
                        path.join(config_dir, cfg['plate_layout_dil_id']))
 
-    if txt_input:
-        reports = rg.gen_report_raw(
-            wl_raw, params, lay, reference_conc, analysis_dir)
-    else:
-        valid_plates = check_worklist(wl_raw)
-        reports = rg.gen_report_calc(valid_plates, wl_raw, params, lay,
-                                     reference_conc, analysis_dir)
+    reports = rg.gen_report_raw(
+        wl_raw, params, lay, reference_conc, analysis_dir)
 
     if docxa:
         export_main_report(reports, analysis_dir, cfg['pandoc_bin'],
@@ -145,7 +139,7 @@ def main():
     parser.add_argument('--cfg', help="config and params directory",
                         default='./data')
     parser.add_argument('--gui', action='store_true',
-                        help="use calc files as input")
+                        help="use gui dialog for input")
     parser.add_argument('--ifld', help="initial analysis folder", default=None)
 
     args = parser.parse_args()
