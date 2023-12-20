@@ -131,9 +131,13 @@ def blank_to_md(blank):
 
 
 def sample_section_md(samples, reference, blank, dr, img_dir):
+    # this works for pdflatex
+    pg_break = '\\pagebreak\n\n'
+    # pg_break = '<div style="page-break-after: always;"></div>\n\n'
     md = '## Sample evaluation\n\n'
     md += blank_to_md(blank)
     md += '\n'
+    md += pg_break
     k = sample_check(samples, 'k', 1)
     md += sample_to_md(k)
     md += '\n'
@@ -141,6 +145,8 @@ def sample_section_md(samples, reference, blank, dr, img_dir):
     img_file = path.join(img_dir, sfile)
     sample_img(samples, reference, 'k', 1, img_file, show=False)
     md += '!["alt text"](./img/{})\n\n'.format(sfile)
+    md += pg_break
+
     sample_n = samples['plate_layout_num'].astype(int).unique()
     sample_n.sort()
     for i in tqdm(sample_n):
@@ -161,6 +167,7 @@ def sample_section_md(samples, reference, blank, dr, img_dir):
         md += '![{0}](./img/{0})\n'.format(sfile)
         if i != sample_n[-1]:
             md += '\n'
+            md += pg_break
     return md
 
 
