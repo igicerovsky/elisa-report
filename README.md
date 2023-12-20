@@ -25,15 +25,37 @@ python -m build --sdist --wheel
 
 ## Running the script
 
-`DIR_NAME` is path to a folder with finished Hamilton analysis, e.g. `C:/work/report-gen/reports/230426_AAV9-ELISA_igi_GN004240-033`  
+```bash
+python .\report_gen.py --help
+
+usage: report_gen.py [-h] [--analysis ANALYSIS] [--cfg CFG] [--gui]
+                     [--ifld IFLD]
+
+options:
+  -h, --help           show this help message and exit
+  --analysis ANALYSIS  analysis directory
+  --cfg CFG            config and params directory
+  --gui                use gui dialog for input
+  --ifld IFLD          initial analysis folder
+```
+
+`--cgf` is path to the configuration directory.  
+`--gui` invokes a dialog which prompts for user input.  
+`--ifld` set an initial folder where GUI analysis folder shall open at start.  
+
+![gui](media/gui.png)  
+
+`--analysis` is path to a folder with finished Hamilton analysis, e.g. `C:/work/hamilton/230801_AAV9-ELISA_sey_GN004240-053`  
+**Analysis folder name is parsed for encoding certain analysis information!** The structume shall be `[DATE]_[METHOD]_[USER]_[GN]`, where the fields are separated by underscore character `_`  
+where `[DATE]` is a date in format `%y%m%d` (*230801*)  
+`[GN]` is analysis identifier (*GN004240-033*)  
+`[PROTOCOL]` is a protocol name (*AAV9-ELISA*)  
+`[USER]` is user name/coce (*sey*)
+
 The working directory **must** contain following files in given format:  
 
 - `[DATE]_[GN]_-_worklist-ELISA.xls`
 - `[DATE]_[GN]_-_[PROTOCOL]_Parameters.csv`
-
-where `[DATE]` is a date in format `%y%m%d` (*230801*)  
-`[GN]` is analysis identifier (*GN004240-033*)  
-`[PROTOCOL]` is a protocol name (*AAV9-ELISA*)
 
 Examples:  
 `230426_GN004240-033_-_worklist-ELISA.xls`  
@@ -44,20 +66,20 @@ Examples:
 Command line argument is used to define a folder containing configuration file, and other files necessary to execute `report_gen.py` programm.  
 
 ```bash
-python report_gen.py DIR_NAME --cfg ./data
+python report_gen.py --cfg ./data
 ```
 
 **Important: if relative path is used for `--cfg` argument, the path is relative to the current execution/working directory!**  
 To make sure intended folder path is used, provide absolute path.
 
 ```bash
-python report_gen.py DIR_NAME --cfg C:/work/report-gen/data
+python report_gen.py --cfg C:/work/report-gen/data
 ```
 
-Configuration file `config.json` is a json format file containing configurable parameters. It could be located in either default folder `./data` or in local analysis folder. If the file located in the **analysis** folder it has precedence (is meant to be modified by a user). Though, if the parameters file is not found in analysis folder it is read from the default location in the `./data` folder.  
-`referenceValue` is identified automatically from the `DIR_NAME` (see above). If the `DIR_NAME` contains a string `AAV8` or `AAV9` reference value for given AAV* is used, otherwise a default value `referenceValue` is used. **If default reference value is used, user is responsible to multiply the result correspondlingly.**  
+Configuration file `config.json` is a json format file containing configurable parameters. It could be located in either default folder `./data` or in local analysis folder. If the file is located in the **analysis** folder it has precedence (is meant to be modified by a user). Though, if the config file is not found in analysis folder it is read from the default location in the `./data` folder.  
+`referenceValue` is identified automatically from the analysis folder name (see above). If the analysis folder name contains a string `AAV8` or `AAV9` reference value for given `AAV*` is used, otherwise an exception is thrown.
 
-Validity limits are defined for AAV9, AAV8 or default. Test validity is checked according to 3σ limits. Control result shall be within interval <`limits[0]`, `limits[1]`>.  Default limits should not be used, and are defined so that the `report_gen` doesn't thow exception (fail).  
+Validity limits are defined for AAV9 or AAV8. Test validity is checked according to 3σ limits. Control result shall lie within interval <`limits[0]`, `limits[1]`>.  Default limits should not be used, and are defined so that the `report_gen` doesn't thow exception (fail).  
 
 The file shall contain entries listed below.
 
@@ -117,25 +139,17 @@ This is a prefered way to run the preocessing of the results and following repor
 python report_gen.py DIR_NAME --cfg ./data
 ```
 
-### Running with pre-calculated `xls` data
-
-This approach is deprecated, and will be removed in future versions.
-
-```bash
-python report_gen.py DIR_NAME --cfg ./data --calc
-```
-
 ## HAMILTON
 
 To export data in **TXT** format run the *SoftMax Pro* softare, and open given analysis. From the main menu choose 'Export' and select the `Export to XML XLS TXT` option.  
 
-![softmax_menu](media\softmax_menu.png)
+![Alt text](image.png)
 
 ![softmax_export_opt](media\softmax_export_opt.png)
 
 **Export measurements for all plates.**  
 
-**Make sure the exported file name matches the folder name structure.**  
+**Make sure the exported file name matches the folder name structure!**  
 folder name example `230922_AAV9-ELISA_fff_GN004360-086`  
 corresponding file name example `230922_AAV9-ELISA_1_20230922_103137.txt`  
 
