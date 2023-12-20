@@ -19,25 +19,32 @@
 
 ## Done
 
-### KW47-11.12.2023
+### KW52-18.12.2023
+
+- configure initial analysis folder `--ifld` argument
+- `Cancel` select folder dialog; bug fix
+- page break for plate analysis PDF
+- `sample` to `point` in graph legend
+
+### KW51-11.12.2023
 
 - masked values check [Ewald email Fri 12/15/2023 2:34 PM] `mask_reason = concentration_backfit * plate_layout_dil`
 - bug fix: `ext` legend not always shown
-- additional checks for corretness of input files
-- GUI refactorring: only select folder dialog is displayed, ten back to stdout
+- additional checks for correctness of input files
+- GUI refactoring: only select folder dialog is displayed, ten back to stdout
 - data / tests cleaning: moving files outside project folder except units tests data
 
-### KW47-04.12.2023
+### KW50-04.12.2023
 
 - GUI with desktop link
 - Ewald email 30.11.2023 (OD value vs backfitted concentration)
 
-### KW47-27.11.2023
+### KW49-27.11.2023
 
 - `PRE_DILUTION_THRESHOLD = 10` is sample valid if dilution is `>` pre dilution threshold?
 - r_squared in fit data fix if exception is thrown
 
-### KW47-20.11.2023
+### KW48-20.11.2023
 
 - non valid values `****` in experiment 231122_AAV9-ELISA_sey_GN004240-064 `PRE_DILUTION_THRESHOLD = 10`  
 - update unit tests for pre-dilution invalid results
