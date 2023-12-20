@@ -3,10 +3,10 @@
 
 ## TODO
 
+- rm deprecatred `--calc` input
 - add description of graphs to README.md, symbol meaning (croos, circle, -) [Ewald Fri 12/15/2023 2:04 PM]
 - check correctness of the exported `*.txt` filename for given plate
 - save final results with `,` decimal delimiter for Andrea
-- ( >1.436e+13 )* ?`reports\all\231017_AAV8-ELISA_sey_GN004240-056_v2` where does it come from?
 - Further review process ???
 - Unit tests
   - modules
