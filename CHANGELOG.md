@@ -1,6 +1,14 @@
 # Hamiltom report changelog
 
+## v0.1.2
+
+20.12.2023
+
+- deprecated `calc` input functionality removed
+
 ## v0.1.1
+
+20.12.2023
 
 - page break in plate report pdf
 - `sample` renamed to `point` in graph legend
