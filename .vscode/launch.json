@@ -13,7 +13,7 @@
             "justMyCode": true,
             "args": [
                 "--analysis",
-                "c:/work/hamilton/analysis/231205_AAV9-ELISA_sey_GN004240-066",
+                "c:/work/hamilton/analysis/231219_AAV9-ELISA_sey_GN004240-069",
                 "--cfg",
                 "C:/work/report-gen/data"
             ]
@@ -28,7 +28,9 @@
             "args": [
                 "--cfg",
                 "C:/work/report-gen/data",
-                "--gui"
+                "--gui",
+                "--ifld",
+                "c:/work/hamilton/analysis"
             ]
         }
     ]
