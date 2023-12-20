@@ -22,7 +22,7 @@
 ### KW52-18.12.2023
 
 - configure initial analysis folder `--ifld` argument
-- `Cancel` select folder dialog; bug fix
+- `Cancel` select folder dialog; close window; bug fix
 - page break for plate analysis PDF
 - `sample` to `point` in graph legend
 
