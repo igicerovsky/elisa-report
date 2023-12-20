@@ -76,7 +76,7 @@ def fit_reference(fnc, x, y):
     https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.curve_fit.html
     """
     p0 = [y.min(), 0.9, x[len(x) - 2], y.max()]
-    return curve_fit(fnc, x, y, p0=p0, method='lm', full_output=True, maxfev=10000)
+    return curve_fit(fnc, x, y, p0=p0, method='lm', full_output=True, maxfev=1000)
 
 
 def conc_func(x, dil, *popt):
