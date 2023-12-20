@@ -70,10 +70,10 @@ def fit_image(x, y, popt, pcov, file_path, confidence_interval=95.0,
     if (sx is not None) and (sy is not None):
         if len(sx.drop(mask_index, axis=0)) != 0:
             plt.scatter(sx.drop(mask_index, axis=0), sy.drop(mask_index, axis=0),
-                        s=48, linewidths=0.6, label='sample valid', color='forestgreen', **kwargs)
+                        s=48, linewidths=0.6, label='point valid', color='forestgreen', **kwargs)
         if (len(sx.iloc[mask_index]) != 0) and (list(mask_index) != list(sna_idx)):
             plt.scatter(sx.iloc[mask_index], sy.iloc[mask_index],
-                        s=48, linewidths=0.8, label='sample masked', color='r', **kwargs)
+                        s=48, linewidths=0.8, label='point masked', color='r', **kwargs)
 
     if len(x.drop(rm_index, axis=0)) != 0:
         plt.scatter(x.drop(rm_index, axis=0), y.drop(rm_index, axis=0), marker='+',
