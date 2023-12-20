@@ -78,24 +78,30 @@ def main_report(analysis_dir, config_dir, docxa: bool = True, docxr: bool = Fals
     print('Done.')
 
 
-def browse_analysis():
-    filename = filedialog.askdirectory(initialdir=getcwd(),
-                                       title="Select a Hamilton Analysis Folder")
-    global analysis_file, entry_analysis
-    analysis_file.set(filename)
-    entry_analysis.update()
-    global window
-    window.destroy()
+def browse_analysis(init_folder):
+    initialdir = getcwd()
+    if init_folder:
+        initialdir = init_folder
+    dirname = filedialog.askdirectory(initialdir=initialdir,
+                                      title="Select a Hamilton Analysis Folder")
+    if dirname:
+        global analysis_file, entry_analysis
+        analysis_file.set(dirname)
+        entry_analysis.update()
+        global window
+        window.destroy()
 
 
-def browse_config(config_folder):
-    filename = filedialog.askdirectory(initialdir=config_folder,  # os.patrh.join(os.getcwd(), 'data'),
-                                       title="Select a Config Folder")
-    global analysis_file
-    analysis_file.set(filename)
+def browse_config(init_folder):
+    dirname = filedialog.askdirectory(initialdir=init_folder,  # os.patrh.join(os.getcwd(), 'data'),
+                                      title="Select a Config Folder")
+
+    if dirname:
+        global config_folder
+        config_folder.set(dirname)
 
 
-def gui(config_dir):
+def gui(config_dir, init_folder):
     global window
     window = Tk()
     window.title('HAMILTON Analysis')
@@ -112,7 +118,7 @@ def gui(config_dir):
         config_folder.set(path.join(getcwd(), 'data'))
 
     button_analysis = Button(window, text="Browse Analysis Folder",
-                             command=browse_analysis)
+                             command=lambda: browse_analysis(init_folder))
     button_analysis.grid(column=0, row=0)
 
     global entry_analysis
@@ -122,7 +128,7 @@ def gui(config_dir):
                         padx=10, pady=10)
 
     button_config = Button(window, text="Browse Config Folder",
-                           command=browse_config)
+                           command=lambda: browse_config(config_dir))
     button_config.grid(column=0, row=1)
     entry_config = Entry(textvariable=config_folder, state=DISABLED, width=110)
     entry_config.grid(row=1, column=1,
@@ -140,17 +146,19 @@ def main():
                         default='./data')
     parser.add_argument('--gui', action='store_true',
                         help="use calc files as input")
+    parser.add_argument('--ifld', help="initial analysis folder", default=None)
 
     args = parser.parse_args()
     analysis_dir = args.analysis
     if analysis_dir:
         analysis_dir.rstrip("/\\")
     config_dir = args.cfg
+    init_folder = args.ifld
 
     if args.analysis:
         main_report(analysis_dir, config_dir)
     else:
-        gui(config_dir)
+        gui(config_dir, init_folder)
 
 
 if __name__ == "__main__":
