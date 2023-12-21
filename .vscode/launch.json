@@ -31,6 +31,21 @@
                 "--ifld",
                 "c:/work/hamilton/analysis"
             ]
+        },
+        {
+            "name": "profiler",
+            "type": "python",
+            "request": "launch",
+            "module": "cProfile",
+            "args": [
+                "-o",
+                "./.tmp/tmp.prof",
+                "report_gen.py",
+                "--analysis",
+                "c:/work/hamilton/analysis/231213_AAV9-ELISA_sey_GN004240-068",
+                "--cfg",
+                "C:/work/report-gen/data"
+            ]
         }
     ]
 }

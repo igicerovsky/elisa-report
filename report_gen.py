@@ -27,7 +27,8 @@ if WARNING_DISABLE:
     warnings.filterwarnings('ignore', category=UserWarning, module='openpyxl')
 
 
-def main_report(analysis_dir, config_dir, docxa: bool = True, docxr: bool = False, pdf: bool = True):
+def main_report(analysis_dir: str, config_dir: str,
+                docxa: bool = True, docxr: bool = False, pdf: bool = True) -> None:
     print(f'Analysis diretory {analysis_dir}')
     print(f'Configuration directory {config_dir}')
 
@@ -72,7 +73,7 @@ def main_report(analysis_dir, config_dir, docxa: bool = True, docxr: bool = Fals
     print('Done.')
 
 
-def browse_analysis(init_folder):
+def browse_analysis(init_folder: str) -> None:
     initialdir = getcwd()
     if init_folder:
         initialdir = init_folder
@@ -86,8 +87,8 @@ def browse_analysis(init_folder):
         window.destroy()
 
 
-def browse_config(init_folder):
-    dirname = filedialog.askdirectory(initialdir=init_folder,  # os.patrh.join(os.getcwd(), 'data'),
+def browse_config(init_folder: str) -> None:
+    dirname = filedialog.askdirectory(initialdir=init_folder,
                                       title="Select a Config Folder")
 
     if dirname:
@@ -95,7 +96,7 @@ def browse_config(init_folder):
         config_folder.set(dirname)
 
 
-def gui(config_dir, init_folder):
+def gui(config_dir: str, init_folder: str) -> str:
     global window
     window = Tk()
     window.title('HAMILTON Analysis')
@@ -132,7 +133,7 @@ def gui(config_dir, init_folder):
     return analysis_dir.get()
 
 
-def main():
+def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--analysis", help="analysis directory", default=None)
@@ -149,7 +150,6 @@ def main():
 
     if not analysis_dir:
         analysis_dir = gui(config_dir, init_folder)
-
     if not analysis_dir:
         print('Canceled.')
         return

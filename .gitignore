@@ -6,3 +6,4 @@ hamrep.egg-info
 
 *.sdax
 results_plate*
+.tmp

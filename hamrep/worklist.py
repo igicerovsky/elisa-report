@@ -2,7 +2,7 @@ import pandas as pd
 from os import path
 
 
-def check_worklist(wl):
+def check_worklist(wl: pd.DataFrame) -> list:
     valid_plates = []
     for i in range(1, 4):
         invalid_sample = wl['SampleID_{}'.format(i)].isnull().values.any()
@@ -11,7 +11,7 @@ def check_worklist(wl):
     return valid_plates
 
 
-def read_worklist(worklist_file):
+def read_worklist(worklist_file: str) -> pd.DataFrame:
     wl = pd.read_excel(worklist_file)
     wl.set_index([['control 01', 'reference 01', 'blank', 'sample 01', 'sample 02', 'sample 03',
                    'sample 04', 'sample 05', 'sample 06', 'sample 07', 'sample 08', 'sample 09', 'sample 10',
@@ -24,7 +24,7 @@ def read_worklist(worklist_file):
     return wl
 
 
-def worklist_sample(wl, plate_id):
+def worklist_sample(wl: pd.DataFrame, plate_id: int) -> tuple:
     invalid_sample = wl['SampleID_{}'.format(plate_id)].isnull().values.any()
     if invalid_sample:
         return None, None
@@ -36,7 +36,7 @@ def worklist_sample(wl, plate_id):
     return wl[cols], cols_dict
 
 
-def predil_worklist(worklist_file):
+def predil_worklist(worklist_file: str) -> pd.DataFrame:
     MANUAL_DILUTION_EXT_NAME = '_ManualDil'
     wl = read_worklist(worklist_file)
 
