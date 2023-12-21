@@ -152,6 +152,7 @@ def main():
 
     if not analysis_dir:
         print('Canceled.')
+        return
 
     try:
         main_report(analysis_dir, config_dir)
