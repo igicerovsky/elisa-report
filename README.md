@@ -156,3 +156,31 @@ corresponding file name example `230922_AAV9-ELISA_1_20230922_103137.txt`
 Folder with Hamilton related stuff.
 
 [Hamilton](<C:\Users\hwn6193\OneDrive - Takeda\2 Geräte\Hamilton_System>)
+
+## Profiling
+
+Define profiling in `launch.json` in VS Code:  
+
+```json
+{
+    "name": "profiler",
+    "type": "python",
+    "request": "launch",
+    "module": "cProfile",
+    "args": [
+        "-o",
+        "./.tmp/tmp.prof",
+        "report_gen.py",
+        "--analysis",
+        "c:/work/hamilton/analysis/231213_AAV9-ELISA_sey_GN004240-068",
+        "--cfg",
+        "C:/work/report-gen/data"
+    ]
+}
+```
+
+Run the profing server... (make su snakeviz is installed `pip install snakeviz`)  
+
+```bash
+python -m snakeviz .tmp/tmp.prof --server
+```
