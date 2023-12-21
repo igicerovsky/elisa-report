@@ -39,6 +39,14 @@ def read_exported_data(file_name):
     return csv_str
 
 
+def get_data_crop(df, row_span, col_span):
+    crop = df.iloc[row_span, col_span].copy()
+    crop.reset_index(drop=True, inplace=True)
+    crop.set_index([['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']], inplace=True)
+    crop.columns = range(1, crop.columns.size+1)
+    return crop
+
+
 def read_data_txt(file_path):
     strdata = read_exported_data(file_path)
     csv_io = StringIO(strdata)
@@ -77,28 +85,10 @@ def save_plate_layout_csv(layout_list, out_file):
     l.to_csv(out_file)
 
 
-def get_data_crop(df, row_span, col_span):
-    crop = df.iloc[row_span, col_span].copy()
-    crop.reset_index(drop=True, inplace=True)
-    crop.set_index([['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']], inplace=True)
-    crop.columns = range(1, crop.columns.size+1)
-    return crop
-
-
-def read_data_xls(file_path):
-    data = pd.read_excel(file_path, sheet_name=None)
-    df_450 = get_data_crop(data["Data"], range(2, 10), range(2, 14))
-    df_630 = get_data_crop(data["Data"], range(2, 10), range(15, 27))
-
-    return df_450, df_630
-
-
 def read_concat_data(data_file_path):
     ext = path.splitext(data_file_path)[1]
     if ext == '.txt':
         read_fn = read_data_txt
-    elif ext == '.xlsx':
-        read_fn = read_data_xls
     else:
         raise Exception(f'Invalid inpit data file {data_file_path}')
 
