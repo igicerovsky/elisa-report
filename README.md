@@ -28,26 +28,26 @@ python -m build --sdist --wheel
 ```bash
 python .\report_gen.py --help
 
-usage: report_gen.py [-h] [--analysis ANALYSIS] [--cfg CFG] [--gui]
+usage: report_gen.py [-h] [--analysis ANALYSIS] [--cfg CFG]
                      [--ifld IFLD]
 
 options:
   -h, --help           show this help message and exit
   --analysis ANALYSIS  analysis directory
   --cfg CFG            config and params directory
-  --gui                use gui dialog for input
   --ifld IFLD          initial analysis folder
 ```
 
 `--cgf` is path to the configuration directory.  
-`--gui` invokes a dialog which prompts for user input.  
 `--ifld` set an initial folder where GUI analysis folder shall open at start.  
 
 ![gui](media/gui.png)  
 
 `--analysis` is path to a folder with finished Hamilton analysis, e.g. `C:/work/hamilton/230801_AAV9-ELISA_sey_GN004240-053`  
-**Analysis folder name is parsed for encoding certain analysis information!** The structume shall be `[DATE]_[METHOD]_[USER]_[GN]`, where the fields are separated by underscore character `_`  
-where `[DATE]` is a date in format `%y%m%d` (*230801*)  
+If analysis directory is not given, GUI window opens to select the diectory.  
+**Analysis folder name is parsed to retrieve certain analysis information!** The structume shall be `[DATE]_[METHOD]_[USER]_[GN]`, where the fields are separated by underscore character `_`  
+where  
+`[DATE]` is a date in format `%y%m%d` (*230801*)  
 `[GN]` is analysis identifier (*GN004240-033*)  
 `[PROTOCOL]` is a protocol name (*AAV9-ELISA*)  
 `[USER]` is user name/coce (*sey*)

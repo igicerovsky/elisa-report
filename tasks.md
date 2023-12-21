@@ -21,6 +21,7 @@
 
 ### KW52-18.12.2023
 
+- exception handling added to main script
 - configure initial analysis folder `--ifld` argument
 - `Cancel` select folder dialog; close window; bug fix
 - page break for plate analysis PDF

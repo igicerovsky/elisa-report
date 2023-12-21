@@ -79,8 +79,8 @@ def browse_analysis(init_folder):
     dirname = filedialog.askdirectory(initialdir=initialdir,
                                       title="Select a Hamilton Analysis Folder")
     if dirname:
-        global analysis_file, entry_analysis
-        analysis_file.set(dirname)
+        global analysis_dir, entry_analysis
+        analysis_dir.set(dirname)
         entry_analysis.update()
         global window
         window.destroy()
@@ -101,9 +101,9 @@ def gui(config_dir, init_folder):
     window.title('HAMILTON Analysis')
     window.geometry("800x80")
 
-    global analysis_file
-    analysis_file = StringVar()
-    analysis_file.set('')
+    global analysis_dir
+    analysis_dir = StringVar()
+    analysis_dir.set('')
     global config_folder
     config_folder = StringVar()
     if config_dir:
@@ -116,7 +116,7 @@ def gui(config_dir, init_folder):
     button_analysis.grid(column=0, row=0)
 
     global entry_analysis
-    entry_analysis = Entry(textvariable=analysis_file,
+    entry_analysis = Entry(textvariable=analysis_dir,
                            state=DISABLED, width=110)
     entry_analysis.grid(row=0, column=1,
                         padx=10, pady=10)
@@ -129,9 +129,7 @@ def gui(config_dir, init_folder):
                       padx=10, pady=10)
     window.mainloop()
 
-    afile = analysis_file.get()
-    if afile:
-        main_report(afile, config_folder.get())
+    return analysis_dir.get()
 
 
 def main():
@@ -140,8 +138,6 @@ def main():
         "--analysis", help="analysis directory", default=None)
     parser.add_argument('--cfg', help="config and params directory",
                         default='./data')
-    parser.add_argument('--gui', action='store_true',
-                        help="use gui dialog for input", default=False)
     parser.add_argument('--ifld', help="initial analysis folder", default=None)
 
     args = parser.parse_args()
@@ -151,10 +147,17 @@ def main():
     config_dir = args.cfg
     init_folder = args.ifld
 
-    if args.analysis:
+    if not analysis_dir:
+        analysis_dir = gui(config_dir, init_folder)
+
+    if not analysis_dir:
+        print('Canceled.')
+
+    try:
         main_report(analysis_dir, config_dir)
-    else:
-        gui(config_dir, init_folder)
+    except Exception as e:
+        print(e)
+        print('Failed!')
 
 
 if __name__ == "__main__":

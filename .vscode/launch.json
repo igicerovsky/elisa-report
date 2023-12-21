@@ -28,7 +28,6 @@
             "args": [
                 "--cfg",
                 "C:/work/report-gen/data",
-                "--gui",
                 "--ifld",
                 "c:/work/hamilton/analysis"
             ]
