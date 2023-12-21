@@ -6,7 +6,7 @@ from zlib import crc32
 from .reportmd import header_section, make_final, result_section, fit_section_md, param_section, sample_section_md
 
 
-def check_report_crc(report: str, crc):
+def check_report_crc(report: str, crc: int) -> None:
     res = bytearray(report, 'utf8')
     t = crc32(res)
 
@@ -56,9 +56,7 @@ This a PoC for automatic report generation...\n\n'''
     img_dir = os.path.join(report_dir, 'img')
     os.makedirs(report_dir, exist_ok=True)
     os.makedirs(img_dir, exist_ok=True)
-    # TODO: !!! global fit_result[3]
     report += fit_section_md(ref, popt, pcov, img_dir)
-
     report += sample_section_md(dfg, ref, blank, dr, img_dir)
 
     return report, final
