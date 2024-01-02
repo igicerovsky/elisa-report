@@ -6,9 +6,10 @@ import chardet
 from pathlib import Path
 from io import StringIO
 from .config import REFVAL_NAME, LIMITS_NAME, DIL_NAME
+from hamrep.typing import PathLike, PathLikeOrNone
 
 
-def get_encoding(file_name):
+def get_encoding(file_name: PathLike) -> str:
     blob = Path(file_name).read_bytes()
     result = chardet.detect(blob)
     charenc = result['encoding']
@@ -20,7 +21,7 @@ SKIP_LINES = 3
 SKIP_BEGIN = 1
 
 
-def read_exported_data(file_name):
+def read_exported_data(file_name: PathLike) -> str:
     count = 0
     csv_str = ''
     char_enc = get_encoding(file_name)
@@ -39,7 +40,7 @@ def read_exported_data(file_name):
     return csv_str
 
 
-def get_data_crop(df, row_span, col_span):
+def get_data_crop(df: pd.DataFrame, row_span: tuple, col_span: tuple) -> pd.DataFrame:
     crop = df.iloc[row_span, col_span].copy()
     crop.reset_index(drop=True, inplace=True)
     crop.set_index([['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']], inplace=True)
@@ -47,7 +48,7 @@ def get_data_crop(df, row_span, col_span):
     return crop
 
 
-def read_data_txt(file_path):
+def read_data_txt(file_path: PathLike) -> tuple:
     strdata = read_exported_data(file_path)
     csv_io = StringIO(strdata)
     df = pd.read_csv(csv_io, sep=",")
@@ -58,14 +59,14 @@ def read_data_txt(file_path):
     return df_450, df_630
 
 
-def to_multi_index(df_single_index, name):
+def to_multi_index(df_single_index: pd.DataFrame, name: str) -> pd.DataFrame:
     df_multi_idx = df_single_index.stack().to_frame()
     df_multi_idx.columns = [name]
 
     return df_multi_idx
 
 
-def index_plate_layout(plate_layout):
+def index_plate_layout(plate_layout: pd.DataFrame) -> pd.DataFrame:
     plate_layout.set_index(
         [['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']], inplace=True)
     plate_layout.columns = range(1, plate_layout.columns.size + 1)
@@ -73,19 +74,19 @@ def index_plate_layout(plate_layout):
     return plate_layout
 
 
-def to_plate_layout(lst):
+def to_plate_layout(lst: list) -> pd.DataFrame:
     l_2d = to_matrix(lst, 8)
     plate_layout = pd.DataFrame(l_2d).T
 
     return index_plate_layout(plate_layout)
 
 
-def save_plate_layout_csv(layout_list, out_file):
+def save_plate_layout_csv(layout_list: list, out_file: PathLike) -> None:
     l = to_plate_layout(layout_list)
     l.to_csv(out_file)
 
 
-def read_concat_data(data_file_path):
+def read_concat_data(data_file_path: PathLike) -> pd.DataFrame:
     ext = path.splitext(data_file_path)[1]
     if ext == '.txt':
         read_fn = read_data_txt
@@ -104,7 +105,9 @@ def read_concat_data(data_file_path):
                     left_index=True, right_index=True)
 
 
-def concat_layouts(playout_id, playout_num, playout_dil_id):
+def concat_layouts(playout_id: pd.DataFrame,
+                   playout_num: pd.DataFrame,
+                   playout_dil_id: pd.DataFrame) -> pd.DataFrame:
     res = to_multi_index(playout_id, 'plate_layout_ident')
     res = pd.merge(res, to_multi_index(
         playout_num, 'plate_layout_num'), left_index=True, right_index=True)
@@ -114,18 +117,18 @@ def concat_layouts(playout_id, playout_num, playout_dil_id):
     return res
 
 
-def concat_data_with_layouts(df_data, df_layout):
+def concat_data_with_layouts(df_data: pd.DataFrame, df_layout: pd.DataFrame) -> pd.DataFrame:
     return pd.merge(df_data, df_layout, left_index=True, right_index=True)
 
 
-def read_params(file_path):
+def read_params(file_path: PathLike) -> pd.DataFrame:
     params = pd.read_csv(file_path, sep=';')
     params.set_index('Variable', inplace=True)
 
     return params
 
 
-def read_layouts(file_id, file_num, file_dil):
+def read_layouts(file_id: PathLike, file_num: PathLike, file_dil: PathLike) -> pd.DataFrame:
     plate_layout_id = read_plate_layout(file_id)
     plate_layout_num = read_plate_layout(file_num)
     plate_layout_dil_id = read_plate_layout(file_dil)
@@ -133,7 +136,8 @@ def read_layouts(file_id, file_num, file_dil):
     return concat_layouts(plate_layout_id, plate_layout_num, plate_layout_dil_id)
 
 
-def read_params_json(analysis_dir, config_dir, params_filename, atype):
+def read_params_json(analysis_dir: PathLike, config_dir: PathLike,
+                     params_filename: PathLike, atype: str):
     params_path_default = path.join(config_dir, params_filename)
     params_path_local = path.join(analysis_dir, params_filename)
     params_path = None

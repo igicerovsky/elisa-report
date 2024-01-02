@@ -17,6 +17,7 @@ from hamrep.mdhandling import md2docx, md2pdf, export_main_report
 from hamrep.reportmd import save_md
 from hamrep.config import config as cfg
 from hamrep.config import init_config, REFVAL_NAME, DIL_NAME
+from hamrep.typing import PathLike, PathLikeOrNone
 import hamrep.reportgen as rg
 
 WARNING_DISABLE = True
@@ -27,7 +28,7 @@ if WARNING_DISABLE:
     warnings.filterwarnings('ignore', category=UserWarning, module='openpyxl')
 
 
-def main_report(analysis_dir: str, config_dir: str,
+def main_report(analysis_dir: PathLike, config_dir: PathLike,
                 docxa: bool = True, docxr: bool = False, pdf: bool = True) -> None:
     print(f'Analysis diretory {analysis_dir}')
     print(f'Configuration directory {config_dir}')
@@ -73,7 +74,7 @@ def main_report(analysis_dir: str, config_dir: str,
     print('Done.')
 
 
-def browse_analysis(init_folder: str) -> None:
+def browse_analysis(init_folder: PathLikeOrNone) -> None:
     initialdir = getcwd()
     if init_folder:
         initialdir = init_folder
@@ -87,7 +88,7 @@ def browse_analysis(init_folder: str) -> None:
         window.destroy()
 
 
-def browse_config(init_folder: str) -> None:
+def browse_config(init_folder: PathLikeOrNone) -> None:
     dirname = filedialog.askdirectory(initialdir=init_folder,
                                       title="Select a Config Folder")
 
@@ -96,7 +97,7 @@ def browse_config(init_folder: str) -> None:
         config_folder.set(dirname)
 
 
-def gui(config_dir: str, init_folder: str) -> str:
+def gui(config_dir: PathLikeOrNone, init_folder: PathLikeOrNone) -> PathLikeOrNone:
     global window
     window = Tk()
     window.title('HAMILTON Analysis')
