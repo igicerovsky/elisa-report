@@ -56,9 +56,11 @@ def mask_value_fn(val, odmin, odmax, note):
 
 def mask_value_short_fn(val, vmin, vmax, dil, note):
     if val < vmin:
-        return '<{:.{dgts}e}'.format(Decimal(vmin * dil), dgts=RESULT_DIGITS)
+        # return '<{:.{dgts}e}'.format(Decimal(vmin * dil), dgts=RESULT_DIGITS)
+        return '<LOQ'
     if val > vmax:
-        return '>{:.{dgts}e}'.format(Decimal(vmax * dil), dgts=RESULT_DIGITS)
+        # return '>{:.{dgts}e}'.format(Decimal(vmax * dil), dgts=RESULT_DIGITS)
+        return '>ULOQ'
     if math.isnan(val):
         return 'Backfit failed.'
     return None

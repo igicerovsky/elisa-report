@@ -55,20 +55,20 @@ def generic_test(analysis_dir, report_plates_crc, assembly_crc):
 
 def test_e2e_aav9():
     analysis_dir = './test/analysis/230801_AAV9-ELISA_sey_GN004240-053'
-    report_plates_crc = [3790190594, 456032002, 1149567454]
+    report_plates_crc = [2262162930, 2246529684, 3595631449]
     assembly_crc = 2879376160
     generic_test(analysis_dir, report_plates_crc, assembly_crc)
 
 
 def test_e2e_aav9_dilthr():
     analysis_dir = './test/analysis/231122_AAV9-ELISA_sey_GN004240-064'
-    report_plates_crc = [3322756084]
+    report_plates_crc = [4112861759]
     assembly_crc = 51616332
     generic_test(analysis_dir, report_plates_crc, assembly_crc)
 
 
 def test_e2e_aav8():
     analysis_dir = './test/analysis/231024_AAV8-ELISA_sey_GN004240-058'
-    report_plates_crc = [693028328]
+    report_plates_crc = [1457636045]
     assembly_crc = 3592875001
     generic_test(analysis_dir, report_plates_crc, assembly_crc)

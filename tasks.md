@@ -19,6 +19,10 @@
 
 ## Done
 
+### 02.01.2024-Prot-Quant Meeting
+
+- `<LOQ` except of number in `mask_reason`
+
 ### KW52-18.12.2023
 
 - profiling (find bottlenecks): image generating is slow
