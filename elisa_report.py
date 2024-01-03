@@ -8,17 +8,17 @@ from zlib import crc32
 from tkinter import *
 from tkinter import filedialog
 
-from hamrep.readdata import read_params
-from hamrep.mkinout import make_input_paths
-from hamrep.worklist import predil_worklist, check_worklist
-from hamrep.sample import make_concentration
-from hamrep.readdata import read_layouts
-from hamrep.mdhandling import md2docx, md2pdf, export_main_report
-from hamrep.reportmd import save_md
-from hamrep.config import config as cfg
-from hamrep.config import init_config, REFVAL_NAME, DIL_NAME
-from hamrep.typing import PathLike, PathLikeOrNone
-import hamrep.reportgen as rg
+from elisarep.readdata import read_params
+from elisarep.mkinout import make_input_paths
+from elisarep.worklist import predil_worklist, check_worklist
+from elisarep.sample import make_concentration
+from elisarep.readdata import read_layouts
+from elisarep.mdhandling import md2docx, md2pdf, export_main_report
+from elisarep.reportmd import save_md
+from elisarep.config import config as cfg
+from elisarep.config import init_config, REFVAL_NAME, DIL_NAME
+from elisarep.typing import PathLike, PathLikeOrNone
+import elisarep.reportgen as rg
 
 WARNING_DISABLE = True
 

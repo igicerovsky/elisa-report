@@ -3,16 +3,16 @@ import warnings
 
 from scipy.optimize import OptimizeWarning
 
-from hamrep.readdata import read_params
-from hamrep.mkinout import make_input_paths, parse_dir_name
-from hamrep.worklist import predil_worklist
-from hamrep.sample import make_concentration
-from hamrep.readdata import read_layouts
-import hamrep.reportgen as rg
-from hamrep.reportmain import check_report_crc
-from hamrep.reportmdassembly import assembly
-from hamrep.config import config as cfg
-from hamrep.config import init_config, REFVAL_NAME, DIL_NAME
+from elisarep.readdata import read_params
+from elisarep.mkinout import make_input_paths, parse_dir_name
+from elisarep.worklist import predil_worklist
+from elisarep.sample import make_concentration
+from elisarep.readdata import read_layouts
+import elisarep.reportgen as rg
+from elisarep.reportmain import check_report_crc
+from elisarep.reportmdassembly import assembly
+from elisarep.config import config as cfg
+from elisarep.config import init_config, REFVAL_NAME, DIL_NAME
 
 CONFIG_DIR = './data'
 PLATE_LAYOUT_ID = 'plate_layout_ident.csv'

@@ -1,33 +1,30 @@
 {
-    // Use IntelliSense to learn about possible attributes.
-    // Hover to view descriptions of existing attributes.
-    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
         {
             "name": "report",
             "type": "python",
             "request": "launch",
-            "program": "report_gen.py",
+            "program": "elisa_report.py",
             "console": "integratedTerminal",
             "justMyCode": true,
             "args": [
                 "--analysis",
                 "c:/work/hamilton/analysis/231219_AAV9-ELISA_sey_GN004240-069",
                 "--cfg",
-                "C:/work/report-gen/data"
+                "C:/work/elisa-report/data"
             ]
         },
         {
             "name": "gg",
             "type": "python",
             "request": "launch",
-            "program": "report_gen.py",
+            "program": "elisa_report.py",
             "console": "integratedTerminal",
             "justMyCode": true,
             "args": [
                 "--cfg",
-                "C:/work/report-gen/data",
+                "C:/work/elisa-report/data",
                 "--ifld",
                 "c:/work/hamilton/analysis"
             ]
@@ -40,11 +37,11 @@
             "args": [
                 "-o",
                 "./.tmp/tmp.prof",
-                "report_gen.py",
+                "elisa_report.py",
                 "--analysis",
                 "c:/work/hamilton/analysis/231213_AAV9-ELISA_sey_GN004240-068",
                 "--cfg",
-                "C:/work/report-gen/data"
+                "C:/work/elisa-report/data"
             ]
         }
     ]

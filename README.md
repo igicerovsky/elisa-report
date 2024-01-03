@@ -73,7 +73,7 @@ python report_gen.py --cfg ./data
 To make sure intended folder path is used, provide absolute path.
 
 ```bash
-python report_gen.py --cfg C:/work/report-gen/data
+python report_gen.py --cfg C:/work/elisa-report/data
 ```
 
 Configuration file `config.json` is a json format file containing configurable parameters. It could be located in either default folder `./data` or in local analysis folder. If the file is located in the **analysis** folder it has precedence (is meant to be modified by a user). Though, if the config file is not found in analysis folder it is read from the default location in the `./data` folder.  
@@ -174,7 +174,7 @@ Define profiling in `launch.json` in VS Code:
         "--analysis",
         "c:/work/hamilton/analysis/231213_AAV9-ELISA_sey_GN004240-068",
         "--cfg",
-        "C:/work/report-gen/data"
+        "C:/work/elisa-report/data"
     ]
 }
 ```

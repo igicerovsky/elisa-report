@@ -6,7 +6,7 @@ import chardet
 from pathlib import Path
 from io import StringIO
 from .config import REFVAL_NAME, LIMITS_NAME, DIL_NAME
-from hamrep.typing import PathLike, PathLikeOrNone
+from elisarep.typing import PathLike, PathLikeOrNone
 
 
 def get_encoding(file_name: PathLike) -> str:
