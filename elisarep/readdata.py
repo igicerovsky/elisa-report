@@ -134,27 +134,3 @@ def read_layouts(file_id: PathLike, file_num: PathLike, file_dil: PathLike) -> p
     plate_layout_dil_id = read_plate_layout(file_dil)
 
     return concat_layouts(plate_layout_id, plate_layout_num, plate_layout_dil_id)
-
-
-def read_params_json(analysis_dir: PathLike, config_dir: PathLike,
-                     params_filename: PathLike, atype: str):
-    params_path_default = path.join(config_dir, params_filename)
-    params_path_local = path.join(analysis_dir, params_filename)
-    params_path = None
-
-    if path.exists(params_path_local):
-        params_path = params_path_local
-        print(f'Loading local params {params_path}')
-    elif path.exists(params_path_default):
-        params_path = params_path_default
-        print(f'Loading default params {params_path}')
-    else:
-        raise Exception(
-            f'Parameters file not found {params_path_local}, {params_path_default}')
-    with open(params_path_default) as json_file:
-        data = json.load(json_file)
-        dilutions = data[DIL_NAME]
-        ref_val_max = data[atype][REFVAL_NAME]
-        limits = data[atype][LIMITS_NAME]
-
-    return ref_val_max, dilutions, limits

@@ -31,7 +31,7 @@ def init_config(analysis_dir, config_dir):
 
 
 def read_config(filename, a_type):
-    keys = ['pandoc_bin', 'pdflatex_bin', 'reference_docx', 'params_filename',
+    keys = ['pandoc_bin', 'pdflatex_bin', 'reference_docx',
             'plate_layout_id', 'plate_layout_num', 'plate_layout_dil_id', 'numeric_warning_disable',
             DIL_NAME]
     k_type = ['AAV8', 'AAV9', 'default']
