@@ -4,6 +4,8 @@
 ## TODO
 
 - rm deprecatred `--calc` input
+- insert Excel sheet to Word final results; configuring the formatting
+- page break in Word (sheet is not split on page end)
 - add description of graphs to README.md, symbol meaning (croos, circle, -) [Ewald Fri 12/15/2023 2:04 PM]
 - check correctness of the exported `*.txt` filename for given plate
 - save final results with `,` decimal delimiter for Andrea

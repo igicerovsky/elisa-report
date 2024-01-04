@@ -146,35 +146,6 @@ def make_input_paths(input_dir):
     return {'worklist': worklist, 'params': params}
 
 
-def make_input_analysis(input_dir, base_name, plate_id):
-    """Make file path to analysis results (measured data) located in analysis/input directory
-
-    Parameters:
-    -----------
-    input_dir: path_like
-        Analysis input directory
-    base_name: string
-        Analysis base name
-    plate_id: int
-        Plate number to be processed
-
-    Raises:
-    -------
-    Exception
-        If given analysis file doesn't exist an exception is raised
-
-    Returns:
-    --------
-    path_like
-        File name of an analysis results
-    """
-    analysis = path.join(input_dir, base_name + 'calc{}.xlsx'.format(plate_id))
-    if not path.isfile(analysis):
-        raise Exception("Analysis file path is invlaid! {}".format(analysis))
-
-    return analysis
-
-
 def make_output_paths(input_dir, base_name, plate_id):
     """Make output data paths
 

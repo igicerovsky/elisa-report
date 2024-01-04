@@ -13,15 +13,15 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "workdir", help="working directory of an experiment", default=None)
-    parser.add_argument('--calc', action='store_true',
-                        help="use calc files as input", default=False)
+    parser.add_argument('--par', action='store_true',
+                        help="use par files as input", default=False)
 
     args = parser.parse_args()
     working_dir = args.workdir
-    calc_input = args.calc
+    par_input = args.par
 
     print(
-        f'Testing scipt :)\nWorking directory is `{working_dir}`, calc input is set to `{calc_input}`\n')
+        f'Testing scipt :)\nWorking directory is `{working_dir}`, par input is set to `{par_input}`\n')
 
     new_dir = path.join(working_dir, '_foo_dir')
     makedirs(new_dir, exist_ok=True)
@@ -29,7 +29,7 @@ def main():
     try:
         new_file = path.join(new_dir, 'foo.txt')
         with open(new_file, 'w') as fl:
-            fl.write(f':)\ncalc is {calc_input}\n')
+            fl.write(f':)\npar is {par_input}\n')
     except Exception as e:
         print('Error: ' + str(e))
 
