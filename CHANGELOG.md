@@ -5,10 +5,11 @@
 03.01.2024
 
 - remaned to elisa
-- - configure initial analysis folder `--ifld` argument
+- configure initial analysis folder `--ifld` argument
 - `Cancel` select folder dialog; close window; bug fix
 - page break for plate analysis PDF
 - `sample` to `point` in graph legend
+- `<LOQ` and `>ULOQ` except of number in `mask_reason` in detailed report
 
 ## v0.1.2
 
