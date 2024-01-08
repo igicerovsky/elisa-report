@@ -11,7 +11,7 @@ from os import path
 import subprocess
 
 from .reportmd import save_md
-from .reportmdassembly import assembly
+from .reportmdassembly import assembly, assembly_word
 from .mkinout import parse_dir_name
 
 
@@ -67,7 +67,7 @@ def md2pdf(pandoc_bin, pdflatex_bin, md_filepath):
         print(e)
 
 
-def export_main_report(reports, working_dir, pandoc_bin, reference_doc):
+def export_main_report(reports, working_dir, pandoc_bin, reference_doc, docx=True):
     """Creates main report
 
     Concatenate reports from plates to a summary report.
@@ -84,11 +84,19 @@ def export_main_report(reports, working_dir, pandoc_bin, reference_doc):
         path to docx reference doc defining styles.
     """
 
-    parsed_dir = parse_dir_name(working_dir)
-    md_assembly = assembly(
-        reports, protocol=parsed_dir['protocol'])
-    mdfile = '{}_{}.md'.format(parsed_dir['date'], parsed_dir['protocol'])
-    md_filepath = path.join(working_dir, mdfile)
-    save_md(md_filepath, md_assembly)
+    if not docx:
+        parsed_dir = parse_dir_name(working_dir)
+        md_assembly = assembly(
+            reports, protocol=parsed_dir['protocol'])
+        mdfile = '{}_{}.md'.format(parsed_dir['date'], parsed_dir['protocol'])
+        md_filepath = path.join(working_dir, mdfile)
+        save_md(md_filepath, md_assembly)
 
-    md2docx(pandoc_bin, reference_doc, md_filepath)
+        md2docx(pandoc_bin, reference_doc, md_filepath)
+    else:
+        parsed_dir = parse_dir_name(working_dir)
+        docxfile = '{}_{}_new.docx'.format(
+            parsed_dir['date'], parsed_dir['protocol'])
+        docxfile = path.join(working_dir, docxfile)
+        assembly_word(reports, protocol=parsed_dir['protocol'],
+                      docx_path=docxfile, reference_doc=reference_doc)

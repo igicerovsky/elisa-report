@@ -41,6 +41,8 @@ For detailed method status see either SOP-234702 and/or method history file DMD-
 
 \* sample will be retested
 
+\newpage
+
 ### Plate 2
 
 | Sample type   | Sample Name         |   Pre-dilution | Result [cp/ml]   | CV [%]   | Comment      |

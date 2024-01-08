@@ -5,7 +5,6 @@ to fit the reference data and compute bacfit for analysis data
 as well as exporting data to Pandas dataframe object.
 """
 import numpy as np
-import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
 import pandas as pd
 from scipy.stats import distributions

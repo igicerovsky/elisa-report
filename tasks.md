@@ -3,9 +3,6 @@
 
 ## TODO
 
-- rm deprecatred `--calc` input
-- insert Excel sheet to Word final results; configuring the formatting
-- page break in Word (sheet is not split on page end)
 - add description of graphs to README.md, symbol meaning (croos, circle, -) [Ewald Fri 12/15/2023 2:04 PM]
 - check correctness of the exported `*.txt` filename for given plate
 - save final results with `,` decimal delimiter for Andrea
@@ -21,10 +18,18 @@
 
 ## Done
 
-### 02.01.2024-Prot-Quant Meeting
+## KW01-08.01.2024
 
-- `<LOQ` except of number in `mask_reason`
+- in progress...
+
+### KW01-02.01.2024-Prot-Quant Meeting
+
+- `<LOQ`, `>ULOQ` except of number in `mask_reason`
 - refactoring removing unused code, params
+- rm deprecated `--calc` input remnants
+- MS Word final report building programmatically
+- insert sheet to Word final results; configuring the formatting
+- page break in Word (sheet is not split on page end)
 
 ### KW52-18.12.2023
 

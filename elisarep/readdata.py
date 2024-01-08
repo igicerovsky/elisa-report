@@ -1,12 +1,10 @@
 import pandas as pd
 from .layouthandle import read_plate_layout, to_matrix
 from os import path
-import json
 import chardet
 from pathlib import Path
 from io import StringIO
-from .config import REFVAL_NAME, LIMITS_NAME, DIL_NAME
-from elisarep.typing import PathLike, PathLikeOrNone
+from elisarep.typing import PathLike
 
 
 def get_encoding(file_name: PathLike) -> str:
