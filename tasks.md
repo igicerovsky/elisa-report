@@ -3,6 +3,7 @@
 
 ## TODO
 
+- 231213_AAV9-ELISA_sey_GN004240-068; plate 3; why is masked second point and not first??? see fitting
 - add description of graphs to README.md, symbol meaning (croos, circle, -) [Ewald Fri 12/15/2023 2:04 PM]
 - check correctness of the exported `*.txt` filename for given plate
 - save final results with `,` decimal delimiter for Andrea
@@ -18,9 +19,14 @@
 
 ## Done
 
+## KW03-15.01.2024
+
+- in progress..
+
 ## KW01-08.01.2024
 
-- in progress...
+- new version deployed
+- invstigating fit
 
 ### KW01-02.01.2024-Prot-Quant Meeting
 
