@@ -3,7 +3,7 @@ _foo_dir
 build
 dist
 hamrep.egg-info
-
+.vs
 *.sdax
 results_plate*
 .tmp
