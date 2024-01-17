@@ -1,4 +1,4 @@
-# Report Generation
+# ELISA Report Generation
 
 Python project for automatic report generation from Hamilton measurements.
 
@@ -7,7 +7,7 @@ Python project for automatic report generation from Hamilton measurements.
 To install python libraries use
 
 ```bash
-pip install -r requirements.txt```
+pip install -r requirements.txt
 ```
 
 Install `pandoc` frpm [pandoc](https://pandoc.org/installing.html) website.  
