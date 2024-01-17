@@ -1,5 +1,10 @@
 # Hamiltom report changelog
 
+## v0.1.4
+
+- unit tests update
+- fit data reordering
+
 ## v0.1.3
 
 03.01.2024

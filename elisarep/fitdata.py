@@ -74,7 +74,8 @@ def fit_reference(fnc, x, y):
     -------
     https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.curve_fit.html
     """
-    p0 = [y.min(), 0.9, x[len(x) - 2], y.max()]
+    inflect = x.min() + 0.8 * (x.max() - x.min())
+    p0 = [y.min(), 0.9, inflect, y.max()]
     return curve_fit(fnc, x, y, p0=p0, method='lm', full_output=True, maxfev=1000)
 
 
@@ -173,7 +174,7 @@ def backfit(df, param):
     return bf
 
 
-def fit_reference_auto_rm(x, y, err_threshold=0.998, verbose=False):
+def fit_reference_auto_rm(xs, ys, err_threshold=0.998, verbose=False):
     """Fits the reference and removes a point to fing min error
 
     Parameters
@@ -199,6 +200,10 @@ def fit_reference_auto_rm(x, y, err_threshold=0.998, verbose=False):
         fit statistics as dataframe
     """
 
+    x = xs.to_numpy()
+    y = ys.to_numpy()
+    x.sort()
+    y.sort()
     fit_stats = pd.DataFrame(columns=['idx', 'metric', 'note'])
     fc = None
     try:
@@ -233,12 +238,15 @@ def fit_reference_auto_rm(x, y, err_threshold=0.998, verbose=False):
                                          'metric < threshold ({:.3f} < {:.3f})'.format(r2_max, err_threshold)]
 
     for i in range(len(x)):
-        xd = x.drop([i], axis=0)
-        yd = y.drop([i], axis=0)
+        xd = xs.drop([i], axis=0)
+        yd = ys.drop([i], axis=0)
+        x = xd.to_numpy()
+        y = yd.to_numpy()
+        x.sort()
+        y.sort()
         try:
-            fc_i = fit_reference(func, xd.to_numpy(), yd.to_numpy())
+            fc_i = fit_reference(func, x, y)
         except Exception as e:
-            estr = '{0}, {1} Reason: {2}'.format(np.nan, [i], str(e))
             if verbose:
                 print(e)
             fit_stats.loc[len(fit_stats)] = [i, np.nan, str(e)]
