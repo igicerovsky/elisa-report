@@ -7,15 +7,16 @@ from os import path, getcwd
 import argparse
 import warnings
 
-from scipy.optimize import OptimizeWarning
 from zlib import crc32
 
 from tkinter import StringVar, Button, Entry, DISABLED, Tk
 from tkinter import filedialog
 
+from scipy.optimize import OptimizeWarning
+
 from elisarep.readdata import read_params
 from elisarep.mkinout import make_input_paths
-from elisarep.worklist import predil_worklist, check_worklist
+from elisarep.worklist import predil_worklist
 from elisarep.sample import make_concentration
 from elisarep.readdata import read_layouts
 from elisarep.mdhandling import md2docx, md2pdf, export_main_report
@@ -26,6 +27,9 @@ from elisarep.typing import PathLike, PathLikeOrNone
 import elisarep.reportgen as rg
 
 WARNING_DISABLE = True
+
+window = None
+
 
 if WARNING_DISABLE:
     warnings.simplefilter('ignore', RuntimeWarning)
@@ -61,8 +65,7 @@ def main_report(analysis_dir: PathLike, config_dir: PathLike,
                            path.join(config_dir, cfg['reference_docx']))
 
     for report in reports:
-        print('Report for plate {} saved as {}'.format(
-            report['plate'], report['path']))
+        print(f"Report for plate {report['plate']} saved as {report['path']}")
         save_md(report['path'], report['md'])
 
         if docxr:
@@ -74,7 +77,7 @@ def main_report(analysis_dir: PathLike, config_dir: PathLike,
 
         binr = bytearray(report['md'], 'utf8')
         t = crc32(binr)
-        print("CRC for '{}' is {}".format(report['path'], t))
+        print(f"CRC for '{report['path']}' is {t}")
 
     print('Done.')
 
@@ -109,7 +112,6 @@ def browse_config(init_folder: PathLikeOrNone) -> None:
 def gui(config_dir: PathLikeOrNone, init_folder: PathLikeOrNone) -> PathLikeOrNone:
     """ GUI dialaog for data input
     """
-    global window
     window = Tk()
     window.title('HAMILTON Analysis')
     window.geometry("800x80")

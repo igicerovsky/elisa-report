@@ -1,6 +1,8 @@
 from os import path
 import json
 
+from .typing import PathLike
+
 CONFIG_FILENAME = 'config.json'
 
 REFVAL_NAME = 'referenceValue'
@@ -9,10 +11,12 @@ DIL_NAME = 'dilutions'
 SOP_NAME = 'SOP'
 MHF_NAME = 'MHF'
 
-config = dict()
+config = {}
 
 
-def analysis_type(analysis_dir):
+def analysis_type(analysis_dir: PathLike) -> dict:
+    """ Retrieve analysis type
+    """
     if analysis_dir.lower().find('aav9') != -1:
         config['a_type'] = 'AAV9'
         print('Applying parameters for AAV9.')
@@ -25,12 +29,16 @@ def analysis_type(analysis_dir):
     return config['a_type']
 
 
-def init_config(analysis_dir, config_dir):
+def init_config(analysis_dir: PathLike, config_dir: PathLike) -> None:
+    """ Initialize config
+    """
     a_type = analysis_type(analysis_dir)
     read_config(path.join(config_dir, CONFIG_FILENAME), a_type)
 
 
-def read_config(filename, a_type):
+def read_config(filename: PathLike, a_type: str) -> dict:
+    """ Read config from file
+    """
     keys = ['pandoc_bin', 'pdflatex_bin', 'reference_docx',
             'plate_layout_id', 'plate_layout_num', 'plate_layout_dil_id', 'numeric_warning_disable',
             DIL_NAME]
@@ -40,7 +48,7 @@ def read_config(filename, a_type):
         for key, value in items:
             if key in keys:
                 config[key] = value
-            elif not (key in k_type):
+            elif not key in k_type:
                 raise KeyError(key)
         dc = dict(items)
         if a_type in dc:
