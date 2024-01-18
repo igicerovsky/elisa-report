@@ -217,8 +217,8 @@ def fit_reference_auto_rm(xs, ys, err_threshold=0.998, verbose=False):
 
     idx = []
     r2_max = 0.0
+    def bfn(l): return inv_func(l, *fc[0])
     if fc:
-        def bfn(l): return inv_func(l, *fc[0])
         x_hat = bfn(y)
         try:
             r2_max = r2_score(x, x_hat)
@@ -233,13 +233,14 @@ def fit_reference_auto_rm(xs, ys, err_threshold=0.998, verbose=False):
     if r2_max > err_threshold:
         fit_stats.loc[len(fit_stats)] = [-1, r2_max, '']
         return fc, idx, r2_max, fit_stats
-    elif r2_max == 0.0:
+    if r2_max == 0.0:
         fit_stats.loc[len(fit_stats)] = [-1, np.nan, '']
     else:
         cmnt = 'metric < threshold ({:.3f} < {:.3f})'.format(
             r2_max, err_threshold)
         fit_stats.loc[len(fit_stats)] = [-1, r2_max, cmnt]
 
+    fc_i = None
     for i in range(len(x)):
         xd = xs.drop([i], axis=0)
         yd = ys.drop([i], axis=0)
@@ -255,7 +256,6 @@ def fit_reference_auto_rm(xs, ys, err_threshold=0.998, verbose=False):
             fit_stats.loc[len(fit_stats)] = [i, np.nan, str(e)]
             continue
 
-        def bfn(l): return inv_func(l, *fc_i[0])
         x_hat = bfn(yd)
         r_squared = np.inf
         try:
