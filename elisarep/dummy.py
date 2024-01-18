@@ -10,6 +10,8 @@ import argparse
 
 
 def main():
+    """ Dummy test main
+    """
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "workdir", help="working directory of an experiment", default=None)
@@ -21,16 +23,17 @@ def main():
     par_input = args.par
 
     print(
-        f'Testing scipt :)\nWorking directory is `{working_dir}`, par input is set to `{par_input}`\n')
+        f'Testing scipt :)\nWorking directory is `{working_dir}`,
+          par input is set to `{par_input}`\n')
 
     new_dir = path.join(working_dir, '_foo_dir')
     makedirs(new_dir, exist_ok=True)
 
     try:
         new_file = path.join(new_dir, 'foo.txt')
-        with open(new_file, 'w') as fl:
+        with open(new_file, 'w', encoding="utf-8") as fl:
             fl.write(f':)\npar is {par_input}\n')
-    except Exception as e:
+    except (Exception,) as e:
         print('Error: ' + str(e))
 
 

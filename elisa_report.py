@@ -28,7 +28,7 @@ import elisarep.reportgen as rg
 
 WARNING_DISABLE = True
 
-window = None
+WINDOW = None
 
 
 if WARNING_DISABLE:
@@ -94,8 +94,8 @@ def browse_analysis(init_folder: PathLikeOrNone) -> None:
         global analysis_dir, entry_analysis
         analysis_dir.set(dirname)
         entry_analysis.update()
-        global window
-        window.destroy()
+        global WINDOW
+        WINDOW.destroy()
 
 
 def browse_config(init_folder: PathLikeOrNone) -> None:

@@ -1,3 +1,6 @@
+""" Custom types
+"""
+
 import os
 from typing import Union
 

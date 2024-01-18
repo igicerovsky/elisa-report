@@ -1,3 +1,8 @@
+""" Configuration for ELISA module
+
+Global config used in elisarep module.
+"""
+
 from os import path
 import json
 
@@ -43,7 +48,7 @@ def read_config(filename: PathLike, a_type: str) -> dict:
             'plate_layout_id', 'plate_layout_num', 'plate_layout_dil_id', 'numeric_warning_disable',
             DIL_NAME]
     k_type = ['AAV8', 'AAV9', 'default']
-    with open(filename) as json_config:
+    with open(filename, encoding="utf-8") as json_config:
         items = json.load(json_config).items()
         for key, value in items:
             if key in keys:
@@ -56,8 +61,8 @@ def read_config(filename: PathLike, a_type: str) -> dict:
             config[LIMITS_NAME] = dc[a_type][LIMITS_NAME]
             config[SOP_NAME] = dc[a_type][SOP_NAME]
             config[MHF_NAME] = dc[a_type][MHF_NAME]
-        elif not (key in keys):
-            raise (Exception(
+        elif not key in keys:
+            raise (KeyError(
                 f"Analysis type '{a_type}' copuld not be identified! Shall be one of {k_type}. "))
 
     return config
