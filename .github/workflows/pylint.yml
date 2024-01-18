@@ -23,7 +23,6 @@ jobs:
         pip install pandas
         pip install scipy
         pip install tabulate
-        pip install xldr
         pip install scikit-learn
         pip install tqdm
         pip install chardet
