@@ -22,9 +22,9 @@ def main():
     working_dir = args.workdir
     par_input = args.par
 
-    print(
-        f'Testing scipt :)\nWorking directory is `{working_dir}`,
-          par input is set to `{par_input}`\n')
+    print('Testing scipt...')
+    print(f'Working directory is `{working_dir}`')
+    print('par input is set to `{par_input}`\n')
 
     new_dir = path.join(working_dir, '_foo_dir')
     makedirs(new_dir, exist_ok=True)
