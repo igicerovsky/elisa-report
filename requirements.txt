@@ -7,7 +7,6 @@ scipy
 virtualenv
 weasyprint
 tabulate
-xlrd
 scikit-learn
 tqdm
 chardet

@@ -10,7 +10,7 @@ import warnings
 from scipy.optimize import OptimizeWarning
 from zlib import crc32
 
-from tkinter import *
+from tkinter import StringVar, Button, Entry, DISABLED, Tk
 from tkinter import filedialog
 
 from elisarep.readdata import read_params
@@ -35,6 +35,8 @@ if WARNING_DISABLE:
 
 def main_report(analysis_dir: PathLike, config_dir: PathLike,
                 docxa: bool = True, docxr: bool = False, pdf: bool = True) -> None:
+    """ Generate main report
+    """
     print(f'Analysis diretory {analysis_dir}')
     print(f'Configuration directory {config_dir}')
 
@@ -44,17 +46,15 @@ def main_report(analysis_dir: PathLike, config_dir: PathLike,
     worklist_file_path = input_files['worklist']
     params_file_path = input_files['params']
 
-    wl_raw = predil_worklist(worklist_file_path)
-    params = read_params(params_file_path)
-    reference_conc = make_concentration(
-        cfg[REFVAL_NAME], cfg[DIL_NAME])
-
-    lay = read_layouts(path.join(config_dir, cfg['plate_layout_id']),
-                       path.join(config_dir, cfg['plate_layout_num']),
-                       path.join(config_dir, cfg['plate_layout_dil_id']))
-
     reports = rg.gen_report_raw(
-        wl_raw, params, lay, reference_conc, analysis_dir)
+        predil_worklist(worklist_file_path),
+        read_params(params_file_path),
+        read_layouts(path.join(config_dir, cfg['plate_layout_id']),
+                     path.join(config_dir, cfg['plate_layout_num']),
+                     path.join(config_dir, cfg['plate_layout_dil_id'])),
+        make_concentration(
+            cfg[REFVAL_NAME], cfg[DIL_NAME]),
+        analysis_dir)
 
     if docxa:
         export_main_report(reports, analysis_dir, cfg['pandoc_bin'],
@@ -80,6 +80,8 @@ def main_report(analysis_dir: PathLike, config_dir: PathLike,
 
 
 def browse_analysis(init_folder: PathLikeOrNone) -> None:
+    """ Browse analysis folder
+    """
     initialdir = getcwd()
     if init_folder:
         initialdir = init_folder
@@ -94,6 +96,8 @@ def browse_analysis(init_folder: PathLikeOrNone) -> None:
 
 
 def browse_config(init_folder: PathLikeOrNone) -> None:
+    """ Browse config folder
+    """
     dirname = filedialog.askdirectory(initialdir=init_folder,
                                       title="Select a Config Folder")
 
@@ -103,6 +107,8 @@ def browse_config(init_folder: PathLikeOrNone) -> None:
 
 
 def gui(config_dir: PathLikeOrNone, init_folder: PathLikeOrNone) -> PathLikeOrNone:
+    """ GUI dialaog for data input
+    """
     global window
     window = Tk()
     window.title('HAMILTON Analysis')
@@ -140,6 +146,8 @@ def gui(config_dir: PathLikeOrNone, init_folder: PathLikeOrNone) -> PathLikeOrNo
 
 
 def main() -> None:
+    """ Main
+    """
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--analysis", help="analysis directory", default=None)
