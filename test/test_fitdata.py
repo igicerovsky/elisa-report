@@ -1,19 +1,28 @@
-from elisarep import fitdata
+""" Testing fitdata module
+"""
 import pytest
 import numpy as np
 
+from elisarep import fitdata
+
 
 def test_func():
+    """ Simple fitdata function
+    """
     assert fitdata.func(1.0e9, 0.01, 0.9, 500_000_000.0,
                         1.0) == pytest.approx(0.6545787829565919)
 
 
 def test_inv_func():
+    """ Testing inverse function
+    """
     assert fitdata.inv_func(0.6, 0.01, 0.9, 500_000_000.0,
                             1.0) == pytest.approx(770046043.1062976)
 
 
 def test_fit_reference():
+    """ Testing reference
+    """
     x = np.array([17954000000.0, 8977000000.0, 4488500000.0,
                  2244250000.0, 1122125000.0, 561062500.0, 280531250.0])
     y = np.array([1.4609, 0.7627, 0.45620000000000005,
