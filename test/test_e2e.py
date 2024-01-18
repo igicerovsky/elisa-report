@@ -75,8 +75,6 @@ def generic_test(analysis_dir: PathLike, report_plates_crc: list, assembly_crc: 
 
     check_report_crc(md_assembly, assembly_crc)
 
-    return None
-
 
 def test_e2e_aav9():
     """ Test for AAV9
@@ -85,8 +83,6 @@ def test_e2e_aav9():
     report_plates_crc = [481216317, 1583512440, 1864635915]
     assembly_crc = 1006124183
     generic_test(analysis_dir, report_plates_crc, assembly_crc)
-
-    return None
 
 
 def test_e2e_aav9_dilthr():
@@ -97,8 +93,6 @@ def test_e2e_aav9_dilthr():
     assembly_crc = 2473881083
     generic_test(analysis_dir, report_plates_crc, assembly_crc)
 
-    return None
-
 
 def test_e2e_aav8():
     """AAV8 test
@@ -107,5 +101,3 @@ def test_e2e_aav8():
     report_plates_crc = [4112746544]
     assembly_crc = 2800641728
     generic_test(analysis_dir, report_plates_crc, assembly_crc)
-
-    return None
