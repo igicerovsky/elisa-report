@@ -26,7 +26,7 @@ def to_matrix(l, n):
 
 
 def index_plate_layout(plate_layout):
-    """
+    """ Index plate layout
     """
     plate_layout.set_index(
         [['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']], inplace=True)

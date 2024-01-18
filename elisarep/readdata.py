@@ -1,5 +1,5 @@
 import pandas as pd
-from .layouthandle import read_plate_layout, to_matrix
+from .layouthandle import read_plate_layout, to_matrix, index_plate_layout
 from os import path
 import chardet
 from pathlib import Path
@@ -41,7 +41,8 @@ def read_exported_data(file_name: PathLike) -> str:
 def get_data_crop(df: pd.DataFrame, row_span: tuple, col_span: tuple) -> pd.DataFrame:
     crop = df.iloc[row_span, col_span].copy()
     crop.reset_index(drop=True, inplace=True)
-    crop.set_index([['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']], inplace=True)
+    # crop.set_index([['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']], inplace=True)
+    crop = index_plate_layout(crop)
     crop.columns = range(1, crop.columns.size+1)
     return crop
 
@@ -62,14 +63,6 @@ def to_multi_index(df_single_index: pd.DataFrame, name: str) -> pd.DataFrame:
     df_multi_idx.columns = [name]
 
     return df_multi_idx
-
-
-def index_plate_layout(plate_layout: pd.DataFrame) -> pd.DataFrame:
-    plate_layout.set_index(
-        [['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']], inplace=True)
-    plate_layout.columns = range(1, plate_layout.columns.size + 1)
-
-    return plate_layout
 
 
 def to_plate_layout(lst: list) -> pd.DataFrame:
