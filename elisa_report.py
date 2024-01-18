@@ -1,3 +1,8 @@
+""" Main ELISA report generation script
+
+Generates ELISA report from photometer output; analysis performed on Hamilton robot.
+"""
+
 from os import path, getcwd
 import argparse
 import warnings

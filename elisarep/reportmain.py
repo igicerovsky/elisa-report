@@ -13,6 +13,8 @@ def check_report_crc(report: str, crc: int) -> None:
     if t != crc:
         raise Exception('Report CRC missmatch! {} != {}'.format(t, crc))
 
+    return None
+
 
 def report_plate(plate_id, worklist, params, layouts, reference_conc,
                  input_data_path, report_dir, info):

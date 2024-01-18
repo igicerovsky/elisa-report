@@ -1,8 +1,13 @@
-from elisarep import layouthandle
+""" Layout handling test
+"""
 import pytest
+
+from elisarep import layouthandle
 
 
 def test_to_matrix():
+    """ Test list to matrix
+    """
     l = ['a', 1,
          'b', 2,
          'c', 3]

@@ -1,3 +1,6 @@
+""" Setup for ELISA report module 
+"""
+
 from setuptools import setup, find_packages
 
 VERSION = '0.1.4'
