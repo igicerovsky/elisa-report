@@ -28,6 +28,7 @@ jobs:
         pip install chardet
         pip install openpyxl
         pip install python-docx
+        pip install pytest
     - name: Analysing the code with pylint
       run: |
         pylint $(git ls-files '*.py')
