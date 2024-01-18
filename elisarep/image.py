@@ -13,7 +13,7 @@ from .fitdata import fit_reference_auto_rm, func
 def fit_image(x, y, popt, pcov, file_path, confidence_interval=95.0,
               confidence=None, interval_ratio=2.0,
               rm_index=[],
-              sx=None, sy=None, mask_index=[], sna_idx=[],
+              sx=None, sy=None, mask_idx=[], sna_idx=[],
               verbose=False, valid_sample=True, show=True):
     r"""Plot the fitted function with confidence intervals.
 
@@ -42,7 +42,7 @@ def fit_image(x, y, popt, pcov, file_path, confidence_interval=95.0,
         Sample x-values.
     sy : array_like
         Sample x-values.
-    mask_index : array_like
+    mask_idx : array_like
         Indices of masked samples.
     sna_idx : 
         Indices of nan data excluded.
@@ -53,7 +53,12 @@ def fit_image(x, y, popt, pcov, file_path, confidence_interval=95.0,
     show : bool
         Show the graph. If `False` image is saved if file path is given. 
     """
-
+    if rm_index is None:
+        rm_index = []
+    if mask_idx is None:
+        mask_idx = []
+    if sna_idx is None:
+        sna_idx = []
     # confidence [None, 'student-t', 'sqrt_err']
     if verbose:
         print('parameter', popt)
@@ -68,11 +73,11 @@ def fit_image(x, y, popt, pcov, file_path, confidence_interval=95.0,
     if not valid_sample:
         kwargs = {'marker': 'o', 'facecolors': 'none'}
     if (sx is not None) and (sy is not None):
-        if len(sx.drop(mask_index, axis=0)) != 0:
-            plt.scatter(sx.drop(mask_index, axis=0), sy.drop(mask_index, axis=0),
+        if len(sx.drop(mask_idx, axis=0)) != 0:
+            plt.scatter(sx.drop(mask_idx, axis=0), sy.drop(mask_idx, axis=0),
                         s=48, linewidths=0.6, label='point valid', color='forestgreen', **kwargs)
-        if (len(sx.iloc[mask_index]) != 0) and (list(mask_index) != list(sna_idx)):
-            plt.scatter(sx.iloc[mask_index], sy.iloc[mask_index],
+        if (len(sx.iloc[mask_idx]) != 0) and (list(mask_idx) != list(sna_idx)):
+            plt.scatter(sx.iloc[mask_idx], sy.iloc[mask_idx],
                         s=48, linewidths=0.8, label='point masked', color='r', **kwargs)
 
     if len(x.drop(rm_index, axis=0)) != 0:
@@ -100,7 +105,7 @@ def fit_image(x, y, popt, pcov, file_path, confidence_interval=95.0,
             print('{0}: {1:.3} [{2:.3}, {3:.3}]; err={4:.3}[{5:.2f}%]'.format(
                 pname, p, p - st, p + st, st, 100*st/p))
 
-    if confidence == None or confidence == 'student-t':
+    if confidence is None or confidence == 'student-t':
         if verbose:
             print(
                 'student-t is used for error estimation using {} degrees of freedom'.format(dof))
@@ -239,5 +244,5 @@ def sample_img(samples, reference, sample_type, sample_num,
     sx = sd['sample'].reset_index(level=[0, 1])['conc_plot']
     sy = sd['sample'].reset_index(level=[0, 1])['OD_delta']
     fit_image(x, y, fit_result[0][0], fit_result[0][1], img_file, confidence='student-t',
-              rm_index=fit_result[1], mask_index=mask_idx,
+              rm_index=fit_result[1], mask_idx=mask_idx,
               sx=sx, sy=sy, sna_idx=na_index(sd['sample']), show=show, valid_sample=sd['valid'], interval_ratio=1.0)

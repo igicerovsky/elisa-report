@@ -6,8 +6,8 @@ as well as exporting data to Pandas dataframe object.
 """
 import numpy as np
 from scipy.optimize import curve_fit
-import pandas as pd
 from scipy.stats import distributions
+import pandas as pd
 from sklearn.metrics import r2_score
 
 
@@ -132,7 +132,9 @@ def fit_sheet(popt, pcov, n, confidence_interval=95.0):
         sigma = var ** 0.5
         st = sigma * tval
         sigma_popt[i] = st
-        confidence_interval[i] = '[{0:.3}, {1:.3}]'.format(p - st, p + st)
+        stl = p - st
+        sth = p + st
+        confidence_interval[i] = f'[{stl:.3}, {sth:.3}]'
 
     param_names = ['a', 'b', 'c', 'd']
     perr = np.sqrt(np.diag(pcov))
@@ -160,7 +162,8 @@ def backfit(df, param):
     bf = df[['OD_delta', 'plate_layout_conc']].copy()
     bf = bf.reindex(['plate_layout_conc', 'OD_delta'], axis=1)
     bf.rename(columns={
-              'plate_layout_conc': 'Standard Value [cp/ml]', 'OD_delta': 'Optical density'}, inplace=True)
+              'plate_layout_conc': 'Standard Value [cp/ml]',
+              'OD_delta': 'Optical density'}, inplace=True)
     bf.loc[:, ['Concentration backfit [cp/ml]']
            ] = bf.apply(lambda x: inv_func(x['Optical density'], *param), axis=1)
     bf.loc[:, ['SV to OD fit']] = bf.apply(
@@ -208,8 +211,7 @@ def fit_reference_auto_rm(xs, ys, err_threshold=0.998, verbose=False):
     fc = None
     try:
         fc = fit_reference(func, x, y)
-    except Exception as e:
-        estr = '{0}, {1} Reason: {2}'.format(np.nan, -1, str(e))
+    except (Exception,) as e:
         if verbose:
             print(e)
 
@@ -234,8 +236,9 @@ def fit_reference_auto_rm(xs, ys, err_threshold=0.998, verbose=False):
     elif r2_max == 0.0:
         fit_stats.loc[len(fit_stats)] = [-1, np.nan, '']
     else:
-        fit_stats.loc[len(fit_stats)] = [-1, r2_max,
-                                         'metric < threshold ({:.3f} < {:.3f})'.format(r2_max, err_threshold)]
+        cmnt = 'metric < threshold ({:.3f} < {:.3f})'.format(
+            r2_max, err_threshold)
+        fit_stats.loc[len(fit_stats)] = [-1, r2_max, cmnt]
 
     for i in range(len(x)):
         xd = xs.drop([i], axis=0)
@@ -246,7 +249,7 @@ def fit_reference_auto_rm(xs, ys, err_threshold=0.998, verbose=False):
         y.sort()
         try:
             fc_i = fit_reference(func, x, y)
-        except Exception as e:
+        except (Exception,) as e:
             if verbose:
                 print(e)
             fit_stats.loc[len(fit_stats)] = [i, np.nan, str(e)]
