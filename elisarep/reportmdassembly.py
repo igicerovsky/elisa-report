@@ -5,10 +5,10 @@ import pandas as pd
 from docx import Document
 from docx.shared import Pt
 
+from elisarep.typing import PathLikeOrNone
 from .constants import CV_DIGITS
 from .config import config as cfg
 from .config import LIMITS_NAME, SOP_NAME, MHF_NAME
-from elisarep.typing import PathLikeOrNone
 
 
 SHEET_FONT_SZ = Pt(8)
@@ -20,7 +20,8 @@ def plate_section_ex(df, plate):
     # df is formatted!
     md = f'### Plate {plate}\n\n'
 
-    md += df.to_markdown(floatfmt="#.{}f".format(CV_DIGITS))
+    dg = CV_DIGITS
+    md += df.to_markdown(floatfmt=f'#.{dg}f')
     md += '\n\n'
     md += '\* sample will be retested\n\n'
 
@@ -47,9 +48,8 @@ def assembly(reports, protocol, **kwargs):
 
     md += '## Evaluation criteria\n\n'
     limits = cfg[LIMITS_NAME]
-    md += 'Validity of the assay: Intermediary control sample limits (3s) are {:.3e} - {:.3e} cp/ml.  \n\n'.format(
-        limits[0], limits[1])
-
+    md += (f'Validity of the assay: Intermediary control sample limits (3s) are '
+           f'{limits[0]:.3e} - {limits[1]:.3e} cp/ml.  \n\n')
     if kwargs and kwargs['comment']:
         md += '## Comments\n\n'
         md += 'Add comment here...\n'
@@ -63,7 +63,7 @@ def check_bold(val: str):
     ret = None
     r = re.compile(r'(\*\*).*?(\*\*)')
     if r.match(val):
-        ret = re.sub('[\*\*]', '', val)
+        ret = re.sub(r'[\*\*]', '', val)
     return ret
 
 
@@ -158,7 +158,7 @@ def assembly_word(reports: list, protocol: str, **kwargs):
 
     # add results for each plate
     for r in reports:
-        document.add_heading('Plate {}'.format(r['plate']), level=2)
+        document.add_heading(f'Plate {r["plate"]}', level=2)
         df = r['df']
         table = document.add_table(
             rows=len(df.index)+1, cols=len(df.columns)+1, style='Table Grid')
