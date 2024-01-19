@@ -29,15 +29,15 @@ def md2docx(pandoc_bin, reference_doc, md_filepath):
     """
 
     docx_path = path.splitext(md_filepath)[0] + '.docx'
-    print('Generating Word {} from {}'.format(docx_path, md_filepath))
+    print(f'Generating Word {docx_path} from {md_filepath}')
     report_dir = path.dirname(path.abspath(md_filepath))
     try:
         subprocess.run([pandoc_bin, '-o', docx_path,
                         '-f', 'markdown', '-t', 'docx',
                         '--resource-path', report_dir,
                         '--reference-doc', reference_doc,
-                        md_filepath])
-    except Exception as e:
+                        md_filepath], check=False)
+    except ChildProcessError as e:
         print(e)
 
 
@@ -62,8 +62,8 @@ def md2pdf(pandoc_bin, pdflatex_bin, md_filepath):
                         '-o', pdf_path,
                         '--resource-path', report_dir,
                         '--pdf-engine', pdflatex_bin,
-                        md_filepath])
-    except Exception as e:
+                        md_filepath], check=False)
+    except ChildProcessError as e:
         print(e)
 
 
@@ -88,15 +88,14 @@ def export_main_report(reports, working_dir, pandoc_bin, reference_doc, docx=Tru
         parsed_dir = parse_dir_name(working_dir)
         md_assembly = assembly(
             reports, protocol=parsed_dir['protocol'])
-        mdfile = '{}_{}.md'.format(parsed_dir['date'], parsed_dir['protocol'])
+        mdfile = '{parsed_dir["date"]}_{parsed_dir["protocol"]}.md'
         md_filepath = path.join(working_dir, mdfile)
         save_md(md_filepath, md_assembly)
 
         md2docx(pandoc_bin, reference_doc, md_filepath)
     else:
         parsed_dir = parse_dir_name(working_dir)
-        docxfile = '{}_{}_new.docx'.format(
-            parsed_dir['date'], parsed_dir['protocol'])
+        docxfile = f'{parsed_dir["date"]}_{ parsed_dir["protocol"]}_new.docx'
         docxfile = path.join(working_dir, docxfile)
         assembly_word(reports, protocol=parsed_dir['protocol'],
                       docx_path=docxfile, reference_doc=reference_doc)

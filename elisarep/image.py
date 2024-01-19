@@ -12,8 +12,8 @@ from .fitdata import fit_reference_auto_rm, func
 
 def fit_image(x, y, popt, pcov, file_path, confidence_interval=95.0,
               confidence=None, interval_ratio=2.0,
-              rm_index=[],
-              sx=None, sy=None, mask_idx=[], sna_idx=[],
+              rm_index=None,
+              sx=None, sy=None, mask_idx=None, sna_idx=None,
               verbose=False, valid_sample=True, show=True):
     r"""Plot the fitted function with confidence intervals.
 

@@ -91,8 +91,8 @@ def browse_analysis(init_folder: PathLikeOrNone) -> None:
     dirname = filedialog.askdirectory(initialdir=initialdir,
                                       title="Select a Hamilton Analysis Folder")
     if dirname:
-        global analysis_dir, entry_analysis
-        analysis_dir.set(dirname)
+        global analysis_folder, entry_analysis
+        analysis_folder.set(dirname)
         entry_analysis.update()
         global WINDOW
         WINDOW.destroy()
@@ -116,9 +116,9 @@ def gui(config_dir: PathLikeOrNone, init_folder: PathLikeOrNone) -> PathLikeOrNo
     window.title('HAMILTON Analysis')
     window.geometry("800x80")
 
-    global analysis_dir
-    analysis_dir = StringVar()
-    analysis_dir.set('')
+    global analysis_folder
+    analysis_folder = StringVar()
+    analysis_folder.set('')
     global config_folder
     config_folder = StringVar()
     if config_dir:
@@ -131,7 +131,7 @@ def gui(config_dir: PathLikeOrNone, init_folder: PathLikeOrNone) -> PathLikeOrNo
     button_analysis.grid(column=0, row=0)
 
     global entry_analysis
-    entry_analysis = Entry(textvariable=analysis_dir,
+    entry_analysis = Entry(textvariable=analysis_folder,
                            state=DISABLED, width=110)
     entry_analysis.grid(row=0, column=1,
                         padx=10, pady=10)
@@ -144,7 +144,7 @@ def gui(config_dir: PathLikeOrNone, init_folder: PathLikeOrNone) -> PathLikeOrNo
                       padx=10, pady=10)
     window.mainloop()
 
-    return analysis_dir.get()
+    return analysis_folder.get()
 
 
 def main() -> None:

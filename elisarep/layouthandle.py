@@ -20,7 +20,7 @@ def to_matrix(l, n):
     """
 
     if (len(l) % n) != 0:
-        raise Exception(
+        raise ValueError(
             f"Number of columns {n} not allowed! {len(l)} % {n} != 0 ({len(l) % n})")
     return [l[i:i+n] for i in range(0, len(l), n)]
 
@@ -36,6 +36,8 @@ def index_plate_layout(plate_layout):
 
 
 def to_plate_layout(lst):
+    """ List to DataFrame for plate
+    """
     l_2d = to_matrix(lst, 8)
     plate_layout = pd.DataFrame(l_2d).T
 
@@ -43,6 +45,8 @@ def to_plate_layout(lst):
 
 
 def read_plate_layout(file_path):
+    """ Read plate layout from file
+    """
     plate_layout = pd.read_csv(file_path)
     index_plate_layout(plate_layout)
 
@@ -50,5 +54,7 @@ def read_plate_layout(file_path):
 
 
 def save_plate_layout_csv(layout_list, out_file):
+    """ Save plate layout
+    """
     l = to_plate_layout(layout_list)
     l.to_csv(out_file, index=False)
