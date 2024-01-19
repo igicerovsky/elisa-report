@@ -1,3 +1,5 @@
+""" Final markdown report assembly
+"""
 import re
 import pandas as pd
 from docx import Document
@@ -13,6 +15,8 @@ SHEET_FONT_SZ = Pt(8)
 
 
 def plate_section_ex(df, plate):
+    """ Plate section assembly to markdown
+    """
     # df is formatted!
     md = f'### Plate {plate}\n\n'
 
@@ -24,6 +28,8 @@ def plate_section_ex(df, plate):
 
 
 def assembly(reports, protocol, **kwargs):
+    """ Whole report assembly to markdown
+    """
     sop = cfg[SOP_NAME]
     md = f'# GT Analytics - Capsid {protocol}\n\n{sop}\n\n'
 
@@ -52,6 +58,8 @@ def assembly(reports, protocol, **kwargs):
 
 
 def check_bold(val: str):
+    """ Check if value shall be bold
+    """
     ret = None
     r = re.compile(r'(\*\*).*?(\*\*)')
     if r.match(val):
@@ -60,12 +68,16 @@ def check_bold(val: str):
 
 
 def check_retest(val: str):
+    """ Check if value shall be retested
+    """
     if ')*' in val:
         return True
     return None
 
 
 def plate_sheet(df: pd.DataFrame, table):
+    """ Generate sheet for given plate
+    """
     # access first row's cells
     heading_row = table.rows[0].cells
 
@@ -108,6 +120,8 @@ def plate_sheet(df: pd.DataFrame, table):
 
 
 def new_doc(reference_doc: PathLikeOrNone = None):
+    """ Create new Word document
+    """
     document = Document(reference_doc)
     for paragraph in document.paragraphs:
         if len(paragraph.text) == 0:
@@ -119,6 +133,8 @@ def new_doc(reference_doc: PathLikeOrNone = None):
 
 
 def assembly_word(reports: list, protocol: str, **kwargs):
+    """ Word document final report assembly
+    """
     reference_doc = None
     if kwargs and kwargs['reference_doc']:
         reference_doc = kwargs['reference_doc']

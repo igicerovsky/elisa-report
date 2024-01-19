@@ -1,3 +1,5 @@
+""" Sample handling
+"""
 from enum import Enum
 from dataclasses import dataclass
 from itertools import combinations
@@ -19,17 +21,19 @@ from .config import LIMITS_NAME
 
 @dataclass
 class DataRange:
+    """ Data ranges foe SV, OD, OD fit, CB
+    """
     sv: typing.Tuple[int, int]
     od: typing.Tuple[int, int]
     od_fit: typing.Tuple[int, int]
     cb: typing.Tuple[int, int]
 
 
-def get_sample(dfa: pd.DataFrame, type: str, sample_num: int) -> pd.DataFrame:
+def get_sample(dfa: pd.DataFrame, stype: str, sample_num: int) -> pd.DataFrame:
     """ Get sample
     """
     # TODO: check for valid `type` `and sample_num`
-    dfa = dfa.loc[(dfa['plate_layout_ident'] == type) &
+    dfa = dfa.loc[(dfa['plate_layout_ident'] == stype) &
                   (dfa['plate_layout_num'] == sample_num)]
     return dfa
 
@@ -68,12 +72,17 @@ def mask_value_fn(val, odmin, odmax, note):
 def mask_value_short_fn(val, vmin, vmax, dil, note):
     """ Masking function 
     """
+    ex = False
     if val < vmin:
-        # return '<{:.{dgts}e}'.format(Decimal(vmin * dil), dgts=RESULT_DIGITS)
-        return '<LOQ'
+        if ex:
+            return '<{:.{dgts}e}'.format(Decimal(vmin * dil), dgts=RESULT_DIGITS)
+        else:
+            return '<LOQ'
     if val > vmax:
-        # return '>{:.{dgts}e}'.format(Decimal(vmax * dil), dgts=RESULT_DIGITS)
-        return '>ULOQ'
+        if ex:
+            return '>{:.{dgts}e}'.format(Decimal(vmax * dil), dgts=RESULT_DIGITS)
+        else:
+            return '>ULOQ'
     if math.isnan(val):
         return 'Backfit failed.'
     return None
@@ -183,24 +192,17 @@ def sampleinfo_to_str(info, multiplier=1.0):
         return f'{info["value"]} valid point'
 
     if info['enum'] == SampleInfo.LIMITS_3S:
-        return f'test invalid'
+        return 'test invalid'
 
     return f'{info["sign"]}{float(info["value"]) * multiplier:.4e}'
 
 
 def sample_info(samples: pd.DataFrame, stype: str, sample_num: int, dr: DataRange,
-                limits: tuple = None, verbose=False) -> dict:
+                limits: tuple = None) -> dict:
     """ Generate sample info
     """
     s = get_sample(samples, stype, sample_num)
     sc = sample_check(samples, stype, sample_num)
-    if verbose:
-        print(f'OD=[{dr.od[0]}, {dr.od[1]}]')
-        print('OD_fit=[{:.3}, {:.3}]'.format(
-            Decimal(dr.od_fit[0]), Decimal(dr.od_fit[1])))
-        print('SV=[{:.{dgts}e}, {:.{dgts}e}]'.format(
-            Decimal(dr.sv[0]), Decimal(dr.sv[1]), dgts=RESULT_DIGITS))
-        print(f'CB=[{dr.cb[0]}, {dr.cb[1]}]')
     above_ref_od_max = s['OD_delta'] > dr.od_fit[1]
     below_ref_od_min = s['OD_delta'] < dr.od_fit[0]
     msgdc = {}

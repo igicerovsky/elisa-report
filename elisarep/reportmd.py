@@ -1,3 +1,6 @@
+""" Markdown report assembly
+"""
+
 import math
 from os import path
 from datetime import datetime
@@ -154,7 +157,7 @@ def sample_section_md(samples, reference, blank, dr, img_dir):
         s = sample_check(samples, stype, i)
         md += sample_to_md(s)
         # sample info
-        si = sample_info(samples, stype, i, dr, verbose=False)
+        si = sample_info(samples, stype, i, dr)
         si_str = sampleinfo_to_str(si['info'])
         if si_str:
             md += '\n'
