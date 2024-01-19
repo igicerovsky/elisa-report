@@ -1,8 +1,12 @@
+""" Main report
+"""
 import os
+from zlib import crc32
+
 from .readdata import read_concat_data, concat_data_with_layouts
 from .sample import init_samples, apply_fit, mask_sample, data_range, generate_results
 from .fitdata import fit_reference_auto_rm
-from zlib import crc32
+
 from .reportmd import header_section, make_final, result_section, fit_section_md, param_section, sample_section_md
 
 
@@ -11,14 +15,13 @@ def check_report_crc(report: str, crc: int) -> None:
     t = crc32(res)
 
     if t != crc:
-        raise Exception('Report CRC missmatch! {} != {}'.format(t, crc))
-
-    return None
+        raise Exception(f'Report CRC missmatch! {t} != {crc}')
 
 
 def report_plate(plate_id, worklist, params, layouts, reference_conc,
                  input_data_path, report_dir, info):
-
+    """ Report plate generation for main report
+    """
     od = read_concat_data(input_data_path)
     df_all = concat_data_with_layouts(od, layouts)
 

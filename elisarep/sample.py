@@ -214,7 +214,7 @@ def sample_info(samples: pd.DataFrame, stype: str, sample_num: int, dr: DataRang
             msgdc = {'sign': '<', 'value': Decimal(
                 dr.sv[0]), 'enum': SampleInfo.NAN_LOW}
     elif sc['cv'] > CV_THRESHOLD:
-        msgdc = {f'sign': '>{CV_THRESHOLD:.2f}',
+        msgdc = {'sign': f'>{CV_THRESHOLD:.2f}',
                  'value': sc['cv'], 'enum': SampleInfo.CV}
     elif not s['mask_reason'].isna().all():
         t = s[['OD_delta', 'plate_layout_dil', 'concentration', 'backfit']]
