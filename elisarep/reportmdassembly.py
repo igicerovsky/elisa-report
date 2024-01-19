@@ -155,9 +155,10 @@ def assembly_word(reports: list, protocol: str, **kwargs):
 
     document.add_heading('Evaluation criteria', level=1)
     limits = cfg[LIMITS_NAME]
-    document.add_paragraph(
-        'Validity of the assay: Intermediary control sample limits (3s) are {:.3e} - {:.3e} cp/ml.'.format(
-            limits[0], limits[1]))
+    document.add_paragraph((f'Validity of the assay: '
+                            f'Intermediary control sample limits (3s) are '
+                            f'{limits[0]:.3e} - {limits[1]:.3e} cp/ml.')
+                           )
 
     if kwargs and kwargs['docx_path']:
         document.save(kwargs['docx_path'])

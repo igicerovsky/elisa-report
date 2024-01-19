@@ -1,3 +1,6 @@
+""" Worklist handling
+"""
+
 from os import path
 
 import pandas as pd
@@ -8,7 +11,7 @@ def check_worklist(wl: pd.DataFrame) -> list:
     """
     valid_plates = []
     for i in range(1, 4):
-        invalid_sample = wl['SampleID_{}'.format(i)].isnull().values.any()
+        invalid_sample = wl[f'SampleID_{i}'].isnull().values.any()
         if not invalid_sample:
             valid_plates.append(i)
     return valid_plates
@@ -50,11 +53,11 @@ def worklist_sample(wl: pd.DataFrame, plate_id: int) -> tuple:
 def predil_worklist(worklist_file: str) -> pd.DataFrame:
     """ Create pre-dilution from worklist
     """
-    MANUAL_DIL_NAME = '_ManualDil'
+    manual_dil_name = '_ManualDil'
     wl = read_worklist(worklist_file)
 
     worklist_predil_path = path.splitext(
-        worklist_file)[0] + MANUAL_DIL_NAME + '.xlsx'
+        worklist_file)[0] + manual_dil_name + '.xlsx'
     if path.isfile(worklist_predil_path):
         print(f'Reading pre-dilution from {worklist_predil_path}')
         wl_pdil = read_worklist(worklist_predil_path)

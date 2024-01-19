@@ -56,10 +56,8 @@ def mask_value_fn(val, odmin, odmax, note):
     """
     dgts = RESULT_DIGITS
     if val < odmin:
-        # return '{2} {0:.{dgts}e} < {1:.{dgts}e}'.format(Decimal(val), Decimal(odmin), note, dgts=RESULT_DIGITS)
         return f'{note} {Decimal(val):.{dgts}e} < {Decimal(odmin):.{dgts}e}'
     if val > odmax:
-        # return '{2} {0:.{dgts}e} > {1:.{dgts}e}'.format(Decimal(val), Decimal(odmin), note, dgts=RESULT_DIGITS)
         return f'{note} {Decimal(val):.{dgts}e} > {Decimal(odmax):.{dgts}e}'
     if math.isnan(val):
         return 'NaN'
@@ -132,13 +130,13 @@ def sample_check(samples, stype, sample_num, cv_thresh=CV_THRESHOLD,
     valid = True
     note = ''
     if s[1] > cv_thresh:
-        note = 'CV > {}; '.format(cv_thresh)
+        note = f'CV > {cv_thresh}; '
         valid = False
     smp = s[0]
     valid_pts = smp['mask_reason'].isna().sum()
     if valid_pts < min_valid_pts:
-        note += 'Not enough valid sample points. Required {}, available {};'.format(
-            min_valid_pts, valid_pts)
+        note += (f'Not enough valid sample points. '
+                 f'Required {min_valid_pts}, available {valid_pts};')
         valid = False
     elif valid_pts != len(smp['mask_reason']):
         note += 'Reduced number of sample points. Measured {}, valid {};'.format(
@@ -311,21 +309,21 @@ def generate_results(df_data, datarange):
     s = sample_check(df_data, 'k', knum)
     si = sample_info(df_data, 'k', knum, datarange,
                      cfg[LIMITS_NAME])
-    dfres.loc[len(dfres)] = ['control {:02d}'.format(
-        knum), s['cv'], s['mean'], s['note'], s['valid'], si]
+    dfres.loc[len(dfres)] = [
+        f'control {knum:02d}', s['cv'], s['mean'], s['note'], s['valid'], si]
 
     rnum = 1
     s = sample_check(df_data, 'r', rnum)
     si = sample_info(df_data, 'r', knum, datarange)
-    dfres.loc[len(dfres)] = ['reference {:02d}'.format(
-        knum), s['cv'], s['mean'], s['note'], s['valid'], si]
+    dfres.loc[len(dfres)] = [
+        f'reference {knum:02d}', s['cv'], s['mean'], s['note'], s['valid'], si]
 
     for i in sample_numbers(df_data):
         stype = 's'
-        s = sample_check(df_data, 's', i)
-        si = sample_info(df_data, 's', i, datarange)
-        dfres.loc[len(dfres)] = ['sample {:02d}'.format(
-            i), s['cv'], s['mean'], s['note'], s['valid'], si]
+        s = sample_check(df_data, stype, i)
+        si = sample_info(df_data, stype, i, datarange)
+        dfres.loc[len(dfres)] = [f'sample {i:02d}',
+                                 s['cv'], s['mean'], s['note'], s['valid'], si]
 
     dfres.set_index(dfres['id'], inplace=True)
     dfres = dfres.drop('id', axis=1)
