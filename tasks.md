@@ -23,7 +23,10 @@
 
 ## KW03-15.01.2024
 
-- in progress..
+- GitHub repo setup
+- Refactoring, lint fixes
+- Bug fix, message mask value > OD max`odmax`
+- Unit tests update
 
 ## KW01-08.01.2024
 

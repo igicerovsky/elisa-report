@@ -80,7 +80,7 @@ def test_e2e_aav9():
     """ Test for AAV9
     """
     analysis_dir = './test/analysis/230801_AAV9-ELISA_sey_GN004240-053'
-    report_plates_crc = [481216317, 1583512440, 1864635915]
+    report_plates_crc = [2799213046, 1583512440, 4091524206]
     assembly_crc = 1006124183
     generic_test(analysis_dir, report_plates_crc, assembly_crc)
 
@@ -89,7 +89,7 @@ def test_e2e_aav9_dilthr():
     """AAV9 test
     """
     analysis_dir = './test/analysis/231122_AAV9-ELISA_sey_GN004240-064'
-    report_plates_crc = [1614107716]
+    report_plates_crc = [44505963]
     assembly_crc = 2473881083
     generic_test(analysis_dir, report_plates_crc, assembly_crc)
 
@@ -98,6 +98,6 @@ def test_e2e_aav8():
     """AAV8 test
     """
     analysis_dir = './test/analysis/231024_AAV8-ELISA_sey_GN004240-058'
-    report_plates_crc = [4112746544]
+    report_plates_crc = [3803015995]
     assembly_crc = 2800641728
     generic_test(analysis_dir, report_plates_crc, assembly_crc)

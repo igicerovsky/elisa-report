@@ -4,13 +4,14 @@ import math
 import typing
 
 from decimal import Decimal
-from scipy.stats import variation
 from enum import Enum
 from dataclasses import dataclass
 from itertools import combinations
+from scipy.stats import variation
 
 from .config import config as cfg
-from .constants import RESULT_DIGITS, CV_THRESHOLD, MIN_VALID_SAMPLE_POINTS, CV_THRESHOLD, PRE_DILUTION_THRESHOLD
+from .constants import RESULT_DIGITS, MIN_VALID_SAMPLE_POINTS
+from .constants import CV_THRESHOLD, PRE_DILUTION_THRESHOLD
 from .fitdata import conc_func, inv_func, backfit
 from .config import LIMITS_NAME
 
@@ -23,14 +24,18 @@ class DataRange:
     cb: typing.Tuple[int, int]
 
 
-def get_sample(dfa, type, sample_num):
+def get_sample(dfa: pd.DataFrame, type: str, sample_num: int) -> pd.DataFrame:
+    """ Get sample
+    """
     # TODO: check for valid `type` `and sample_num`
     dfa = dfa.loc[(dfa['plate_layout_ident'] == type) &
                   (dfa['plate_layout_num'] == sample_num)]
     return dfa
 
 
-def make_concentration(ref_val_max, dilution):
+def make_concentration(ref_val_max: float, dilution: list) -> pd.DataFrame:
+    """ Create concentration dataframe
+    """
     conc = pd.DataFrame({'dilution': dilution})
     conc.loc[:, ['concentration']] = conc.apply(
         lambda x: ref_val_max / x['dilution'], axis=1)
@@ -38,23 +43,32 @@ def make_concentration(ref_val_max, dilution):
     return conc
 
 
-def sample_numbers(df):
+def sample_numbers(df: pd.DataFrame) -> pd.DataFrame:
+    """ Get sorted sample numbers
+    """
     sample_nums = df['plate_layout_num'].astype(int).unique()
     sample_nums.sort()
     return sample_nums
 
 
 def mask_value_fn(val, odmin, odmax, note):
+    """ Masking function
+    """
+    dgts = RESULT_DIGITS
     if val < odmin:
-        return '{2} {0:.{dgts}e} < {1:.{dgts}e}'.format(Decimal(val), Decimal(odmin), note, dgts=RESULT_DIGITS)
+        # return '{2} {0:.{dgts}e} < {1:.{dgts}e}'.format(Decimal(val), Decimal(odmin), note, dgts=RESULT_DIGITS)
+        return f'{note} {Decimal(val):.{dgts}e} < {Decimal(odmin):.{dgts}e}'
     if val > odmax:
-        return '{2} {0:.{dgts}e} > {1:.{dgts}e}'.format(Decimal(val), Decimal(odmin), note, dgts=RESULT_DIGITS)
+        # return '{2} {0:.{dgts}e} > {1:.{dgts}e}'.format(Decimal(val), Decimal(odmin), note, dgts=RESULT_DIGITS)
+        return f'{note} {Decimal(val):.{dgts}e} > {Decimal(odmax):.{dgts}e}'
     if math.isnan(val):
         return 'NaN'
     return None
 
 
 def mask_value_short_fn(val, vmin, vmax, dil, note):
+    """ Masking function 
+    """
     if val < vmin:
         # return '<{:.{dgts}e}'.format(Decimal(vmin * dil), dgts=RESULT_DIGITS)
         return '<LOQ'
@@ -66,7 +80,9 @@ def mask_value_short_fn(val, vmin, vmax, dil, note):
     return None
 
 
-def mask_sample_cv(df_in, valid_pts, cv_threshold):
+def mask_sample_cv(df_in: pd.DataFrame, valid_pts: list, cv_threshold: float):
+    """ Aply masking to a sample
+    """
     df = df_in[df_in['mask_reason'].isna()]
     cv_min = cv_threshold  # variation(df['concentration'], ddof=1)
     non_mask_idx = []
@@ -92,6 +108,8 @@ def mask_sample_cv(df_in, valid_pts, cv_threshold):
 
 
 def process_sample(samples, stype, sample_num):
+    """ Process a sample
+    """
     sample = get_sample(samples, stype, sample_num)
     smp_t = sample[sample.mask_reason.isna()]
     cv = np.nan
@@ -108,6 +126,8 @@ def process_sample(samples, stype, sample_num):
 
 def sample_check(samples, stype, sample_num, cv_thresh=CV_THRESHOLD,
                  min_valid_pts=MIN_VALID_SAMPLE_POINTS):
+    """ Check sample for validity
+    """
     s = process_sample(samples, stype, sample_num)
     valid = True
     note = ''
@@ -133,7 +153,9 @@ def sample_check(samples, stype, sample_num, cv_thresh=CV_THRESHOLD,
             if note_cols['od_mask_reason'].iloc[0]:
                 note += ';' + note_cols['od_mask_reason'].iloc[0]
 
-    return {'sample': smp, 'cv': s[1], 'mean': s[2], 'note': note, 'type': stype, 'num': sample_num, 'valid': valid, 'valid_pts': valid_pts}
+    return {'sample': smp, 'cv': s[1], 'mean': s[2],
+            'note': note, 'type': stype, 'num': sample_num,
+            'valid': valid, 'valid_pts': valid_pts}
 
 
 class SampleInfo(str, Enum):
@@ -147,6 +169,8 @@ class SampleInfo(str, Enum):
 
 
 def sampleinfo_to_str(info, multiplier=1.0):
+    """ Convert sample info to string
+    """
     if info is None:
         return None
 
@@ -165,8 +189,10 @@ def sampleinfo_to_str(info, multiplier=1.0):
     return '{}{:.4e}'.format(info['sign'], float(info['value']) * multiplier)
 
 
-def sample_info(samples, stype, sample_num, dr: DataRange,
-                limits: tuple = None, verbose=False):
+def sample_info(samples: pd.DataFrame, stype: str, sample_num: int, dr: DataRange,
+                limits: tuple = None, verbose=False) -> dict:
+    """ Generate sample info
+    """
     s = get_sample(samples, stype, sample_num)
     sc = sample_check(samples, stype, sample_num)
     if verbose:
@@ -213,10 +239,12 @@ def sample_info(samples, stype, sample_num, dr: DataRange,
     return sc
 
 
-def control_info(val, limits):
+def control_info(val: float, limits: tuple) -> dict:
+    """ Create info for control sample
+    """
     msgdc = {}
     if not limits:
-        raise (Exception('Please provide controll limits!'))
+        raise Exception('Please provide controll limits!')
     if val < limits[0]:
         msgdc = {'sign': '<',
                  'value': limits[0], 'enum': SampleInfo.LIMITS_3S}
@@ -227,6 +255,8 @@ def control_info(val, limits):
 
 
 def final_sample_info(all_info, pre_dilution, limits):
+    """ Final table info assembly
+    """
     if not all_info:
         raise Exception("Invalid sample info!")
     info = all_info['info']
@@ -273,6 +303,8 @@ def final_sample_info(all_info, pre_dilution, limits):
 
 
 def generate_results(df_data, datarange):
+    """ Compute results
+    """
     dfres = pd.DataFrame(
         columns=['id', 'CV [%]', 'Reader Data [cp/ml]', 'Note', 'Valid', 'info'])
     knum = 1
@@ -302,6 +334,8 @@ def generate_results(df_data, datarange):
 
 
 def data_range(ref, popt):
+    """ Retrieve data ranges
+    """
     bf = backfit(ref, popt)
 
     od_min = bf['Optical density'].min()
@@ -323,6 +357,8 @@ def data_range(ref, popt):
 
 
 def apply_fit(df, popt):
+    """ Apply fit function to OD value
+    """
     df.loc[:, ['concentration']] = df.apply(lambda x: conc_func(
         x['OD_delta'], x['plate_layout_dil'], *popt), axis=1)
     df.loc[:, ['backfit']] = df.apply(
@@ -332,6 +368,8 @@ def apply_fit(df, popt):
 
 
 def init_samples(df, reference_conc):
+    """ Generate samples info
+    """
     skr = df.loc[(df['plate_layout_ident'] == 's')
                  | (df['plate_layout_ident'] == 'k')
                  | (df['plate_layout_ident'] == 'r')
@@ -345,6 +383,8 @@ def init_samples(df, reference_conc):
 
 
 def mask_sample(df, dr):
+    """ Mask sample
+    """
     df.loc[:, ['od_mask_reason']] = df.apply(
         lambda x: mask_value_fn(
             x['OD_delta'], dr.od[0], dr.od[1], 'Measured OD'),

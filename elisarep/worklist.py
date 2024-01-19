@@ -1,8 +1,11 @@
-import pandas as pd
 from os import path
+
+import pandas as pd
 
 
 def check_worklist(wl: pd.DataFrame) -> list:
+    """ Find number of valid plates in worklist
+    """
     valid_plates = []
     for i in range(1, 4):
         invalid_sample = wl['SampleID_{}'.format(i)].isnull().values.any()
@@ -12,11 +15,17 @@ def check_worklist(wl: pd.DataFrame) -> list:
 
 
 def read_worklist(worklist_file: str) -> pd.DataFrame:
+    """ Read Hamilton-friendly worklist
+    """
     wl = pd.read_excel(worklist_file)
-    wl.set_index([['control 01', 'reference 01', 'blank', 'sample 01', 'sample 02', 'sample 03',
-                   'sample 04', 'sample 05', 'sample 06', 'sample 07', 'sample 08', 'sample 09', 'sample 10',
-                   'sample 11', 'sample 12', 'sample 13', 'sample 14', 'sample 15', 'sample 16', 'sample 17',
-                   'sample 18', 'sample 19', 'sample 20', 'sample 21']], inplace=True)
+    wl.set_index([['control 01', 'reference 01', 'blank',
+                   'sample 01', 'sample 02', 'sample 03',
+                   'sample 04', 'sample 05', 'sample 06',
+                   'sample 07', 'sample 08', 'sample 09',
+                   'sample 10', 'sample 11', 'sample 12',
+                   'sample 13', 'sample 14', 'sample 15',
+                   'sample 16', 'sample 17', 'sample 18',
+                   'sample 19', 'sample 20', 'sample 21']], inplace=True)
     check_worklist(wl)
     wl.drop('blank', axis=0, inplace=True)
     wl.index.name = 'Sample type'
@@ -25,23 +34,27 @@ def read_worklist(worklist_file: str) -> pd.DataFrame:
 
 
 def worklist_sample(wl: pd.DataFrame, plate_id: int) -> tuple:
-    invalid_sample = wl['SampleID_{}'.format(plate_id)].isnull().values.any()
+    """ Create samples from worklist for given plate
+    """
+    invalid_sample = wl[f'SampleID_{plate_id}'].isnull().values.any()
     if invalid_sample:
         return None, None
 
     cols_id = ['SampleID', 'Dilution', 'Viscosity']
     cols = [x + '_' + str(plate_id) for x in cols_id]
-    cols_dict = {x: y for x, y in zip(cols_id, cols)}
+    cols_dict = dict(zip(cols_id, cols))
 
     return wl[cols], cols_dict
 
 
 def predil_worklist(worklist_file: str) -> pd.DataFrame:
-    MANUAL_DILUTION_EXT_NAME = '_ManualDil'
+    """ Create pre-dilution from worklist
+    """
+    MANUAL_DIL_NAME = '_ManualDil'
     wl = read_worklist(worklist_file)
 
     worklist_predil_path = path.splitext(
-        worklist_file)[0] + MANUAL_DILUTION_EXT_NAME + '.xlsx'
+        worklist_file)[0] + MANUAL_DIL_NAME + '.xlsx'
     if path.isfile(worklist_predil_path):
         print(f'Reading pre-dilution from {worklist_predil_path}')
         wl_pdil = read_worklist(worklist_predil_path)
