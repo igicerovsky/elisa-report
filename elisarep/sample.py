@@ -1,12 +1,13 @@
-import numpy as np
-import pandas as pd
+from enum import Enum
+from dataclasses import dataclass
+from itertools import combinations
+
 import math
 import typing
 
 from decimal import Decimal
-from enum import Enum
-from dataclasses import dataclass
-from itertools import combinations
+import numpy as np
+import pandas as pd
 from scipy.stats import variation
 
 from .config import config as cfg
@@ -139,8 +140,8 @@ def sample_check(samples, stype, sample_num, cv_thresh=CV_THRESHOLD,
                  f'Required {min_valid_pts}, available {valid_pts};')
         valid = False
     elif valid_pts != len(smp['mask_reason']):
-        note += 'Reduced number of sample points. Measured {}, valid {};'.format(
-            len(smp['mask_reason']), valid_pts)
+        note += (f'Reduced number of sample points. '
+                 f'Measured {len(smp["mask_reason"])}, valid {valid_pts};')
         valid &= True
 
     note_cols = smp[~smp['mask_reason'].isna()]
@@ -176,15 +177,15 @@ def sampleinfo_to_str(info, multiplier=1.0):
         return None
 
     if info['enum'] == SampleInfo.CV:
-        return 'CV>{:.1f}%({:.1f}%)'.format(CV_THRESHOLD * 100, float(info['value']) * 100.0)
+        return f'CV>{CV_THRESHOLD * 100:.1f}%({float(info["value"]) * 100.0:.1f}%)'
 
     if info['enum'] == SampleInfo.VALID_PTS:
-        return '{} valid point'.format(info['value'])
+        return f'{info["value"]} valid point'
 
     if info['enum'] == SampleInfo.LIMITS_3S:
-        return '{}'.format('test invalid')
+        return f'test invalid'
 
-    return '{}{:.4e}'.format(info['sign'], float(info['value']) * multiplier)
+    return f'{info["sign"]}{float(info["value"]) * multiplier:.4e}'
 
 
 def sample_info(samples: pd.DataFrame, stype: str, sample_num: int, dr: DataRange,
@@ -194,12 +195,12 @@ def sample_info(samples: pd.DataFrame, stype: str, sample_num: int, dr: DataRang
     s = get_sample(samples, stype, sample_num)
     sc = sample_check(samples, stype, sample_num)
     if verbose:
-        print('OD=[{}, {}]'.format(dr.od[0], dr.od[1]))
+        print(f'OD=[{dr.od[0]}, {dr.od[1]}]')
         print('OD_fit=[{:.3}, {:.3}]'.format(
             Decimal(dr.od_fit[0]), Decimal(dr.od_fit[1])))
         print('SV=[{:.{dgts}e}, {:.{dgts}e}]'.format(
             Decimal(dr.sv[0]), Decimal(dr.sv[1]), dgts=RESULT_DIGITS))
-        print('CB=[{}, {}]'.format(dr.cb[0], dr.cb[1]))
+        print(f'CB=[{dr.cb[0]}, {dr.cb[1]}]')
     above_ref_od_max = s['OD_delta'] > dr.od_fit[1]
     below_ref_od_min = s['OD_delta'] < dr.od_fit[0]
     msgdc = {}
@@ -211,8 +212,8 @@ def sample_info(samples: pd.DataFrame, stype: str, sample_num: int, dr: DataRang
             msgdc = {'sign': '<', 'value': Decimal(
                 dr.sv[0]), 'enum': SampleInfo.NAN_LOW}
     elif sc['cv'] > CV_THRESHOLD:
-        msgdc = {'sign': '>{:.2f}'.format(
-            CV_THRESHOLD), 'value': sc['cv'], 'enum': SampleInfo.CV}
+        msgdc = {f'sign': '>{CV_THRESHOLD:.2f}',
+                 'value': sc['cv'], 'enum': SampleInfo.CV}
     elif not s['mask_reason'].isna().all():
         t = s[['OD_delta', 'plate_layout_dil', 'concentration', 'backfit']]
         t_not_na = t[~t['backfit'].isna()]
@@ -242,7 +243,7 @@ def control_info(val: float, limits: tuple) -> dict:
     """
     msgdc = {}
     if not limits:
-        raise Exception('Please provide controll limits!')
+        raise AttributeError('Please provide controll limits!')
     if val < limits[0]:
         msgdc = {'sign': '<',
                  'value': limits[0], 'enum': SampleInfo.LIMITS_3S}
@@ -256,7 +257,7 @@ def final_sample_info(all_info, pre_dilution, limits):
     """ Final table info assembly
     """
     if not all_info:
-        raise Exception("Invalid sample info!")
+        raise AttributeError("Invalid sample info!")
     info = all_info['info']
     # check 3s limits
     if all_info['type'] == 'k':
@@ -268,31 +269,25 @@ def final_sample_info(all_info, pre_dilution, limits):
     msg = ''
     valid_ex = False
     if info['enum'] == SampleInfo.NAN_HIGH:
-        msg = '>{:.{dgts}e}'.format(
-            info['value'] * pre_dilution, dgts=RESULT_DIGITS)
+        msg = f'>{info["value"] * pre_dilution:.{RESULT_DIGITS}e}'
     elif info['enum'] == SampleInfo.NAN_LOW:
         if pre_dilution <= PRE_DILUTION_THRESHOLD:
             valid_ex = True
-            msg = '<{:.{dgts}e}'.format(
-                info['value'] * pre_dilution, dgts=RESULT_DIGITS)
+            msg = f'<{info["value"] * pre_dilution:.{RESULT_DIGITS}e}'
         else:
             valid_ex = False
-            msg = '<{:.{dgts}e}'.format(
-                info['value'] * pre_dilution, dgts=RESULT_DIGITS)
+            msg = f'<{info["value"] * pre_dilution:.{RESULT_DIGITS}e}'
     elif info['enum'] == SampleInfo.HIGH:
-        msg = '>{:.{dgts}e}'.format(
-            info['value'] * pre_dilution, dgts=RESULT_DIGITS)
+        msg = f'>{info["value"] * pre_dilution:.{RESULT_DIGITS}e}'
     elif info['enum'] == SampleInfo.LOW:
-        msg = '<{:.{dgts}e}'.format(
-            info['value'] * pre_dilution, dgts=RESULT_DIGITS)
+        msg = f'<{info["value"] * pre_dilution:.{RESULT_DIGITS}e}'
         valid_ex = True
     elif info['enum'] == SampleInfo.VALID_PTS:
-        msg = '{} valid point'.format(all_info['valid_pts'])
+        msg = f'{all_info["valid_pts"]} valid point'
     elif info['enum'] == SampleInfo.CV:
-        msg = 'CV>{:.1f}%({:.1f}%)'.format(
-            CV_THRESHOLD * 100.0, info['value'] * 100.0)
+        msg = f'CV>{CV_THRESHOLD * 100.0:.1f}%({info["value"] * 100.0:.1f}%)'
     elif info['enum'] == SampleInfo.LIMITS_3S:
-        msg = '{}'.format('test invalid')
+        msg = 'test invalid'
     else:
         msg = ''
         valid_ex = True
