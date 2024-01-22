@@ -16,7 +16,6 @@ from .config import config as cfg
 from .constants import RESULT_DIGITS, MIN_VALID_SAMPLE_POINTS
 from .constants import CV_THRESHOLD, PRE_DILUTION_THRESHOLD
 from .fitdata import conc_func, inv_func, backfit
-from .config import LIMITS_NAME
 
 
 @dataclass
@@ -69,7 +68,7 @@ def mask_value_fn(val, odmin, odmax, note):
     return None
 
 
-def mask_value_short_fn(val, vmin, vmax, dil, note):
+def mask_value_short_fn(val, vmin, vmax, dil):
     """ Masking function 
     """
     ex = False
@@ -386,7 +385,7 @@ def mask_sample(df, dr):
         axis=1)
     df.loc[:, ['mask_reason']] = df.apply(
         lambda x: mask_value_short_fn(
-            x['backfit'], dr.cb[0], dr.cb[1], x['plate_layout_dil'], ''),
+            x['backfit'], dr.cb[0], dr.cb[1], x['plate_layout_dil']),
         axis=1)
 
     # mask samples for CV < threshold, controll is considered normal sample

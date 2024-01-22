@@ -8,8 +8,12 @@ from os import path, listdir
 from datetime import datetime
 import re
 
+from .typing import PathLike
 
-def find_analysis(work_dir, match_pattern):
+
+def find_analysis(work_dir: PathLike, match_pattern: str) -> list:
+    """ Find analysis files in directory
+    """
     files = listdir(work_dir)
     # rs = r'^{}_{}_.*\.txt$'.format(pd['date'], pd['protocol'])
     r = re.compile(match_pattern)
@@ -21,7 +25,7 @@ def find_analysis(work_dir, match_pattern):
     return ll
 
 
-def parse_photometer_filename(path_name):
+def parse_photometer_filename(path_name: PathLike) -> dict:
     """Parses analysis filename
 
     Parameters
@@ -51,7 +55,7 @@ def parse_photometer_filename(path_name):
     return dc
 
 
-def parse_dir_name(path_name):
+def parse_dir_name(path_name: PathLike) -> dict:
     """Parses directory name
 
     Parameters
@@ -72,18 +76,18 @@ def parse_dir_name(path_name):
     if path.isdir(path_name):
         path_name = path.basename(path_name)
     else:
-        raise Exception('Not directory! {}'.format(path_name))
+        raise Exception(f'Not directory! {path_name}')
 
     s = path_name.split('_')
     if len(s) != 4:
         raise Exception(
-            'Invalid method results directory: {}'.format(path_name))
+            'Invalid method results directory: {path_name}')
 
     dc = {'date': s[0], 'protocol': s[1], 'analyst': s[2], 'gn': s[3]}
     return dc
 
 
-def make_base_name(date, gn):
+def make_base_name(date: str, gn: str) -> str:
     """Create base report name
 
     Parameters:
@@ -101,7 +105,7 @@ def make_base_name(date, gn):
     return date + '_' + gn + '_-_'
 
 
-def basename_from_inputdir(input_dir):
+def basename_from_inputdir(input_dir: PathLike) -> str:
     """Create base name from input folder name
 
     Parameters:
@@ -117,7 +121,7 @@ def basename_from_inputdir(input_dir):
     return make_base_name(p['date'], p['gn'])
 
 
-def make_input_paths(input_dir):
+def make_input_paths(input_dir: PathLike) -> dict:
     """Make worklist and parameters path names
 
     Worklist and parameters files have fixed formats defined in README.md
@@ -136,17 +140,17 @@ def make_input_paths(input_dir):
     base_name = basename_from_inputdir(input_dir)
     worklist = path.join(input_dir, base_name + 'worklist-ELISA.xls')
     if not path.isfile(worklist):
-        raise Exception("Worklist file path is invlaid: {}".format(worklist))
+        raise Exception(f"Worklist file path is invlaid: {worklist}")
 
     params = path.join(input_dir, base_name +
                        p['protocol'] + '_Parameters.csv')
     if not path.isfile(params):
-        raise Exception("Parameters file path is invlaid: {}".format(params))
+        raise Exception("Parameters file path is invlaid: {params}")
 
     return {'worklist': worklist, 'params': params}
 
 
-def make_output_paths(input_dir, base_name, plate_id):
+def make_output_paths(input_dir: PathLike, base_name: str, plate_id: int) -> dict:
     """Make output data paths
 
     Parameters:
@@ -162,10 +166,8 @@ def make_output_paths(input_dir, base_name, plate_id):
     dictionary
         File path to 'plate_results' 'report'
     """
-    base = path.join(input_dir, 'results_plate_{}'.format(plate_id))
-    plate = path.join(
-        base, '{}results_plate_{}.md'.format(base_name, plate_id))
-    report = path.join(
-        base, '{}report_plate_{}.md'.format(base_name, plate_id))
+    base = path.join(input_dir, f'results_plate_{plate_id}')
+    plate = path.join(base, f'{base_name}results_plate_{plate_id}.md')
+    report = path.join(base, f'{base_name}report_plate_{plate_id}')
 
     return {'plate_results': plate, 'report': report}

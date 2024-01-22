@@ -63,7 +63,7 @@ def read_config(filename: PathLike, a_type: str) -> dict:
             config[LIMITS_NAME] = dc[a_type][LIMITS_NAME]
             config[SOP_NAME] = dc[a_type][SOP_NAME]
             config[MHF_NAME] = dc[a_type][MHF_NAME]
-        elif not key in keys:
+        elif not a_type in k_type:
             raise (KeyError(
                 f"Analysis type '{a_type}' copuld not be identified! Shall be one of {k_type}. "))
 

@@ -66,7 +66,7 @@ def fit_image(x, y, popt, pcov, file_path, confidence_interval=95.0,
     sigma_err = 1.0
     chisq = np.sum((perr / sigma_err) ** 2)
     if verbose:
-        print('chisq={0:.4}; error={1}'.format(np.sqrt(chisq), perr))
+        print(f'chisq={np.sqrt(chisq):.4}; error={perr}')
         # print('function calls', infodict['nfev'])
 
     kwargs = {'marker': 'x'}
@@ -102,13 +102,13 @@ def fit_image(x, y, popt, pcov, file_path, confidence_interval=95.0,
         st = sigma * tval
         sigma_popt[i] = st
         if verbose:
-            print('{0}: {1:.3} [{2:.3}, {3:.3}]; err={4:.3}[{5:.2f}%]'.format(
-                pname, p, p - st, p + st, st, 100*st/p))
+            print((f'{pname}: {p:.3} [{p - st:.3}, '
+                   f'{p + st:.3}]; err={st:.3}[{100*st/p:.2f}%]'))
 
     if confidence is None or confidence == 'student-t':
         if verbose:
             print(
-                'student-t is used for error estimation using {} degrees of freedom'.format(dof))
+                f'student-t is used for error estimation using {dof} degrees of freedom')
         popt_high = popt + sigma_popt
         popt_low = popt - sigma_popt
     else:

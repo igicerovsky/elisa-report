@@ -217,7 +217,9 @@ def fit_reference_auto_rm(xs, ys, err_threshold=0.998, verbose=False):
 
     idx = []
     r2_max = 0.0
-    def bfn(l): return inv_func(l, *fc[0])
+
+    def bfn(l):
+        return inv_func(l, *fc[0])
     if fc:
         x_hat = bfn(y)
         try:
@@ -228,7 +230,7 @@ def fit_reference_auto_rm(xs, ys, err_threshold=0.998, verbose=False):
     if verbose:
         print('R-squared is invalid for nonlinear models!')
         print('metric, index')
-        print('{0:.5f}, {1}'.format(r2_max, idx))
+        print(f'{r2_max:.5f}, {idx}')
 
     if r2_max > err_threshold:
         fit_stats.loc[len(fit_stats)] = [-1, r2_max, '']
@@ -236,8 +238,7 @@ def fit_reference_auto_rm(xs, ys, err_threshold=0.998, verbose=False):
     if r2_max == 0.0:
         fit_stats.loc[len(fit_stats)] = [-1, np.nan, '']
     else:
-        cmnt = 'metric < threshold ({:.3f} < {:.3f})'.format(
-            r2_max, err_threshold)
+        cmnt = f'metric < threshold ({r2_max:.3f} < {err_threshold:.3f})'
         fit_stats.loc[len(fit_stats)] = [-1, r2_max, cmnt]
 
     fc_i = None
@@ -272,7 +273,7 @@ def fit_reference_auto_rm(xs, ys, err_threshold=0.998, verbose=False):
 
         fit_stats.loc[len(fit_stats)] = [i, r_squared, '']
         if verbose:
-            print('{0:.3f}, {1}'.format(r_squared, i))
+            print(f'{r_squared:.3f}, {i}')
         if (r_squared > r2_max) and not np.isinf(fc_i[1]).any():
             r2_max = r_squared
             fc = fc_i
