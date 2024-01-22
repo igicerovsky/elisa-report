@@ -14,7 +14,7 @@ def gen_report_raw(worklist, params, layout, reference_conc,
 
     reports = []
     pdr = parse_dir_name(working_dir)
-    match_pattern = r'^{}_{}_.*\.txt$'.format(pdr['date'], pdr['protocol'])
+    match_pattern = f'^{pdr["date"]}_{pdr["protocol"]}_.*\.txt$'
     alist = find_analysis(working_dir, match_pattern)
     if not alist:
         raise (FileNotFoundError(

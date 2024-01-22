@@ -28,7 +28,8 @@ def make_final(sl, wl_raw, plate_id):
     final.loc[:, ['CV [%]']] = final.apply(lambda x: x['CV [%]'] * 100, axis=1)
     # reorder columns
     final = final.reindex([cd['SampleID'], cd['Dilution'], cd['Viscosity'],
-                          'Reader Data [cp/ml]', 'Result [cp/ml]', 'CV [%]', 'Valid', 'info'], axis=1)
+                          'Reader Data [cp/ml]', 'Result [cp/ml]', 'CV [%]',
+                           'Valid', 'info'], axis=1)
     final.rename(columns={cd['SampleID']: 'Sample Name',
                  cd['Dilution']: 'Pre-dilution'}, inplace=True)
     final.drop(f'Viscosity_{plate_id}', axis=1, inplace=True)
@@ -224,8 +225,7 @@ def format_results(df: pd.DataFrame, limits: dict) -> pd.DataFrame:
     df.loc[:, ['Comment']] = df.apply(lambda x: final_sample_info(
         x['info'], x['Pre-dilution'], limits)[0], axis=1)
     df.loc[:, ['CV [%]']] = df.apply(lambda x: format_cv(x['CV [%]']), axis=1)
-    df.loc[:, ['Result [cp/ml]']
-           ] = df.apply(lambda x: format_results_val(x), axis=1)
+    df.loc[:, ['Result [cp/ml]']] = df.apply(format_results_val, axis=1)
     df.drop(['info', 'Valid', 'Reader Data [cp/ml]',
             'info_ex', 'valid_ex'], axis=1, inplace=True)
 

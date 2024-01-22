@@ -2,9 +2,9 @@
 """
 
 from os import path
-import chardet
 from pathlib import Path
 from io import StringIO
+import chardet
 
 import pandas as pd
 from .layouthandle import read_plate_layout, to_matrix, index_plate_layout
