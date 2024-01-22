@@ -29,12 +29,9 @@ def main():
     new_dir = path.join(working_dir, '_foo_dir')
     makedirs(new_dir, exist_ok=True)
 
-    try:
-        new_file = path.join(new_dir, 'foo.txt')
-        with open(new_file, 'w', encoding="utf-8") as fl:
-            fl.write(f':)\npar is {par_input}\n')
-    except (Exception,) as e:
-        print('Error: ' + str(e))
+    new_file = path.join(new_dir, 'foo.txt')
+    with open(new_file, 'w', encoding="utf-8") as fl:
+        fl.write(f':)\npar is {par_input}\n')
 
 
 if __name__ == "__main__":

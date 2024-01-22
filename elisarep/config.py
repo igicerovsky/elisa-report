@@ -50,6 +50,8 @@ def read_config(filename: PathLike, a_type: str) -> dict:
     k_type = ['AAV8', 'AAV9', 'default']
     with open(filename, encoding="utf-8") as json_config:
         items = json.load(json_config).items()
+        if not items:
+            raise ValueError(f"Config file '{filename}' is empty!")
         for key, value in items:
             if key in keys:
                 config[key] = value
