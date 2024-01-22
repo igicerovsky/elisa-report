@@ -1,10 +1,11 @@
-import pandas as pd
-from .layouthandle import read_plate_layout, to_matrix, index_plate_layout
 from os import path
 import chardet
 from pathlib import Path
 from io import StringIO
-from elisarep.typing import PathLike
+
+import pandas as pd
+from .layouthandle import read_plate_layout, to_matrix, index_plate_layout
+from .typing import PathLike
 
 
 def get_encoding(file_name: PathLike) -> str:
