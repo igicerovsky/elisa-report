@@ -22,19 +22,17 @@ def gen_report_raw(worklist, params, layout, reference_conc,
              f'Please export analysis results.')))
     print(alist)
     for analysis_file in alist:
-        dc = parse_photometer_filename(analysis_file)
-        plate = int(dc['plate'])
+        plate = int(parse_photometer_filename(analysis_file)['plate'])
         print('Processing plate {plate} of {len(alist)}')
 
-        base_name = basename_from_inputdir(working_dir)
-        output_files = make_output_paths(working_dir, base_name, plate)
-        report_file_path = output_files['report']
-
-        report_dir = path.dirname(path.abspath(report_file_path))
-        info = parse_dir_name(working_dir)
+        report_file_path = make_output_paths(working_dir,
+                                             basename_from_inputdir(
+                                                 working_dir),
+                                             plate)['report']
         md, dfres = report_plate(plate, worklist, params, layout,
-                                 reference_conc, analysis_file, report_dir,
-                                 info)
+                                 reference_conc, analysis_file,
+                                 path.dirname(path.abspath(report_file_path)),
+                                 parse_dir_name(working_dir))
         reports.append(
             {'md': md, 'df': dfres, 'path': report_file_path, 'plate': plate})
 

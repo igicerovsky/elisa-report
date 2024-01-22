@@ -150,13 +150,12 @@ def sample_section_md(samples: pd.DataFrame, reference,
     md += blank_to_md(blank)
     md += '\n'
     md += pg_break
-    k = sample_check(samples, 'k', 1)
-    md += sample_to_md(k)
+    md += sample_to_md(sample_check(samples, 'k', 1))
     md += '\n'
     nfl = 1
     sfile = f'control_{nfl:02d}.svg'
-    img_file = path.join(img_dir, sfile)
-    sample_img(samples, reference, 'k', 1, img_file, show=False)
+    sample_img(samples, reference, 'k', 1,
+               path.join(img_dir, sfile), show=False)
     md += f'!["alt text"](./img/{sfile})\n\n'
     md += pg_break
 
@@ -164,8 +163,7 @@ def sample_section_md(samples: pd.DataFrame, reference,
     sample_n.sort()
     for i in tqdm(sample_n):
         stype = 's'
-        s = sample_check(samples, stype, i)
-        md += sample_to_md(s)
+        md += sample_to_md(sample_check(samples, stype, i))
         # sample info
         si = sample_info(samples, stype, i, dr)
         si_str = sampleinfo_to_str(si['info'])
