@@ -1,3 +1,6 @@
+""" Module for reading photometer data from txt file and plate layouts from csv file
+"""
+
 from os import path
 import chardet
 from pathlib import Path
@@ -42,7 +45,7 @@ def read_exported_data(file_name: PathLike) -> str:
 
 
 def get_data_crop(df: pd.DataFrame, row_span: tuple, col_span: tuple) -> pd.DataFrame:
-    """"""
+    """Crops data from dataframe"""
     crop = df.iloc[row_span, col_span].copy()
     crop.reset_index(drop=True, inplace=True)
     # crop.set_index([['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']], inplace=True)
@@ -91,7 +94,7 @@ def read_concat_data(data_file_path: PathLike) -> pd.DataFrame:
     if ext == '.txt':
         read_fn = read_data_txt
     else:
-        raise Exception(f'Invalid inpit data file {data_file_path}')
+        raise FileNotFoundError(f'Invalid input data file {data_file_path}')
 
     df_450, df_630 = read_fn(data_file_path)
     df_delta = df_450 - df_630

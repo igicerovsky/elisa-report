@@ -7,6 +7,7 @@ from datetime import datetime
 import pandas as pd
 from tqdm import tqdm
 
+from .typing import PathLike
 from .fitdata import fit_sheet, fit_reference_auto_rm, backfit
 from .image import fit_image, sample_img
 from .sample import final_sample_info, sample_check, sample_info, sampleinfo_to_str
@@ -17,6 +18,7 @@ from .config import LIMITS_NAME
 
 
 def make_final(sl, wl_raw, plate_id):
+    """Make final report dataframe"""
     limits = cfg[LIMITS_NAME]
     wl, cd = worklist_sample(wl_raw, plate_id)
 
@@ -40,7 +42,8 @@ def make_final(sl, wl_raw, plate_id):
 
 # Header
 
-def header_section(dc, plate_id, msg):
+def header_section(dc: dict, plate_id: int, msg: str) -> str:
+    """Generate header section"""
     md = '## Header\n\n'
 
     dt = datetime.strptime(dc['date'], "%y%m%d")
@@ -56,7 +59,8 @@ def header_section(dc, plate_id, msg):
 
 # Parameters
 
-def param_section(df_params):
+def param_section(df_params: pd.DataFrame) -> str:
+    """Generate parameter section"""
     md = '## Parameters\n\n'
 
     md += 'Parameters:\n\n' + df_params.to_markdown() + '\n\n'
@@ -66,7 +70,8 @@ def param_section(df_params):
 
 # Fit reference curve
 
-def fit_section_md(df_ref, popt, pcov, out_dir):
+def fit_section_md(df_ref: pd.DataFrame, popt, pcov, out_dir: PathLike) -> str:
+    """Generate fit section"""
     x = df_ref.reset_index(level=[0, 1])['plate_layout_conc']
     y = df_ref.reset_index(level=[0, 1])['OD_delta']
     fit_result = fit_reference_auto_rm(x, y)
@@ -108,7 +113,8 @@ def fit_section_md(df_ref, popt, pcov, out_dir):
 
 # Sample section
 
-def sample_to_md(dc):
+def sample_to_md(dc: dict) -> str:
+    """Generate sample section"""
     s_view = dc['sample'][['OD_delta', 'plate_layout_dil',
                            'concentration', 'mask_reason']]
     md = "### Sample: {0} '{1}' {2}\n\n".format(
@@ -125,7 +131,8 @@ def sample_to_md(dc):
     return md
 
 
-def blank_to_md(blank):
+def blank_to_md(blank: pd.DataFrame) -> str:
+    """Generate blank section"""
     md = '### Blank\n\n'
     blank.index.name = 'Well'
     md += blank[['OD_delta', 'OD_450', 'OD_630']].to_markdown()
@@ -133,7 +140,9 @@ def blank_to_md(blank):
     return md
 
 
-def sample_section_md(samples, reference, blank, dr, img_dir):
+def sample_section_md(samples: pd.DataFrame, reference,
+                      blank, dr, img_dir: PathLike) -> str:
+    """Generate sample section"""
     # this works for pdflatex
     pg_break = '\\pagebreak\n\n'
     # pg_break = '<div style="page-break-after: always;"></div>\n\n'
@@ -174,39 +183,44 @@ def sample_section_md(samples, reference, blank, dr, img_dir):
     return md
 
 
-def save_md(file_path, md_txt):
+def save_md(file_path: PathLike, md_txt: str) -> None:
+    """Save markdown text to file"""
     try:
         with open(file_path, 'w', encoding='utf-8') as fl:
             fl.write(md_txt)
-    except Exception as e:
+    except FileNotFoundError as e:
         print('Error: ' + str(e))
 
 
 # Result section
 
-def format_results_val(x):
+def format_results_val(x: float) -> str:
+    """Format result value"""
     res = ''
     if math.isnan(x['Result [cp/ml]']):
         res = x['Comment']
     else:
-        res = '{:.{dgts}e}'.format(x['Result [cp/ml]'], dgts=RESULT_DIGITS)
+        v = x["Result [cp/ml]"]
+        res = f'{v:.{RESULT_DIGITS}e}'
     if x['valid_ex']:
-        res = '**{}**'.format(res)
+        res = f'**{res}**'
     elif x['info_ex'] == 'test invalid':
-        res = '[ {} ]'.format(res)
+        res = f'[ {res} ]'
     else:
-        res = '( {} )*'.format(res)
+        res = f'( {res} )*'
 
     return res
 
 
-def format_cv(x):
+def format_cv(x: float) -> str:
+    """Format CV value"""
     if math.isnan(x):
         return 'NA'
-    return '{:.{dgts}f}'.format(x, dgts=CV_DIGITS)
+    return f'{x:.{CV_DIGITS}f}'
 
 
-def format_results(df, limits):
+def format_results(df: pd.DataFrame, limits: dict) -> pd.DataFrame:
+    """Format results dataframe"""
     df.loc[:, ['Comment']] = df.apply(lambda x: final_sample_info(
         x['info'], x['Pre-dilution'], limits)[0], axis=1)
     df.loc[:, ['CV [%]']] = df.apply(lambda x: format_cv(x['CV [%]']), axis=1)
@@ -218,12 +232,13 @@ def format_results(df, limits):
     return df
 
 
-def result_section(df):
+def result_section(df: pd.DataFrame) -> str:
+    """Generate result section"""
     limits = cfg[LIMITS_NAME]
     md = '## Analysis Results\n\n'
 
     df_formated = format_results(df, limits)
-    md += df_formated.to_markdown(floatfmt="#.{}f".format(CV_DIGITS))
+    md += df_formated.to_markdown(floatfmt=f"#.{CV_DIGITS}f")
     md += '\n\n'
     md += '\* sample will be retested\n\n'
 
