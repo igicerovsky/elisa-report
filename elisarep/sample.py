@@ -12,7 +12,7 @@ import numpy as np
 import pandas as pd
 from scipy.stats import variation
 
-from .constants import RESULT_DIGITS, MIN_VALID_SAMPLE_POINTS
+from .constants import RESULT_DIGITS, MIN_VALID_SAMPLE_POINTS, SAMPLE_TYPES
 from .constants import CV_THRESHOLD, PRE_DILUTION_THRESHOLD
 from .fitdata import conc_func, inv_func, backfit
 
@@ -30,7 +30,8 @@ class DataRange:
 def get_sample(dfa: pd.DataFrame, stype: str, sample_num: int) -> pd.DataFrame:
     """ Get sample
     """
-    # TODO: check for valid `type` `and sample_num`
+    if stype not in SAMPLE_TYPES:
+        raise ValueError(f'Invalid sample type: {stype}')
     dfa = dfa.loc[(dfa['plate_layout_ident'] == stype) &
                   (dfa['plate_layout_num'] == sample_num)]
     return dfa
@@ -271,7 +272,7 @@ def final_sample_info(all_info, pre_dilution, limits):
     valid_ex = False
     if info['enum'] == SampleInfo.NAN_HIGH:
         msg = f'>{info["value"] * pre_dilution:.{RESULT_DIGITS}e}'
-    elif info['enum'] == SampleInfo.NAN_LOW:
+    elif info['enum'] == SampleInfo.NAN_LOW or info['enum'] == SampleInfo.LOW:
         if pre_dilution <= PRE_DILUTION_THRESHOLD:
             valid_ex = True
             msg = f'<{info["value"] * pre_dilution:.{RESULT_DIGITS}e}'
@@ -280,9 +281,6 @@ def final_sample_info(all_info, pre_dilution, limits):
             msg = f'<{info["value"] * pre_dilution:.{RESULT_DIGITS}e}'
     elif info['enum'] == SampleInfo.HIGH:
         msg = f'>{info["value"] * pre_dilution:.{RESULT_DIGITS}e}'
-    elif info['enum'] == SampleInfo.LOW:
-        msg = f'<{info["value"] * pre_dilution:.{RESULT_DIGITS}e}'
-        valid_ex = True
     elif info['enum'] == SampleInfo.VALID_PTS:
         msg = f'{all_info["valid_pts"]} valid point'
     elif info['enum'] == SampleInfo.CV:
