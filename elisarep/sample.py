@@ -75,14 +75,14 @@ def mask_value_short_fn(val, vmin, vmax, dil, note):
     ex = False
     if val < vmin:
         if ex:
-            return '<{:.{dgts}e}'.format(Decimal(vmin * dil), dgts=RESULT_DIGITS)
-        else:
-            return '<LOQ'
+            v = Decimal(vmin * dil)
+            return f'<{v:.{RESULT_DIGITS}e}'
+        return '<LOQ'
     if val > vmax:
         if ex:
-            return '>{:.{dgts}e}'.format(Decimal(vmax * dil), dgts=RESULT_DIGITS)
-        else:
-            return '>ULOQ'
+            v = Decimal(vmax * dil)
+            return f'>{v:.{RESULT_DIGITS}e}'
+        return '>ULOQ'
     if math.isnan(val):
         return 'Backfit failed.'
     return None
@@ -167,6 +167,8 @@ def sample_check(samples, stype, sample_num, cv_thresh=CV_THRESHOLD,
 
 
 class SampleInfo(str, Enum):
+    """ SampleInfo data class.
+    """
     NAN_LOW = 'NaN below reference'
     NAN_HIGH = 'NaN above reference'
     LOW = 'value below reference'
@@ -197,8 +199,7 @@ def sampleinfo_to_str(info, multiplier=1.0):
     return f'{info["sign"]}{float(info["value"]) * multiplier:.4e}'
 
 
-def sample_info(samples: pd.DataFrame, stype: str, sample_num: int, dr: DataRange,
-                limits: tuple = None) -> dict:
+def sample_info(samples: pd.DataFrame, stype: str, sample_num: int, dr: DataRange) -> dict:
     """ Generate sample info
     """
     s = get_sample(samples, stype, sample_num)
@@ -304,8 +305,7 @@ def generate_results(df_data, datarange):
         columns=['id', 'CV [%]', 'Reader Data [cp/ml]', 'Note', 'Valid', 'info'])
     knum = 1
     s = sample_check(df_data, 'k', knum)
-    si = sample_info(df_data, 'k', knum, datarange,
-                     cfg[LIMITS_NAME])
+    si = sample_info(df_data, 'k', knum, datarange)
     dfres.loc[len(dfres)] = [
         f'control {knum:02d}', s['cv'], s['mean'], s['note'], s['valid'], si]
 
