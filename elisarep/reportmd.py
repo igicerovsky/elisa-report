@@ -31,7 +31,7 @@ def make_final(sl, wl_raw, plate_id):
                           'Reader Data [cp/ml]', 'Result [cp/ml]', 'CV [%]', 'Valid', 'info'], axis=1)
     final.rename(columns={cd['SampleID']: 'Sample Name',
                  cd['Dilution']: 'Pre-dilution'}, inplace=True)
-    final.drop('Viscosity_{}'.format(plate_id), axis=1, inplace=True)
+    final.drop(f'Viscosity_{plate_id}', axis=1, inplace=True)
     final.index.name = 'Sample type'
     final.loc[:, ['info_ex']] = final.apply(
         lambda x: final_sample_info(x['info'], x['Pre-dilution'], limits)[0], axis=1)
@@ -47,12 +47,12 @@ def header_section(dc: dict, plate_id: int, msg: str) -> str:
     md = '## Header\n\n'
 
     dt = datetime.strptime(dc['date'], "%y%m%d")
-    md += 'Date: **{}**  \n'.format(dt.strftime('%d %b %Y'))
-    md += 'Identification: **{}**  \n'.format(dc['gn'])
-    md += 'Protocol: **{}**  \n'.format(dc['protocol'])
-    md += 'Analyzed by: **{}**  \n'.format(dc['analyst'])
-    md += 'Plate: **{}**  \n'.format(plate_id)
-    md += 'Comment: {}  \n\n'.format(msg)
+    md += f'Date: **{dt.strftime("%d %b %Y")}**  \n'
+    md += f'Identification: **{dc["gn"]}**  \n'
+    md += f'Protocol: **{dc["protocol"]}**  \n'
+    md += f'Analyzed by: **{dc["analyst"]}**  \n'
+    md += f'Plate: **{plate_id}**  \n'
+    md += f'Comment: {msg}  \n\n'
 
     return md
 
@@ -117,16 +117,15 @@ def sample_to_md(dc: dict) -> str:
     """Generate sample section"""
     s_view = dc['sample'][['OD_delta', 'plate_layout_dil',
                            'concentration', 'mask_reason']]
-    md = "### Sample: {0} '{1}' {2}\n\n".format(
-        SAMPLE_TYPES[dc['type']], dc['type'], dc['num'])
+    md = f"### Sample: {SAMPLE_TYPES[dc['type']]} '{dc['type']}' {dc['num']}\n\n"
     s_view.index.name = 'Well'
     md += s_view.to_markdown()
     md += '\n\n'
-    md += "CV = {:2.3} [%]  \n".format(100 * dc['cv'])
-    md += "mean = {:.4} [cp/ml]  \n".format(dc['mean'])
-    md += "valid = {}  \n".format(dc['valid'])
+    md += f"CV = {100 * dc['cv']:2.3} [%]  \n"
+    md += f"mean = {dc['mean']:.4} [cp/ml]  \n"
+    md += f"valid = {dc['valid']}  \n"
     if dc['note']:
-        md += "note: {}  ".format(dc['note'])
+        md += f"note: {dc['note']}  "
 
     return md
 
@@ -153,10 +152,11 @@ def sample_section_md(samples: pd.DataFrame, reference,
     k = sample_check(samples, 'k', 1)
     md += sample_to_md(k)
     md += '\n'
-    sfile = 'control_{0:02d}.svg'.format(1)
+    nfl = 1
+    sfile = f'control_{nfl:02d}.svg'
     img_file = path.join(img_dir, sfile)
     sample_img(samples, reference, 'k', 1, img_file, show=False)
-    md += '!["alt text"](./img/{})\n\n'.format(sfile)
+    md += f'!["alt text"](./img/{sfile})\n\n'
     md += pg_break
 
     sample_n = samples['plate_layout_num'].astype(int).unique()
@@ -172,11 +172,11 @@ def sample_section_md(samples: pd.DataFrame, reference,
             md += '\n'
             md += 'info: ' + si_str + '  '
         md += '\n'
-        sfile = 'sample_{0:02d}.svg'.format(i)
+        sfile = f'sample_{i:02d}.svg'
         img_file = path.join(img_dir, sfile)
         sample_img(samples, reference, stype, i,
                    img_file=img_file, show=False, verbose=False)
-        md += '![{0}](./img/{0})\n'.format(sfile)
+        md += f'![{sfile}](./img/{sfile})\n'
         if i != sample_n[-1]:
             md += '\n'
             md += pg_break
