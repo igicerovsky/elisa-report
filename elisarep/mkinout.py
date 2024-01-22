@@ -43,12 +43,12 @@ def parse_photometer_filename(path_name: PathLike) -> dict:
         If pathname isn't a file exception is raised.
     """
     if not path.isfile(path_name):
-        raise Exception('Not a file!')
+        raise FileNotFoundError('Not a file!')
     fle = path.split(path_name)[1]
     fl = path.splitext(fle)
     s = fl[0].split('_')
     if len(s) != 5:
-        raise Exception(
+        raise NameError(
             f'Plate file is invalid! {fle}\n It shall contain 5 items delimited by \'_\'')
     dt = datetime.strptime(s[3]+s[4], "%Y%m%d%H%M%S")
     dc = {'datetime': dt, 'plate': s[2], 'protocol': s[1]}
@@ -76,11 +76,11 @@ def parse_dir_name(path_name: PathLike) -> dict:
     if path.isdir(path_name):
         path_name = path.basename(path_name)
     else:
-        raise Exception(f'Not directory! {path_name}')
+        raise FileNotFoundError(f'Not directory! {path_name}')
 
     s = path_name.split('_')
     if len(s) != 4:
-        raise Exception(
+        raise NameError(
             'Invalid method results directory: {path_name}')
 
     dc = {'date': s[0], 'protocol': s[1], 'analyst': s[2], 'gn': s[3]}
@@ -140,12 +140,12 @@ def make_input_paths(input_dir: PathLike) -> dict:
     base_name = basename_from_inputdir(input_dir)
     worklist = path.join(input_dir, base_name + 'worklist-ELISA.xls')
     if not path.isfile(worklist):
-        raise Exception(f"Worklist file path is invlaid: {worklist}")
+        raise FileNotFoundError(f"Worklist file path is invlaid: {worklist}")
 
     params = path.join(input_dir, base_name +
                        p['protocol'] + '_Parameters.csv')
     if not path.isfile(params):
-        raise Exception("Parameters file path is invlaid: {params}")
+        raise FileNotFoundError("Parameters file path is invlaid: {params}")
 
     return {'worklist': worklist, 'params': params}
 

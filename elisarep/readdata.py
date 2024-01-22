@@ -8,6 +8,7 @@ from elisarep.typing import PathLike
 
 
 def get_encoding(file_name: PathLike) -> str:
+    """Detects file encoding"""
     blob = Path(file_name).read_bytes()
     result = chardet.detect(blob)
     charenc = result['encoding']
@@ -20,6 +21,7 @@ SKIP_BEGIN = 1
 
 
 def read_exported_data(file_name: PathLike) -> str:
+    """Reads exported data from photometer"""
     count = 0
     csv_str = ''
     char_enc = get_encoding(file_name)
@@ -39,6 +41,7 @@ def read_exported_data(file_name: PathLike) -> str:
 
 
 def get_data_crop(df: pd.DataFrame, row_span: tuple, col_span: tuple) -> pd.DataFrame:
+    """"""
     crop = df.iloc[row_span, col_span].copy()
     crop.reset_index(drop=True, inplace=True)
     # crop.set_index([['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']], inplace=True)
@@ -48,6 +51,7 @@ def get_data_crop(df: pd.DataFrame, row_span: tuple, col_span: tuple) -> pd.Data
 
 
 def read_data_txt(file_path: PathLike) -> tuple:
+    """Reads photometer data from txt file"""
     strdata = read_exported_data(file_path)
     csv_io = StringIO(strdata)
     df = pd.read_csv(csv_io, sep=",")
@@ -59,6 +63,7 @@ def read_data_txt(file_path: PathLike) -> tuple:
 
 
 def to_multi_index(df_single_index: pd.DataFrame, name: str) -> pd.DataFrame:
+    """Converts single index dataframe to multi index dataframe"""
     df_multi_idx = df_single_index.stack().to_frame()
     df_multi_idx.columns = [name]
 
@@ -66,6 +71,7 @@ def to_multi_index(df_single_index: pd.DataFrame, name: str) -> pd.DataFrame:
 
 
 def to_plate_layout(lst: list) -> pd.DataFrame:
+    """Converts list to plate layout dataframe"""
     l_2d = to_matrix(lst, 8)
     plate_layout = pd.DataFrame(l_2d).T
 
@@ -73,11 +79,13 @@ def to_plate_layout(lst: list) -> pd.DataFrame:
 
 
 def save_plate_layout_csv(layout_list: list, out_file: PathLike) -> None:
+    """Saves plate layout to csv file"""
     l = to_plate_layout(layout_list)
     l.to_csv(out_file)
 
 
 def read_concat_data(data_file_path: PathLike) -> pd.DataFrame:
+    """Reads photometer data from txt file and concatenates it to single dataframe"""
     ext = path.splitext(data_file_path)[1]
     if ext == '.txt':
         read_fn = read_data_txt
@@ -99,6 +107,7 @@ def read_concat_data(data_file_path: PathLike) -> pd.DataFrame:
 def concat_layouts(playout_id: pd.DataFrame,
                    playout_num: pd.DataFrame,
                    playout_dil_id: pd.DataFrame) -> pd.DataFrame:
+    """Concatenates plate layouts"""
     res = to_multi_index(playout_id, 'plate_layout_ident')
     res = pd.merge(res, to_multi_index(
         playout_num, 'plate_layout_num'), left_index=True, right_index=True)
@@ -108,18 +117,23 @@ def concat_layouts(playout_id: pd.DataFrame,
     return res
 
 
-def concat_data_with_layouts(df_data: pd.DataFrame, df_layout: pd.DataFrame) -> pd.DataFrame:
+def concat_data_with_layouts(df_data: pd.DataFrame,
+                             df_layout: pd.DataFrame) -> pd.DataFrame:
+    """Concatenates data with layouts"""
     return pd.merge(df_data, df_layout, left_index=True, right_index=True)
 
 
 def read_params(file_path: PathLike) -> pd.DataFrame:
+    """Reads params from csv file"""
     params = pd.read_csv(file_path, sep=';')
     params.set_index('Variable', inplace=True)
 
     return params
 
 
-def read_layouts(file_id: PathLike, file_num: PathLike, file_dil: PathLike) -> pd.DataFrame:
+def read_layouts(file_id: PathLike, file_num: PathLike,
+                 file_dil: PathLike) -> pd.DataFrame:
+    """Reads plate layouts"""
     plate_layout_id = read_plate_layout(file_id)
     plate_layout_num = read_plate_layout(file_num)
     plate_layout_dil_id = read_plate_layout(file_dil)

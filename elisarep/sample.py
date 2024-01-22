@@ -12,7 +12,6 @@ import numpy as np
 import pandas as pd
 from scipy.stats import variation
 
-from .config import config as cfg
 from .constants import RESULT_DIGITS, MIN_VALID_SAMPLE_POINTS
 from .constants import CV_THRESHOLD, PRE_DILUTION_THRESHOLD
 from .fitdata import conc_func, inv_func, backfit
