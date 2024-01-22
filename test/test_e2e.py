@@ -54,17 +54,16 @@ def generic_test(analysis_dir: PathLike, report_plates_crc: list, assembly_crc: 
 
     init_config(analysis_dir, CONFIG_DIR)
 
-    wl_raw = predil_worklist(worklist_file_path)
-    params = read_params(params_file_path)
-    reference_conc = make_concentration(
-        cfg[REFVAL_NAME], cfg[DIL_NAME])
-
-    lay = read_layouts(path.join(CONFIG_DIR, PLATE_LAYOUT_ID),
-                       path.join(CONFIG_DIR, PLATE_LAYOUT_NUM),
-                       path.join(CONFIG_DIR, PLATE_LAYOUT_DIL_ID))
-
-    reports = rg. gen_report_raw(
-        wl_raw, params, lay, reference_conc, analysis_dir)
+    report_params = {
+        'worklist': predil_worklist(worklist_file_path),
+        'params': read_params(params_file_path),
+        'layouts': read_layouts(path.join(CONFIG_DIR, cfg['plate_layout_id']),
+                                path.join(CONFIG_DIR, cfg['plate_layout_num']),
+                                path.join(CONFIG_DIR, cfg['plate_layout_dil_id'])),
+        'refconc': make_concentration(
+            cfg[REFVAL_NAME], cfg[DIL_NAME])
+    }
+    reports = rg.gen_report_raw(report_params, analysis_dir)
 
     for report, crc in zip(reports, report_plates_crc):
         check_report_crc(report['md'], crc)

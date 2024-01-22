@@ -8,8 +8,7 @@ from .mkinout import find_analysis, parse_photometer_filename
 from .typing import PathLike
 
 
-def gen_report_raw(worklist, params, layout, reference_conc,
-                   working_dir: PathLike):
+def gen_report_raw(report_params: dict, working_dir: PathLike):
     """Generate report from raw data files"""
 
     reports = []
@@ -29,8 +28,7 @@ def gen_report_raw(worklist, params, layout, reference_conc,
                                              basename_from_inputdir(
                                                  working_dir),
                                              plate)['report']
-        md, dfres = report_plate(plate, worklist, params, layout,
-                                 reference_conc, analysis_file,
+        md, dfres = report_plate(plate, report_params, analysis_file,
                                  path.dirname(path.abspath(report_file_path)),
                                  parse_dir_name(working_dir))
         reports.append(

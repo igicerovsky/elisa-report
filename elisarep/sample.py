@@ -5,7 +5,6 @@ from dataclasses import dataclass
 from itertools import combinations
 
 import math
-import typing
 
 from decimal import Decimal
 import numpy as np
@@ -14,17 +13,7 @@ from scipy.stats import variation
 
 from .constants import RESULT_DIGITS, MIN_VALID_SAMPLE_POINTS, SAMPLE_TYPES
 from .constants import CV_THRESHOLD, PRE_DILUTION_THRESHOLD
-from .fitdata import conc_func, inv_func, backfit
-
-
-@dataclass
-class DataRange:
-    """ Data ranges foe SV, OD, OD fit, CB
-    """
-    sv: typing.Tuple[int, int]
-    od: typing.Tuple[int, int]
-    od_fit: typing.Tuple[int, int]
-    cb: typing.Tuple[int, int]
+from .fitdata import conc_func, inv_func, backfit, DataRange
 
 
 def get_sample(dfa: pd.DataFrame, stype: str, sample_num: int) -> pd.DataFrame:

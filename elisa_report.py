@@ -50,15 +50,16 @@ def main_report(analysis_dir: PathLike, config_dir: PathLike,
     worklist_file_path = input_files['worklist']
     params_file_path = input_files['params']
 
-    reports = rg.gen_report_raw(
-        predil_worklist(worklist_file_path),
-        read_params(params_file_path),
-        read_layouts(path.join(config_dir, cfg['plate_layout_id']),
-                     path.join(config_dir, cfg['plate_layout_num']),
-                     path.join(config_dir, cfg['plate_layout_dil_id'])),
-        make_concentration(
-            cfg[REFVAL_NAME], cfg[DIL_NAME]),
-        analysis_dir)
+    report_params = {
+        'worklist': predil_worklist(worklist_file_path),
+        'params': read_params(params_file_path),
+        'layouts': read_layouts(path.join(config_dir, cfg['plate_layout_id']),
+                                path.join(config_dir, cfg['plate_layout_num']),
+                                path.join(config_dir, cfg['plate_layout_dil_id'])),
+        'refconc': make_concentration(
+            cfg[REFVAL_NAME], cfg[DIL_NAME])
+    }
+    reports = rg.gen_report_raw(report_params, analysis_dir)
 
     if docxa:
         export_main_report(reports, analysis_dir, cfg['pandoc_bin'],

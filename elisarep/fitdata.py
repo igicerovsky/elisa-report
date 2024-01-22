@@ -4,11 +4,36 @@ Module containing math from '220726_SOP_Capsid-AAV9-ELISA_V4'
 to fit the reference data and compute bacfit for analysis data 
 as well as exporting data to Pandas dataframe object.
 """
+
+from dataclasses import dataclass
+from array import array
+from typing import Tuple
+
 import numpy as np
 from scipy.optimize import curve_fit
 from scipy.stats import distributions
 import pandas as pd
 from sklearn.metrics import r2_score
+
+
+@dataclass
+class DataRange:
+    """ Data ranges foe SV, OD, OD fit, CB
+    """
+    sv: Tuple[int, int]
+    od: Tuple[int, int]
+    od_fit: Tuple[int, int]
+    cb: Tuple[int, int]
+
+
+@dataclass
+class FitData:
+    """ Fit data
+    """
+    ref: pd.DataFrame
+    popt: array
+    pcov: array
+    dr: DataRange
 
 
 def func(x, a, b, c, d):
@@ -177,7 +202,7 @@ def backfit(df, param):
     return bf
 
 
-def fit_reference_auto_rm(xs, ys, err_threshold=0.998, verbose=False):
+def fit_reference_auto_rm(xs, ys, err_threshold=0.998, verbose=False) -> tuple:
     """Fits the reference and removes a point to fing min error
 
     Parameters
