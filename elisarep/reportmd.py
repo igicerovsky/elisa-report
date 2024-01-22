@@ -240,6 +240,6 @@ def result_section(df: pd.DataFrame) -> str:
     df_formated = format_results(df, limits)
     md += df_formated.to_markdown(floatfmt=f"#.{CV_DIGITS}f")
     md += '\n\n'
-    md += '\* sample will be retested\n\n'
+    md += '\\* sample will be retested\n\n'
 
     return md

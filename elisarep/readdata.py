@@ -59,7 +59,6 @@ def read_data_txt(file_path: PathLike) -> tuple:
     strdata = read_exported_data(file_path)
     csv_io = StringIO(strdata)
     df = pd.read_csv(csv_io, sep=",")
-    # TODO: move ranges to config file
     df_450 = get_data_crop(df, range(0, 8), range(1, 13))
     df_630 = get_data_crop(df, range(0, 8), range(14, 26))
 

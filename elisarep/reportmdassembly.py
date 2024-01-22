@@ -23,7 +23,7 @@ def plate_section_ex(df, plate):
     dg = CV_DIGITS
     md += df.to_markdown(floatfmt=f'#.{dg}f')
     md += '\n\n'
-    md += '\* sample will be retested\n\n'
+    md += '\\* sample will be retested\n\n'
 
     return md
 

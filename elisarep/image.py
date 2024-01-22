@@ -5,6 +5,7 @@ Draw graph images using the measured data.
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.stats import distributions
+import pandas as pd
 
 from .sample import sample_check
 from .fitdata import fit_reference_auto_rm, func
@@ -178,7 +179,7 @@ def fit_image(x, y, popt, pcov, file_path, confidence_interval=95.0,
         plt.clf()
 
 
-def mask_index(df):
+def mask_index(df: pd.DataFrame) -> list:
     """Get the index of masked data
 
     Parameters:
@@ -196,7 +197,7 @@ def mask_index(df):
     return b.index
 
 
-def na_index(df):
+def na_index(df: pd.DataFrame):
     """Get index of `na` data
     """
     b = df.reset_index(level=[0, 1])
@@ -206,7 +207,7 @@ def na_index(df):
 
 
 def sample_img(samples, reference, sample_type, sample_num,
-               img_file=None, show=True, verbose=False):
+               img_file=None, show=True, verbose=False) -> None:
     """Draw image of a sample
 
     Sample image contains reference curve and sample points 
@@ -245,4 +246,5 @@ def sample_img(samples, reference, sample_type, sample_num,
     sy = sd['sample'].reset_index(level=[0, 1])['OD_delta']
     fit_image(x, y, fit_result[0][0], fit_result[0][1], img_file, confidence='student-t',
               rm_index=fit_result[1], mask_idx=mask_idx,
-              sx=sx, sy=sy, sna_idx=na_index(sd['sample']), show=show, valid_sample=sd['valid'], interval_ratio=1.0)
+              sx=sx, sy=sy, sna_idx=na_index(sd['sample']), show=show,
+              valid_sample=sd['valid'], interval_ratio=1.0)

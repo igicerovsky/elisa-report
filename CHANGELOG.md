@@ -1,5 +1,11 @@
 # Hamiltom report changelog
 
+## v0.1.5
+
+24.01.2024
+
+- github
+
 ## v0.1.4
 
 - unit tests update

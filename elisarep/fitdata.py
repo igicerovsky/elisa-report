@@ -17,7 +17,7 @@ def func(x, a, b, c, d):
     Parameters
     ----------
     x : array_like
-        x-axis values, $\Delta$ OD (450nm - 620nm)
+        x-axis values, $\\Delta$ OD (450nm - 620nm)
     a : float
         minimum value (lowest possible point)  .
     b : float 
@@ -54,7 +54,7 @@ def inv_func(y, a, b, c, d):
     Returns
     -------
     float64
-         $\Delta$ OD (450nm - 620nm)
+         $\\Delta$ OD (450nm - 620nm)
     """
     return c * (((a - d) / (y - d)) - 1.0) ** (1.0 / b)
 
