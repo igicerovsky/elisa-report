@@ -87,7 +87,7 @@ def fit_section_md(df_ref: pd.DataFrame, popt, pcov, out_dir: PathLike) -> str:
     md += '$y = {d + \\frac{a - d}{{1 + (\\frac{ x }{ c })^b}} }$  \n\n'
 
     param_legend = """\
-`y` &nbsp;&nbsp;&nbsp;$\Delta$ OD (450nm - 620nm)  
+`y` &nbsp;&nbsp;&nbsp;$\\Delta$ OD (450nm - 620nm)  
 `x` &nbsp;&nbsp;&nbsp;concentration [cp/ml]  
 `a` &nbsp;&nbsp;&nbsp;minimum value (lowest possible point)  
 `b` &nbsp;&nbsp;&nbsp;slope at inflection point `c`  
