@@ -161,10 +161,9 @@ def fit_sheet(popt, pcov, n, confidence_interval=95.0):
         sth = p + st
         confidence_interval[i] = f'[{stl:.3}, {sth:.3}]'
 
-    param_names = ['a', 'b', 'c', 'd']
     perr = np.sqrt(np.diag(pcov))
 
-    return pd.DataFrame({'Parameter name': param_names, 'Estimated value': popt,
+    return pd.DataFrame({'Parameter name': ['a', 'b', 'c', 'd'], 'Estimated value': popt,
                          'Error': perr, 'Confidence interval': confidence_interval})
 
 

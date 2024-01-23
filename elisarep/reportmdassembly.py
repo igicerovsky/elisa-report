@@ -104,8 +104,7 @@ def plate_sheet(df: pd.DataFrame, table):
             if check_val:
                 for paragraph in cell.paragraphs:
                     for run in paragraph.runs:
-                        font = run.font
-                        font.bold = True
+                        run.font.bold = True
 
     # set table font to smaller size to fit into the table
     for row in table.rows:
@@ -113,8 +112,7 @@ def plate_sheet(df: pd.DataFrame, table):
             paragraphs = cell.paragraphs
             for paragraph in paragraphs:
                 for run in paragraph.runs:
-                    font = run.font
-                    font.size = SHEET_FONT_SZ
+                    run.font.size = SHEET_FONT_SZ
 
     return retest
 

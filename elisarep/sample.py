@@ -1,7 +1,6 @@
 """ Sample handling
 """
 from enum import Enum
-from dataclasses import dataclass
 from itertools import combinations
 
 import math
