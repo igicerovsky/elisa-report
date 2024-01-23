@@ -150,15 +150,13 @@ def fit_sheet(popt, pcov, n, confidence_interval=95.0):
 
     # student-t value for the dof and confidence level
     tval = distributions.t.ppf(1.0 - alpha / 2.0, dof)
-
     sigma_popt = np.empty(len(popt), dtype=np.float64)
     confidence_interval = [None] * 4
     for i, p, var in zip(range(n), popt, np.diag(pcov)):
         sigma = var ** 0.5
-        st = sigma * tval
-        sigma_popt[i] = st
-        stl = p - st
-        sth = p + st
+        sigma_popt[i] = sigma * tval
+        stl = p - sigma_popt[i]
+        sth = p + sigma_popt[i]
         confidence_interval[i] = f'[{stl:.3}, {sth:.3}]'
 
     perr = np.sqrt(np.diag(pcov))
@@ -201,6 +199,35 @@ def backfit(df, param):
     return bf
 
 
+def xy_np(xs, ys, drop=None) -> tuple:
+    """Converts pandas series to numpy array
+
+    Parameters
+    ----------
+    xs : pandas.series
+        x data
+    ys : pandas.series
+        y data
+    drop : int, optional
+        index to drop, by default None
+
+    Returns
+    -------
+    tuple
+        x and y data as numpy arrays
+    """
+    xd = xs
+    yd = ys
+    if drop is not None:
+        xd = xs.drop([drop], axis=0)
+        yd = ys.drop([drop], axis=0)
+    x = xd.to_numpy()
+    y = yd.to_numpy()
+    x.sort()
+    y.sort()
+    return x, y
+
+
 def fit_reference_auto_rm(xs, ys, err_threshold=0.998, verbose=False) -> tuple:
     """Fits the reference and removes a point to fing min error
 
@@ -227,10 +254,7 @@ def fit_reference_auto_rm(xs, ys, err_threshold=0.998, verbose=False) -> tuple:
         fit statistics as dataframe
     """
 
-    x = xs.to_numpy()
-    y = ys.to_numpy()
-    x.sort()
-    y.sort()
+    x, y = xy_np(xs, ys)
     fit_stats = pd.DataFrame(columns=['idx', 'metric', 'note'])
     fc = None
     try:
@@ -267,12 +291,7 @@ def fit_reference_auto_rm(xs, ys, err_threshold=0.998, verbose=False) -> tuple:
 
     fc_i = None
     for i in range(len(x)):
-        xd = xs.drop([i], axis=0)
-        yd = ys.drop([i], axis=0)
-        x = xd.to_numpy()
-        y = yd.to_numpy()
-        x.sort()
-        y.sort()
+        x, y = xy_np(xs, ys, drop=i)
         try:
             fc_i = fit_reference(func, x, y)
         except (Exception,) as e:
@@ -281,10 +300,10 @@ def fit_reference_auto_rm(xs, ys, err_threshold=0.998, verbose=False) -> tuple:
             fit_stats.loc[len(fit_stats)] = [i, np.nan, str(e)]
             continue
 
-        x_hat = bfn(yd)
+        x_hat = bfn(y)
         r_squared = np.inf
         try:
-            r_squared = r2_score(xd, x_hat)
+            r_squared = r2_score(x, x_hat)
         except:
             fit_stats.loc[len(fit_stats)] = [i, r_squared,
                                              'Invalid r2_score.']
