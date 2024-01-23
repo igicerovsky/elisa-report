@@ -14,6 +14,7 @@ from scipy.optimize import curve_fit
 from scipy.stats import distributions
 import pandas as pd
 from sklearn.metrics import r2_score
+from scipy.optimize import OptimizeWarning
 
 
 @dataclass
@@ -101,6 +102,7 @@ def fit_reference(fnc, x, y):
     """
     inflect = x.min() + 0.8 * (x.max() - x.min())
     p0 = [y.min(), 0.9, inflect, y.max()]
+
     return curve_fit(fnc, x, y, p0=p0, method='lm', full_output=True, maxfev=1000)
 
 
@@ -259,7 +261,7 @@ def fit_reference_auto_rm(xs, ys, err_threshold=0.998, verbose=False) -> tuple:
     fc = None
     try:
         fc = fit_reference(func, x, y)
-    except (Exception,) as e:
+    except (ValueError, RuntimeError, OptimizeWarning,) as e:
         if verbose:
             print(e)
 
@@ -294,7 +296,7 @@ def fit_reference_auto_rm(xs, ys, err_threshold=0.998, verbose=False) -> tuple:
         x, y = xy_np(xs, ys, drop=i)
         try:
             fc_i = fit_reference(func, x, y)
-        except (Exception,) as e:
+        except (ValueError, RuntimeError, OptimizeWarning,) as e:
             if verbose:
                 print(e)
             fit_stats.loc[len(fit_stats)] = [i, np.nan, str(e)]
