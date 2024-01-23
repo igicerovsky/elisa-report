@@ -84,6 +84,9 @@ def main_report(analysis_dir: PathLike, config_dir: PathLike,
 
 
 class Gui:
+    """ GUI class
+    """
+
     def __init__(self, window, config_dir: PathLikeOrNone, init_folder: PathLikeOrNone) -> None:
         self.window = window
         self.window.title('HAMILTON Analysis')
@@ -143,7 +146,7 @@ class Gui:
         return self.analysis_folder.get(), self.config_folder.get()
 
 
-def gui(config_dir: PathLikeOrNone, init_folder: PathLikeOrNone) -> PathLikeOrNone:
+def gui_fn(config_dir: PathLikeOrNone, init_folder: PathLikeOrNone) -> PathLikeOrNone:
     """ GUI dialaog for data input
     """
     window = Tk()
@@ -170,14 +173,14 @@ def main() -> None:
     init_folder = args.ifld
 
     if not analysis_dir:
-        analysis_dir, config_dir = gui(config_dir, init_folder)
+        analysis_dir, config_dir = gui_fn(config_dir, init_folder)
     if not analysis_dir:
         print('Canceled.')
         return
 
     try:
         main_report(analysis_dir, config_dir)
-    except Exception as e:
+    except (KeyError, ValueError, FileNotFoundError, Exception, ) as e:
         print(e)
         print('Failed!')
 
