@@ -12,9 +12,9 @@ from typing import Tuple
 import numpy as np
 from scipy.optimize import curve_fit
 from scipy.stats import distributions
+from scipy.optimize import OptimizeWarning
 import pandas as pd
 from sklearn.metrics import r2_score
-from scipy.optimize import OptimizeWarning
 
 
 @dataclass

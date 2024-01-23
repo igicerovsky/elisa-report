@@ -83,69 +83,73 @@ def main_report(analysis_dir: PathLike, config_dir: PathLike,
     print('Done.')
 
 
-def browse_analysis(init_folder: PathLikeOrNone) -> None:
-    """ Browse analysis folder
-    """
-    initialdir = getcwd()
-    if init_folder:
-        initialdir = init_folder
-    dirname = filedialog.askdirectory(initialdir=initialdir,
-                                      title="Select a Hamilton Analysis Folder")
-    if dirname:
-        global analysis_folder, entry_analysis
-        analysis_folder.set(dirname)
-        entry_analysis.update()
-        global WINDOW
-        WINDOW.destroy()
+class Gui:
+    def __init__(self, window, config_dir: PathLikeOrNone, init_folder: PathLikeOrNone) -> None:
+        self.window = window
+        self.window.title('HAMILTON Analysis')
+        self.window.geometry("800x80")
+        self.init_folder = init_folder
 
+        self.analysis_folder = StringVar()
+        self.analysis_folder.set('')
+        self.config_folder = StringVar()
+        if config_dir:
+            self.config_folder.set(config_dir)
+        else:
+            self.config_folder.set(path.join(getcwd(), 'data'))
 
-def browse_config(init_folder: PathLikeOrNone) -> None:
-    """ Browse config folder
-    """
-    dirname = filedialog.askdirectory(initialdir=init_folder,
-                                      title="Select a Config Folder")
+        button_analysis = Button(self.window, text="Browse Analysis Folder",
+                                 command=lambda: self.browse_analysis())
+        button_analysis.grid(column=0, row=0)
 
-    if dirname:
-        global config_folder
-        config_folder.set(dirname)
+        self.entry_analysis = Entry(textvariable=self.analysis_folder,
+                                    state=DISABLED, width=110)
+        self.entry_analysis.grid(row=0, column=1,
+                                 padx=10, pady=10)
+
+        button_config = Button(self.window, text="Browse Config Folder",
+                               command=lambda: self.browse_config())
+        button_config.grid(column=0, row=1)
+        entry_config = Entry(textvariable=self.config_folder,
+                             state=DISABLED, width=110)
+        entry_config.grid(row=1, column=1,
+                          padx=10, pady=10)
+
+    def browse_analysis(self) -> None:
+        """ Browse analysis folder
+        """
+        initialdir = getcwd()
+        if self.init_folder:
+            initialdir = self.init_folder
+        dirname = filedialog.askdirectory(initialdir=initialdir,
+                                          title="Select a Hamilton Analysis Folder")
+        if dirname:
+            self.analysis_folder.set(dirname)
+            self.entry_analysis.update()
+            self.window.destroy()
+
+    def browse_config(self) -> None:
+        """ Browse config folder
+        """
+        dirname = filedialog.askdirectory(initialdir=self.config_folder.get(),
+                                          title="Select a Config Folder")
+
+        if dirname:
+            self.config_folder.set(dirname)
+
+    def res(self) -> None:
+        """ Result
+        """
+        return self.analysis_folder.get(), self.config_folder.get()
 
 
 def gui(config_dir: PathLikeOrNone, init_folder: PathLikeOrNone) -> PathLikeOrNone:
     """ GUI dialaog for data input
     """
     window = Tk()
-    window.title('HAMILTON Analysis')
-    window.geometry("800x80")
-
-    global analysis_folder
-    analysis_folder = StringVar()
-    analysis_folder.set('')
-    global config_folder
-    config_folder = StringVar()
-    if config_dir:
-        config_folder.set(config_dir)
-    else:
-        config_folder.set(path.join(getcwd(), 'data'))
-
-    button_analysis = Button(window, text="Browse Analysis Folder",
-                             command=lambda: browse_analysis(init_folder))
-    button_analysis.grid(column=0, row=0)
-
-    global entry_analysis
-    entry_analysis = Entry(textvariable=analysis_folder,
-                           state=DISABLED, width=110)
-    entry_analysis.grid(row=0, column=1,
-                        padx=10, pady=10)
-
-    button_config = Button(window, text="Browse Config Folder",
-                           command=lambda: browse_config(config_dir))
-    button_config.grid(column=0, row=1)
-    entry_config = Entry(textvariable=config_folder, state=DISABLED, width=110)
-    entry_config.grid(row=1, column=1,
-                      padx=10, pady=10)
+    gui = Gui(window, config_dir, init_folder)
     window.mainloop()
-
-    return analysis_folder.get()
+    return gui.res()
 
 
 def main() -> None:
@@ -166,7 +170,7 @@ def main() -> None:
     init_folder = args.ifld
 
     if not analysis_dir:
-        analysis_dir = gui(config_dir, init_folder)
+        analysis_dir, config_dir = gui(config_dir, init_folder)
     if not analysis_dir:
         print('Canceled.')
         return
