@@ -270,6 +270,7 @@ def fit_reference_auto_rm(xs, ys, err_threshold=0.998) -> tuple:
         try:
             r2_max = r2_score(x, inv_func(y, *fc[0]))
         except (ValueError,) as e:
+            print(e)
             r2_max = 0.0
 
     if r2_max > err_threshold:
