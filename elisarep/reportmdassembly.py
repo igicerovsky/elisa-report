@@ -75,6 +75,19 @@ def check_retest(val: str):
     return None
 
 
+def set_cell_text(cell, val):
+    """ Set text and formatting for a cell in the table
+    """
+    check_val = check_bold(val)
+    if check_val:
+        val = check_val
+    cell.text = val
+    if check_val:
+        for paragraph in cell.paragraphs:
+            for run in paragraph.runs:
+                run.font.bold = True
+
+
 def plate_sheet(df: pd.DataFrame, table):
     """ Generate sheet for given plate
     """
@@ -95,16 +108,9 @@ def plate_sheet(df: pd.DataFrame, table):
         for j in range(len(df.columns)):
             val = str(df.iat[i, j])
             cell = table.rows[i + 1].cells[j + 1]
-            check_val = check_bold(val)
             if not retest:
                 retest = check_retest(val)
-            if check_val:
-                val = check_val
-            cell.text = val
-            if check_val:
-                for paragraph in cell.paragraphs:
-                    for run in paragraph.runs:
-                        run.font.bold = True
+            set_cell_text(cell, val)
 
     # set table font to smaller size to fit into the table
     for row in table.rows:
