@@ -180,7 +180,7 @@ def main() -> None:
 
     try:
         main_report(analysis_dir, config_dir)
-    except (KeyError, ValueError, FileNotFoundError, Exception, ) as e:
+    except (KeyError, ValueError, FileNotFoundError, ) as e:
         print(e)
         print('Failed!')
 
