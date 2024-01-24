@@ -30,7 +30,7 @@ def init_fit_data(df_all: pd.DataFrame, reference_conc: float) -> FitData:
     ref = dfg.loc[(dfg['plate_layout_ident'] == 'r')]
     x = ref.reset_index(level=[0, 1])['plate_layout_conc']
     y = ref.reset_index(level=[0, 1])['OD_delta']
-    fit = fit_reference_auto_rm(x, y, verbose=False)
+    fit = fit_reference_auto_rm(x, y)
     popt = fit[0][0]
     pcov = fit[0][1]
     dr = data_range(ref, popt)

@@ -230,7 +230,7 @@ def xy_np(xs, ys, drop=None) -> tuple:
     return x, y
 
 
-def fit_reference_auto_rm(xs, ys, err_threshold=0.998, verbose=False) -> tuple:
+def fit_reference_auto_rm(xs, ys, err_threshold=0.998) -> tuple:
     """Fits the reference and removes a point to fing min error
 
     Parameters
@@ -262,25 +262,15 @@ def fit_reference_auto_rm(xs, ys, err_threshold=0.998, verbose=False) -> tuple:
     try:
         fc = fit_reference(func, x, y)
     except (ValueError, RuntimeError, OptimizeWarning,) as e:
-        if verbose:
-            print(e)
+        print(e)
 
     idx = []
     r2_max = 0.0
-
-    def bfn(l):
-        return inv_func(l, *fc[0])
     if fc:
-        x_hat = bfn(y)
         try:
-            r2_max = r2_score(x, x_hat)
-        except:
+            r2_max = r2_score(x, inv_func(y, *fc[0]))
+        except (ValueError,) as e:
             r2_max = 0.0
-
-    if verbose:
-        print('R-squared is invalid for nonlinear models!')
-        print('metric, index')
-        print(f'{r2_max:.5f}, {idx}')
 
     if r2_max > err_threshold:
         fit_stats.loc[len(fit_stats)] = [-1, r2_max, '']
@@ -297,16 +287,13 @@ def fit_reference_auto_rm(xs, ys, err_threshold=0.998, verbose=False) -> tuple:
         try:
             fc_i = fit_reference(func, x, y)
         except (ValueError, RuntimeError, OptimizeWarning,) as e:
-            if verbose:
-                print(e)
             fit_stats.loc[len(fit_stats)] = [i, np.nan, str(e)]
             continue
 
-        x_hat = bfn(y)
         r_squared = np.inf
         try:
-            r_squared = r2_score(x, x_hat)
-        except:
+            r_squared = r2_score(x, inv_func(y, *fc_i[0]))
+        except (ValueError,) as e:
             fit_stats.loc[len(fit_stats)] = [i, r_squared,
                                              'Invalid r2_score.']
             continue
@@ -317,8 +304,6 @@ def fit_reference_auto_rm(xs, ys, err_threshold=0.998, verbose=False) -> tuple:
             continue
 
         fit_stats.loc[len(fit_stats)] = [i, r_squared, '']
-        if verbose:
-            print(f'{r_squared:.3f}, {i}')
         if (r_squared > r2_max) and not np.isinf(fc_i[1]).any():
             r2_max = r_squared
             fc = fc_i
