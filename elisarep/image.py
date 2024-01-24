@@ -15,7 +15,7 @@ def fit_image(x, y, popt, pcov, file_path, confidence_interval=95.0,
               confidence=None, interval_ratio=2.0,
               rm_index=None,
               sx=None, sy=None, mask_idx=None, sna_idx=None,
-              verbose=False, valid_sample=True, show=True):
+              verbose=False, valid_sample=True):
     r"""Plot the fitted function with confidence intervals.
 
     Confidence intervals coud be set using `confidence` parameter.
@@ -51,8 +51,6 @@ def fit_image(x, y, popt, pcov, file_path, confidence_interval=95.0,
         Print verbose output.
     valid_sample : bool
         Is sample valid?
-    show : bool
-        Show the graph. If `False` image is saved if file path is given. 
     """
     if rm_index is None:
         rm_index = []
@@ -70,16 +68,16 @@ def fit_image(x, y, popt, pcov, file_path, confidence_interval=95.0,
         print(f'chisq={np.sqrt(chisq):.4}; error={perr}')
         # print('function calls', infodict['nfev'])
 
-    kwargs = {'marker': 'x'}
+    kw_scatter = {'marker': 'x'}
     if not valid_sample:
-        kwargs = {'marker': 'o', 'facecolors': 'none'}
+        kw_scatter = {'marker': 'o', 'facecolors': 'none'}
     if (sx is not None) and (sy is not None):
         if len(sx.drop(mask_idx, axis=0)) != 0:
             plt.scatter(sx.drop(mask_idx, axis=0), sy.drop(mask_idx, axis=0),
-                        s=48, linewidths=0.6, label='point valid', color='forestgreen', **kwargs)
+                        s=48, linewidths=0.6, label='point valid', color='forestgreen', **kw_scatter)
         if (len(sx.iloc[mask_idx]) != 0) and (list(mask_idx) != list(sna_idx)):
             plt.scatter(sx.iloc[mask_idx], sy.iloc[mask_idx],
-                        s=48, linewidths=0.8, label='point masked', color='r', **kwargs)
+                        s=48, linewidths=0.8, label='point masked', color='r', **kw_scatter)
 
     if len(x.drop(rm_index, axis=0)) != 0:
         plt.scatter(x.drop(rm_index, axis=0), y.drop(rm_index, axis=0), marker='+',
@@ -119,9 +117,7 @@ def fit_image(x, y, popt, pcov, file_path, confidence_interval=95.0,
         popt_low = popt - perr
 
     num_pts = 400
-    x_min = x.min()
-    x_max = x.max()
-    t = np.arange(x_min, x_max, (x_max - x_min) / num_pts)
+    t = np.arange(x.min(), x.max(), (x.max() - x.min()) / num_pts)
     plt.plot(t, func(t, *popt), color='slategray', linewidth=0.2)
 
     sx_n = sx[~sx.isna()] if sx is not None else None
@@ -129,8 +125,9 @@ def fit_image(x, y, popt, pcov, file_path, confidence_interval=95.0,
     if sx is not None:
         x_min_ext = min(x_min_ext, sx_n.min())
     ext_legend = False
-    if x_min != x_min_ext:
-        t = np.arange(x_min_ext, x_min, (x_min - x_min_ext) / (num_pts / 10.0))
+    if x.min() != x_min_ext:
+        t = np.arange(x_min_ext, x.min(),
+                      (x.min() - x_min_ext) / (num_pts / 10.0))
         plt.plot(t, func(t, *popt), color='red',
                  linestyle=(0, (5, 10)), linewidth=0.2, label='ext')
         ext_legend = True
@@ -138,8 +135,9 @@ def fit_image(x, y, popt, pcov, file_path, confidence_interval=95.0,
     x_max_ext = x.max() * interval_ratio
     if sx is not None:
         x_max_ext = max(x_max_ext, sx_n.max())
-    if x_max != x_max_ext:
-        t = np.arange(x_max, x_max_ext, (x_max_ext - x_max) / (num_pts / 10.0))
+    if x.max() != x_max_ext:
+        t = np.arange(x.max(), x_max_ext,
+                      (x_max_ext - x.max()) / (num_pts / 10.0))
         # no label, only one extension label
         ext_label = None
         if not ext_legend:
@@ -173,10 +171,7 @@ def fit_image(x, y, popt, pcov, file_path, confidence_interval=95.0,
 
     if file_path is not None:
         plt.savefig(file_path)
-    if show:
-        plt.show()
-    else:
-        plt.clf()
+    plt.clf()
 
 
 def mask_index(df: pd.DataFrame) -> list:
@@ -207,7 +202,7 @@ def na_index(df: pd.DataFrame):
 
 
 def sample_img(samples, reference, sample_type, sample_num,
-               img_file=None, show=True, verbose=False) -> None:
+               img_file=None, verbose=False) -> None:
     """Draw image of a sample
 
     Sample image contains reference curve and sample points 
@@ -246,5 +241,5 @@ def sample_img(samples, reference, sample_type, sample_num,
     sy = sd['sample'].reset_index(level=[0, 1])['OD_delta']
     fit_image(x, y, fit_result[0][0], fit_result[0][1], img_file, confidence='student-t',
               rm_index=fit_result[1], mask_idx=mask_idx,
-              sx=sx, sy=sy, sna_idx=na_index(sd['sample']), show=show,
+              sx=sx, sy=sy, sna_idx=na_index(sd['sample']),
               valid_sample=sd['valid'], interval_ratio=1.0)
