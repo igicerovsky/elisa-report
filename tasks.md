@@ -3,7 +3,6 @@
 
 ## TODO
 
-- Copilot `Request submitted successfully. The ID for this request is 1064619.`
 - write LOQ value
 - 231213_AAV9-ELISA_sey_GN004240-068; plate 3; why is masked second point and not first??? see fitting
 - add description of graphs to README.md, symbol meaning (croos, circle, -) [Ewald Fri 12/15/2023 2:04 PM]
@@ -20,6 +19,12 @@
 - Sample mean multiply (Andrea) in sample overview; add if easy  
 
 ## Done
+
+## KW04-22.01.2024
+
+- Github lint fixes & tests
+- Copilot exploring
+- Documenting code
 
 ## KW03-15.01.2024
 

@@ -141,6 +141,7 @@ def fit_image(x, y, popt, pcov, file_path, confidence_interval=95.0,
 
 
 def confidence_intervals(pcov, popt):
+    """Compute confidence intervals using covariance matrix."""
     perr = np.sqrt(np.diag(pcov))
     popt_high = popt + perr
     popt_low = popt - perr
@@ -148,6 +149,7 @@ def confidence_intervals(pcov, popt):
 
 
 def confidence_intervals_studentt(y, popt, pcov, confidence_interval):
+    """Compute confidence intervals using student-t distribution."""
     alpha = (100.0 - confidence_interval) / 100.0
     n = len(y)    # number of data points
     p = len(popt)  # number of parameters
@@ -156,8 +158,7 @@ def confidence_intervals_studentt(y, popt, pcov, confidence_interval):
     # student-t value for the dof and confidence level
     tval = distributions.t.ppf(1.0 - alpha / 2., dof)
     sigma_popt = np.empty(len(popt), dtype=np.float64)
-    param_names = ['a', 'b', 'c', 'd']
-    for i, p, var, pname in zip(range(n), popt, np.diag(pcov), param_names):
+    for i, var in zip(range(n), np.diag(pcov)):
         sigma = var ** 0.5
         st = sigma * tval
         sigma_popt[i] = st
