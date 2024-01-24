@@ -157,14 +157,13 @@ def confidence_intervals_studentt(y, popt, pcov, confidence_interval):
 
     # student-t value for the dof and confidence level
     tval = distributions.t.ppf(1.0 - alpha / 2., dof)
-    sigma_popt = np.empty(len(popt), dtype=np.float64)
+    sigma_popt = np.empty(p, dtype=np.float64)
     for i, var in zip(range(n), np.diag(pcov)):
         sigma = var ** 0.5
         st = sigma * tval
         sigma_popt[i] = st
-    popt_high = popt + sigma_popt
-    popt_low = popt - sigma_popt
-    return popt_low, popt_high
+
+    return popt - sigma_popt, popt + sigma_popt
 
 
 def mask_index(df: pd.DataFrame) -> list:
