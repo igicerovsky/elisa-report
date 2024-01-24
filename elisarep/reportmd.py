@@ -78,7 +78,7 @@ def fit_section_md(df_ref: pd.DataFrame, popt, pcov, out_dir: PathLike) -> str:
     fit_result = fit_reference_auto_rm(x, y)
     result_img = path.join(out_dir, 'fit.svg')
     fit_image(x, y, fit_result[0][0], fit_result[0][1], result_img,
-              confidence='student-t', rm_index=fit_result[1], verbose=False)
+              confidence='student-t', rm_index=fit_result[1])
 
     n = len(x) - len(fit_result[1])
     df_fit = fit_sheet(popt, pcov, n)
@@ -173,8 +173,7 @@ def sample_section_md(samples: pd.DataFrame, reference,
         md += '\n'
         sfile = f'sample_{i:02d}.svg'
         img_file = path.join(img_dir, sfile)
-        sample_img(samples, reference, stype, i,
-                   img_file=img_file, verbose=False)
+        sample_img(samples, reference, stype, i, img_file=img_file)
         md += f'![{sfile}](./img/{sfile})\n'
         if i != sample_n[-1]:
             md += '\n'

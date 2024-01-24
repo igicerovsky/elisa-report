@@ -27,7 +27,7 @@ def gen_report_raw(report_params: dict, working_dir: PathLike):
         report_file_path = make_output_paths(working_dir,
                                              basename_from_inputdir(
                                                  working_dir),
-                                             plate)['report']
+                                             plate)['report']+'.md'
         md, dfres = report_plate(plate, report_params, analysis_file,
                                  path.dirname(path.abspath(report_file_path)),
                                  parse_dir_name(working_dir))

@@ -15,7 +15,7 @@ def fit_image(x, y, popt, pcov, file_path, confidence_interval=95.0,
               confidence=None, interval_ratio=2.0,
               rm_index=None,
               sx=None, sy=None, mask_idx=None, sna_idx=None,
-              verbose=False, valid_sample=True):
+              valid_sample=True):
     r"""Plot the fitted function with confidence intervals.
 
     Confidence intervals coud be set using `confidence` parameter.
@@ -47,8 +47,6 @@ def fit_image(x, y, popt, pcov, file_path, confidence_interval=95.0,
         Indices of masked samples.
     sna_idx : 
         Indices of nan data excluded.
-    verbose : bool
-        Print verbose output.
     valid_sample : bool
         Is sample valid?
     """
@@ -59,14 +57,6 @@ def fit_image(x, y, popt, pcov, file_path, confidence_interval=95.0,
     if sna_idx is None:
         sna_idx = []
     # confidence [None, 'student-t', 'sqrt_err']
-    if verbose:
-        print('parameter', popt)
-    perr = np.sqrt(np.diag(pcov))
-    sigma_err = 1.0
-    chisq = np.sum((perr / sigma_err) ** 2)
-    if verbose:
-        print(f'chisq={np.sqrt(chisq):.4}; error={perr}')
-        # print('function calls', infodict['nfev'])
 
     kw_scatter = {'marker': 'x'}
     if not valid_sample:
@@ -74,7 +64,8 @@ def fit_image(x, y, popt, pcov, file_path, confidence_interval=95.0,
     if (sx is not None) and (sy is not None):
         if len(sx.drop(mask_idx, axis=0)) != 0:
             plt.scatter(sx.drop(mask_idx, axis=0), sy.drop(mask_idx, axis=0),
-                        s=48, linewidths=0.6, label='point valid', color='forestgreen', **kw_scatter)
+                        s=48, linewidths=0.6, label='point valid',
+                        color='forestgreen', **kw_scatter)
         if (len(sx.iloc[mask_idx]) != 0) and (list(mask_idx) != list(sna_idx)):
             plt.scatter(sx.iloc[mask_idx], sy.iloc[mask_idx],
                         s=48, linewidths=0.8, label='point masked', color='r', **kw_scatter)
@@ -87,34 +78,11 @@ def fit_image(x, y, popt, pcov, file_path, confidence_interval=95.0,
                     color='r', s=48, linewidths=0.8, label='reference masked')
     plt.xscale('log')
 
-    alpha = (100.0 - confidence_interval) / 100.0
-    n = len(y)    # number of data points
-    p = len(popt)  # number of parameters
-    dof = max(0, n - p)  # number of degrees of freedom
-
-    # student-t value for the dof and confidence level
-    tval = distributions.t.ppf(1.0 - alpha / 2., dof)
-    sigma_popt = np.empty(len(popt), dtype=np.float64)
-    param_names = ['a', 'b', 'c', 'd']
-    for i, p, var, pname in zip(range(n), popt, np.diag(pcov), param_names):
-        sigma = var ** 0.5
-        st = sigma * tval
-        sigma_popt[i] = st
-        if verbose:
-            print((f'{pname}: {p:.3} [{p - st:.3}, '
-                   f'{p + st:.3}]; err={st:.3}[{100*st/p:.2f}%]'))
-
     if confidence is None or confidence == 'student-t':
-        if verbose:
-            print(
-                f'student-t is used for error estimation using {dof} degrees of freedom')
-        popt_high = popt + sigma_popt
-        popt_low = popt - sigma_popt
+        popt_low, popt_high = confidence_intervals_studentt(
+            y, popt, pcov, confidence_interval)
     else:
-        if verbose:
-            print('sqrt of covariance matrix diagonal is used for error estimation')
-        popt_high = popt + perr
-        popt_low = popt - perr
+        popt_low, popt_high = confidence_intervals(pcov, popt)
 
     num_pts = 400
     t = np.arange(x.min(), x.max(), (x.max() - x.min()) / num_pts)
@@ -148,8 +116,6 @@ def fit_image(x, y, popt, pcov, file_path, confidence_interval=95.0,
     # show NaN concentration values somewhere -> show OD
     sx_na = sx[sx.isna()] if sx is not None else None
     if sx is not None:
-        if verbose:
-            print("NaN indices:", sx_na.index)
         sna_idx = sx[~sx.isna()].index
         if len(sx_na) != 0:
             x_na = np.full(shape=len(sx_na), fill_value=x_min_ext * 0.5)
@@ -172,6 +138,32 @@ def fit_image(x, y, popt, pcov, file_path, confidence_interval=95.0,
     if file_path is not None:
         plt.savefig(file_path)
     plt.clf()
+
+
+def confidence_intervals(pcov, popt):
+    perr = np.sqrt(np.diag(pcov))
+    popt_high = popt + perr
+    popt_low = popt - perr
+    return popt_low, popt_high
+
+
+def confidence_intervals_studentt(y, popt, pcov, confidence_interval):
+    alpha = (100.0 - confidence_interval) / 100.0
+    n = len(y)    # number of data points
+    p = len(popt)  # number of parameters
+    dof = max(0, n - p)  # number of degrees of freedom
+
+    # student-t value for the dof and confidence level
+    tval = distributions.t.ppf(1.0 - alpha / 2., dof)
+    sigma_popt = np.empty(len(popt), dtype=np.float64)
+    param_names = ['a', 'b', 'c', 'd']
+    for i, p, var, pname in zip(range(n), popt, np.diag(pcov), param_names):
+        sigma = var ** 0.5
+        st = sigma * tval
+        sigma_popt[i] = st
+    popt_high = popt + sigma_popt
+    popt_low = popt - sigma_popt
+    return popt_low, popt_high
 
 
 def mask_index(df: pd.DataFrame) -> list:
@@ -201,8 +193,7 @@ def na_index(df: pd.DataFrame):
     return b.index
 
 
-def sample_img(samples, reference, sample_type, sample_num,
-               img_file=None, verbose=False) -> None:
+def sample_img(samples, reference, sample_type, sample_num, img_file=None) -> None:
     """Draw image of a sample
 
     Sample image contains reference curve and sample points 
@@ -222,13 +213,9 @@ def sample_img(samples, reference, sample_type, sample_num,
         Image fime name or `None`. Optional, if specified file is saved.
     show : bool
         Display image.
-    verbose : bool
-        Verbose output.
     """
 
     sd = sample_check(samples, sample_type, sample_num)
-    if verbose:
-        print(sample_type, sample_num)
 
     mask_idx = mask_index(sd['sample'])
     x = reference.reset_index(level=[0, 1])['plate_layout_conc']
