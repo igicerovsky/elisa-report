@@ -129,9 +129,7 @@ def new_doc(reference_doc: PathLikeOrNone = None):
     document = Document(reference_doc)
     for paragraph in document.paragraphs:
         if len(paragraph.text) == 0:
-            p = paragraph._element
-            p.getparent().remove(p)
-            p._p = p._element = None
+            paragraph.delete()
 
     return document
 
