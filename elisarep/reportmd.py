@@ -9,7 +9,7 @@ from tqdm import tqdm
 
 from .typing import PathLike
 from .fitdata import fit_sheet, fit_reference_auto_rm, backfit
-from .image import fit_image, sample_img
+from .image import fit_image, sample_img, ImageFitResult, save_image
 from .sample import final_sample_info, sample_check, sample_info, sampleinfo_to_str
 from .constants import RESULT_DIGITS, SAMPLE_TYPES, CV_DIGITS
 from .worklist import worklist_sample
@@ -77,8 +77,9 @@ def fit_section_md(df_ref: pd.DataFrame, popt, pcov, out_dir: PathLike) -> str:
     y = df_ref.reset_index(level=[0, 1])['OD_delta']
     fit_result = fit_reference_auto_rm(x, y)
     result_img = path.join(out_dir, 'fit.svg')
-    fit_image(x, y, fit_result[0][0], fit_result[0][1], result_img,
-              confidence='student-t', rm_index=fit_result[1])
+    img = fit_image(ImageFitResult(x, y, fit_result[0][0], fit_result[0][1]),
+                    confidence='student-t', rm_index=fit_result[1])
+    save_image(img, result_img)
 
     n = len(x) - len(fit_result[1])
     df_fit = fit_sheet(popt, pcov, n)

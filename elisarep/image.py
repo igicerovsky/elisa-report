@@ -2,6 +2,9 @@
 
 Draw graph images using the measured data.
 """
+from dataclasses import dataclass
+import io
+
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.stats import distributions
@@ -11,7 +14,29 @@ from .sample import sample_check
 from .fitdata import fit_reference_auto_rm, func
 
 
-def fit_image(x, y, popt, pcov, file_path, confidence_interval=95.0,
+@dataclass
+class ImageFitResult:
+    """Image fit result
+
+    Parameters
+    ----------
+    x : array_like
+        x-axis values.
+    y : array_like
+        y-axis value.
+    popt : array_like
+        fit parameters.
+    pcov : array_like
+        covariance matrix.
+    """
+    x: pd.Series
+    y: pd.Series
+    popt: np.iterable
+    pcov: np.iterable
+
+
+def fit_image(fit_res: ImageFitResult,
+              confidence_interval=95.0,
               confidence=None, interval_ratio=2.0,
               rm_index=None,
               sx=None, sy=None, mask_idx=None, sna_idx=None,
@@ -23,9 +48,9 @@ def fit_image(x, y, popt, pcov, file_path, confidence_interval=95.0,
 
     Parameters
     ----------
-    x : array_like
+    x : pd.Series
         x-axis reference values.
-    y : array_like
+    y : pd.series
         y-axis reference values.
     popt : iterable
         Fit parameters.
@@ -70,47 +95,48 @@ def fit_image(x, y, popt, pcov, file_path, confidence_interval=95.0,
             plt.scatter(sx.iloc[mask_idx], sy.iloc[mask_idx],
                         s=48, linewidths=0.8, label='point masked', color='r', **kw_scatter)
 
-    if len(x.drop(rm_index, axis=0)) != 0:
-        plt.scatter(x.drop(rm_index, axis=0), y.drop(rm_index, axis=0), marker='+',
+    if len(fit_res.x.drop(rm_index, axis=0)) != 0:
+        plt.scatter(fit_res.x.drop(rm_index, axis=0), fit_res.y.drop(rm_index, axis=0), marker='+',
                     color='royalblue', s=48, linewidths=0.8, label='reference')
-    if len(x.iloc[rm_index]) != 0:
-        plt.scatter(x.iloc[rm_index], y.iloc[rm_index], marker='.',
+    if len(fit_res.x.iloc[rm_index]) != 0:
+        plt.scatter(fit_res.x.iloc[rm_index], fit_res.y.iloc[rm_index], marker='.',
                     color='r', s=48, linewidths=0.8, label='reference masked')
     plt.xscale('log')
 
     if confidence is None or confidence == 'student-t':
         popt_low, popt_high = confidence_intervals_studentt(
-            y, popt, pcov, confidence_interval)
+            fit_res.y, fit_res.popt, fit_res.pcov, confidence_interval)
     else:
-        popt_low, popt_high = confidence_intervals(pcov, popt)
+        popt_low, popt_high = confidence_intervals(fit_res.pcov, fit_res.popt)
 
     num_pts = 400
-    t = np.arange(x.min(), x.max(), (x.max() - x.min()) / num_pts)
-    plt.plot(t, func(t, *popt), color='slategray', linewidth=0.2)
+    t = np.arange(fit_res.x.min(), fit_res.x.max(),
+                  (fit_res.x.max() - fit_res.x.min()) / num_pts)
+    plt.plot(t, func(t, *fit_res.popt), color='slategray', linewidth=0.2)
 
     sx_n = sx[~sx.isna()] if sx is not None else None
-    x_min_ext = x.min() / interval_ratio
+    x_min_ext = fit_res.x.min() / interval_ratio
     if sx is not None:
         x_min_ext = min(x_min_ext, sx_n.min())
     ext_legend = False
-    if x.min() != x_min_ext:
-        t = np.arange(x_min_ext, x.min(),
-                      (x.min() - x_min_ext) / (num_pts / 10.0))
-        plt.plot(t, func(t, *popt), color='red',
+    if fit_res.x.min() != x_min_ext:
+        t = np.arange(x_min_ext, fit_res.x.min(),
+                      (fit_res.x.min() - x_min_ext) / (num_pts / 10.0))
+        plt.plot(t, func(t, *fit_res.popt), color='red',
                  linestyle=(0, (5, 10)), linewidth=0.2, label='ext')
         ext_legend = True
 
-    x_max_ext = x.max() * interval_ratio
+    x_max_ext = fit_res.x.max() * interval_ratio
     if sx is not None:
         x_max_ext = max(x_max_ext, sx_n.max())
-    if x.max() != x_max_ext:
-        t = np.arange(x.max(), x_max_ext,
-                      (x_max_ext - x.max()) / (num_pts / 10.0))
+    if fit_res.x.max() != x_max_ext:
+        t = np.arange(fit_res.x.max(), x_max_ext,
+                      (x_max_ext - fit_res.x.max()) / (num_pts / 10.0))
         # no label, only one extension label
         ext_label = None
         if not ext_legend:
             ext_label = 'ext'
-        plt.plot(t, func(t, *popt), color='red',
+        plt.plot(t, func(t, *fit_res.popt), color='red',
                  linestyle=(0, (5, 10)), linewidth=0.2, label=ext_label)
 
     # show NaN concentration values somewhere -> show OD
@@ -132,12 +158,28 @@ def fit_image(x, y, popt, pcov, file_path, confidence_interval=95.0,
     # plotting the confidence intervals
     plt.fill_between(t, bound_lower, bound_upper,
                      color='black', alpha=0.15)
-
     plt.legend()
 
-    if file_path is not None:
-        plt.savefig(file_path)
+    buf = io.BytesIO()
+    plt.savefig(buf, format='svg')
+    buf.seek(0)
     plt.clf()
+
+    return buf
+
+
+def save_image(buf, file_path):
+    """Save image to file
+
+    Parameters
+    ----------
+    buf : io.BytesIO
+        Image buffer.
+    file_path : path_like
+        Image file path.
+    """
+    with open(file_path, 'wb') as f:
+        f.write(buf.getbuffer())
 
 
 def confidence_intervals(pcov, popt):
@@ -226,7 +268,10 @@ def sample_img(samples, reference, sample_type, sample_num, img_file=None) -> No
         lambda x: x['concentration'] / x['plate_layout_dil'], axis=1)
     sx = sd['sample'].reset_index(level=[0, 1])['conc_plot']
     sy = sd['sample'].reset_index(level=[0, 1])['OD_delta']
-    fit_image(x, y, fit_result[0][0], fit_result[0][1], img_file, confidence='student-t',
-              rm_index=fit_result[1], mask_idx=mask_idx,
-              sx=sx, sy=sy, sna_idx=na_index(sd['sample']),
-              valid_sample=sd['valid'], interval_ratio=1.0)
+    img = fit_image(ImageFitResult(x, y, fit_result[0][0], fit_result[0][1]),
+                    confidence='student-t',
+                    rm_index=fit_result[1], mask_idx=mask_idx,
+                    sx=sx, sy=sy, sna_idx=na_index(sd['sample']),
+                    valid_sample=sd['valid'], interval_ratio=1.0)
+    if img_file:
+        save_image(img, img_file)
