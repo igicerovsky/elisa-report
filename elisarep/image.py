@@ -33,13 +33,34 @@ class ImageFitResult:
     y: pd.Series
     popt: np.iterable
     pcov: np.iterable
+    rm_index: list
+
+
+@dataclass
+class SampleData:
+    """Sample data
+
+    Parameters  
+    ----------
+    sx : pd.Series
+        Sample x-axis values.   
+    sy : pd.Series  
+        Sample y-axis values.
+     mask_idx : list
+        Masked sample index.
+    sna_idx : list
+        Sample index with NaN values.
+    """
+    sx: pd.Series = None
+    sy: pd.Series = None
+    mask_idx: list = None
+    sna_idx: list = None
 
 
 def fit_image(fit_res: ImageFitResult,
+              sample: SampleData,
               confidence_interval=95.0,
               confidence=None, interval_ratio=2.0,
-              rm_index=None,
-              sx=None, sy=None, mask_idx=None, sna_idx=None,
               valid_sample=True):
     r"""Plot the fitted function with confidence intervals.
 
@@ -75,31 +96,33 @@ def fit_image(fit_res: ImageFitResult,
     valid_sample : bool
         Is sample valid?
     """
-    if rm_index is None:
-        rm_index = []
-    if mask_idx is None:
-        mask_idx = []
-    if sna_idx is None:
-        sna_idx = []
+    if fit_res.rm_index is None:
+        fit_res.rm_index = []
+    if sample.mask_idx is None:
+        sample.mask_idx = []
+    if sample.sna_idx is None:
+        sample.sna_idx = []
     # confidence [None, 'student-t', 'sqrt_err']
 
     kw_scatter = {'marker': 'x'}
     if not valid_sample:
         kw_scatter = {'marker': 'o', 'facecolors': 'none'}
-    if (sx is not None) and (sy is not None):
-        if len(sx.drop(mask_idx, axis=0)) != 0:
-            plt.scatter(sx.drop(mask_idx, axis=0), sy.drop(mask_idx, axis=0),
+    if (sample.sx is not None) and (sample.sy is not None):
+        if len(sample.sx.drop(sample.mask_idx, axis=0)) != 0:
+            plt.scatter(sample.sx.drop(sample.mask_idx, axis=0), sample.sy.drop(sample.mask_idx, axis=0),
                         s=48, linewidths=0.6, label='point valid',
                         color='forestgreen', **kw_scatter)
-        if (len(sx.iloc[mask_idx]) != 0) and (list(mask_idx) != list(sna_idx)):
-            plt.scatter(sx.iloc[mask_idx], sy.iloc[mask_idx],
+        if (len(sample.sx.iloc[sample.mask_idx]) != 0) and (list(sample.mask_idx) != list(sample.sna_idx)):
+            plt.scatter(sample.sx.iloc[sample.mask_idx], sample.sy.iloc[sample.mask_idx],
                         s=48, linewidths=0.8, label='point masked', color='r', **kw_scatter)
 
-    if len(fit_res.x.drop(rm_index, axis=0)) != 0:
-        plt.scatter(fit_res.x.drop(rm_index, axis=0), fit_res.y.drop(rm_index, axis=0), marker='+',
+    if len(fit_res.x.drop(fit_res.rm_index, axis=0)) != 0:
+        plt.scatter(fit_res.x.drop(fit_res.rm_index, axis=0),
+                    fit_res.y.drop(fit_res.rm_index, axis=0), marker='+',
                     color='royalblue', s=48, linewidths=0.8, label='reference')
-    if len(fit_res.x.iloc[rm_index]) != 0:
-        plt.scatter(fit_res.x.iloc[rm_index], fit_res.y.iloc[rm_index], marker='.',
+    if len(fit_res.x.iloc[fit_res.rm_index]) != 0:
+        plt.scatter(fit_res.x.iloc[fit_res.rm_index],
+                    fit_res.y.iloc[fit_res.rm_index], marker='.',
                     color='r', s=48, linewidths=0.8, label='reference masked')
     plt.xscale('log')
 
@@ -114,9 +137,9 @@ def fit_image(fit_res: ImageFitResult,
                   (fit_res.x.max() - fit_res.x.min()) / num_pts)
     plt.plot(t, func(t, *fit_res.popt), color='slategray', linewidth=0.2)
 
-    sx_n = sx[~sx.isna()] if sx is not None else None
+    sx_n = sample.sx[~sample.sx.isna()] if sample.sx is not None else None
     x_min_ext = fit_res.x.min() / interval_ratio
-    if sx is not None:
+    if sample.sx is not None:
         x_min_ext = min(x_min_ext, sx_n.min())
     ext_legend = False
     if fit_res.x.min() != x_min_ext:
@@ -127,7 +150,7 @@ def fit_image(fit_res: ImageFitResult,
         ext_legend = True
 
     x_max_ext = fit_res.x.max() * interval_ratio
-    if sx is not None:
+    if sample.sx is not None:
         x_max_ext = max(x_max_ext, sx_n.max())
     if fit_res.x.max() != x_max_ext:
         t = np.arange(fit_res.x.max(), x_max_ext,
@@ -140,12 +163,12 @@ def fit_image(fit_res: ImageFitResult,
                  linestyle=(0, (5, 10)), linewidth=0.2, label=ext_label)
 
     # show NaN concentration values somewhere -> show OD
-    sx_na = sx[sx.isna()] if sx is not None else None
-    if sx is not None:
-        sna_idx = sx[~sx.isna()].index
+    sx_na = sample.sx[sample.sx.isna()] if sample.sx is not None else None
+    if sample.sx is not None:
+        sample.sna_idx = sample.sx[~sample.sx.isna()].index
         if len(sx_na) != 0:
             x_na = np.full(shape=len(sx_na), fill_value=x_min_ext * 0.5)
-            y_na = sy.drop(sna_idx, axis=0)
+            y_na = sample.sy.drop(sample.sna_idx, axis=0)
             plt.scatter(x_na, y_na, marker='_', color='red', s=48,
                         linewidths=0.8, label='backfit failed')
 
@@ -268,10 +291,9 @@ def sample_img(samples, reference, sample_type, sample_num, img_file=None) -> No
         lambda x: x['concentration'] / x['plate_layout_dil'], axis=1)
     sx = sd['sample'].reset_index(level=[0, 1])['conc_plot']
     sy = sd['sample'].reset_index(level=[0, 1])['OD_delta']
-    img = fit_image(ImageFitResult(x, y, fit_result[0][0], fit_result[0][1]),
+    img = fit_image(ImageFitResult(x, y, fit_result[0][0], fit_result[0][1], fit_result[1]),
+                    SampleData(sx, sy, mask_idx, na_index(sd['sample'])),
                     confidence='student-t',
-                    rm_index=fit_result[1], mask_idx=mask_idx,
-                    sx=sx, sy=sy, sna_idx=na_index(sd['sample']),
                     valid_sample=sd['valid'], interval_ratio=1.0)
     if img_file:
         save_image(img, img_file)
