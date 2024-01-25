@@ -118,7 +118,7 @@ def draw_ext(fit_res: ImageFitResult, sample: SampleData, interval_ratio: float)
         plt.plot(t, func(t, *fit_res.popt), color='red',
                  linestyle=(0, (5, 10)), linewidth=0.2, label=ext_label)
 
-    return num_pts, x_min_ext, x_max_ext
+    return x_min_ext, x_max_ext
 
 
 def draw_fit(fit_res: ImageFitResult):
@@ -176,7 +176,7 @@ def fit_image(fit_res: ImageFitResult,
 
     draw_sample(sample)
     draw_fit(fit_res)
-    num_pts, x_min_ext, x_max_ext = draw_ext(fit_res, sample, interval_ratio)
+    x_min_ext, x_max_ext = draw_ext(fit_res, sample, interval_ratio)
 
     # show NaN concentration values somewhere -> show OD
     sx_na = sample.sx[sample.sx.isna()] if sample.sx is not None else None
@@ -187,20 +187,18 @@ def fit_image(fit_res: ImageFitResult,
             y_na = sample.sy.drop(sample.na_idx, axis=0)
             plt.scatter(x_na, y_na, marker='_', color='red', s=48,
                         linewidths=0.8, label='backfit failed')
-
     plt.xlabel('concentration [cp/ml]')
     plt.ylabel('Optical density')
 
-    t = np.arange(x_min_ext, x_max_ext, (x_max_ext - x_min_ext) / num_pts)
+    t = np.arange(x_min_ext, x_max_ext, (x_max_ext - x_min_ext) / 256)
     if confidence is None or confidence == 'student-t':
         popt_low, popt_high = confidence_intervals_studentt(
             fit_res.y, fit_res.popt, fit_res.pcov, confidence_interval)
     else:
         popt_low, popt_high = confidence_intervals(fit_res.pcov, fit_res.popt)
-    bound_upper = func(t, *popt_high)
-    bound_lower = func(t, *popt_low)
     # plotting the confidence intervals
-    plt.fill_between(t, bound_lower, bound_upper,
+    plt.fill_between(t,
+                     func(t, *popt_low), func(t, *popt_high),
                      color='black', alpha=0.15)
     plt.legend()
 
