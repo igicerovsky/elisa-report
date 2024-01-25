@@ -58,36 +58,9 @@ class SampleData:
     valid: bool = True
 
 
-def fit_image(fit_res: ImageFitResult,
-              sample: SampleData,
-              confidence_interval=95.0,
-              confidence=None, interval_ratio=2.0):
-    r"""Plot the fitted function with confidence intervals.
-
-    Confidence intervals coud be set using `confidence` parameter.
-    'student-t' method is a correct one producing wider confidence intervals.
-
-    Parameters
-    ----------
-    fit_res : ImageFitResult
-        Fit result.
-    sample : SampleData
-        Sample data.
-    confidence_interval : float 
-        Confidence interval in %
-    interval_ratio: float
-        Ration of min and max extention of x axis for fitted curve plot.
-    confidence : None, 'student-t', 'sqrt_err'
-        Confidence intervals method.
+def draw_sample(sample: SampleData):
+    """Draw sample points.
     """
-    if fit_res.rm_index is None:
-        fit_res.rm_index = []
-    if sample.mask_idx is None:
-        sample.mask_idx = []
-    if sample.na_idx is None:
-        sample.na_idx = []
-    # confidence [None, 'student-t', 'sqrt_err']
-
     kw_scatter = {'marker': 'x'}
     if not sample.valid:
         kw_scatter = {'marker': 'o', 'facecolors': 'none'}
@@ -102,22 +75,19 @@ def fit_image(fit_res: ImageFitResult,
             plt.scatter(sample.sx.iloc[sample.mask_idx], sample.sy.iloc[sample.mask_idx],
                         s=48, linewidths=0.8, label='point masked', color='r', **kw_scatter)
 
-    if len(fit_res.x.drop(fit_res.rm_index, axis=0)) != 0:
-        plt.scatter(fit_res.x.drop(fit_res.rm_index, axis=0),
-                    fit_res.y.drop(fit_res.rm_index, axis=0), marker='+',
-                    color='royalblue', s=48, linewidths=0.8, label='reference')
-    if len(fit_res.x.iloc[fit_res.rm_index]) != 0:
-        plt.scatter(fit_res.x.iloc[fit_res.rm_index],
-                    fit_res.y.iloc[fit_res.rm_index], marker='.',
-                    color='r', s=48, linewidths=0.8, label='reference masked')
-    plt.xscale('log')
 
-    if confidence is None or confidence == 'student-t':
-        popt_low, popt_high = confidence_intervals_studentt(
-            fit_res.y, fit_res.popt, fit_res.pcov, confidence_interval)
-    else:
-        popt_low, popt_high = confidence_intervals(fit_res.pcov, fit_res.popt)
+def draw_ext(fit_res: ImageFitResult, sample: SampleData, interval_ratio: float):
+    """Draw extension of fitted curve.
 
+    Parameters
+    ----------
+    fit_res : ImageFitResult
+        Fit result.
+    sample : SampleData
+        Sample data.
+    interval_ratio: float
+        Ratio of min and max extention of x axis for fitted curve plot.
+    """
     num_pts = 400
     t = np.arange(fit_res.x.min(), fit_res.x.max(),
                   (fit_res.x.max() - fit_res.x.min()) / num_pts)
@@ -148,6 +118,66 @@ def fit_image(fit_res: ImageFitResult,
         plt.plot(t, func(t, *fit_res.popt), color='red',
                  linestyle=(0, (5, 10)), linewidth=0.2, label=ext_label)
 
+    return num_pts, x_min_ext, x_max_ext
+
+
+def draw_fit(fit_res: ImageFitResult):
+    """Draw fitted curve.
+
+    Parameters
+    ----------
+    fit_res : ImageFitResult
+        Fit result.
+    """
+    if len(fit_res.x.drop(fit_res.rm_index, axis=0)) != 0:
+        plt.scatter(fit_res.x.drop(fit_res.rm_index, axis=0),
+                    fit_res.y.drop(fit_res.rm_index, axis=0), marker='+',
+                    color='royalblue', s=48, linewidths=0.8, label='reference')
+    if len(fit_res.x.iloc[fit_res.rm_index]) != 0:
+        plt.scatter(fit_res.x.iloc[fit_res.rm_index],
+                    fit_res.y.iloc[fit_res.rm_index], marker='.',
+                    color='r', s=48, linewidths=0.8, label='reference masked')
+    plt.xscale('log')
+
+
+def check_no_data(data):
+    """Check if data is None and return empty list.
+    """
+    if data is None:
+        data = []
+    return data
+
+
+def fit_image(fit_res: ImageFitResult,
+              sample: SampleData,
+              confidence_interval=95.0,
+              confidence=None, interval_ratio=2.0):
+    r"""Plot the fitted function with confidence intervals.
+
+    Confidence intervals coud be set using `confidence` parameter.
+    'student-t' method is a correct one producing wider confidence intervals.
+
+    Parameters
+    ----------
+    fit_res : ImageFitResult
+        Fit result.
+    sample : SampleData
+        Sample data.
+    confidence_interval : float 
+        Confidence interval in %
+    interval_ratio: float
+        Ration of min and max extention of x axis for fitted curve plot.
+    confidence : None, 'student-t', 'sqrt_err'
+        Confidence intervals method.
+    """
+    check_no_data(fit_res.rm_index)
+    check_no_data(sample.mask_idx)
+    check_no_data(sample.na_idx)
+
+    draw_sample(sample)
+    draw_fit(fit_res)
+    num_pts, x_min_ext, x_max_ext = draw_ext(fit_res, sample, interval_ratio)
+
     # show NaN concentration values somewhere -> show OD
     sx_na = sample.sx[sample.sx.isna()] if sample.sx is not None else None
     if sample.sx is not None:
@@ -162,6 +192,11 @@ def fit_image(fit_res: ImageFitResult,
     plt.ylabel('Optical density')
 
     t = np.arange(x_min_ext, x_max_ext, (x_max_ext - x_min_ext) / num_pts)
+    if confidence is None or confidence == 'student-t':
+        popt_low, popt_high = confidence_intervals_studentt(
+            fit_res.y, fit_res.popt, fit_res.pcov, confidence_interval)
+    else:
+        popt_low, popt_high = confidence_intervals(fit_res.pcov, fit_res.popt)
     bound_upper = func(t, *popt_high)
     bound_lower = func(t, *popt_low)
     # plotting the confidence intervals
