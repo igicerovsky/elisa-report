@@ -48,20 +48,20 @@ class SampleData:
         Sample y-axis values.
      mask_idx : list
         Masked sample index.
-    sna_idx : list
+    na_idx : list
         Sample index with NaN values.
     """
     sx: pd.Series = None
     sy: pd.Series = None
     mask_idx: list = None
-    sna_idx: list = None
+    na_idx: list = None
+    valid: bool = True
 
 
 def fit_image(fit_res: ImageFitResult,
               sample: SampleData,
               confidence_interval=95.0,
-              confidence=None, interval_ratio=2.0,
-              valid_sample=True):
+              confidence=None, interval_ratio=2.0):
     r"""Plot the fitted function with confidence intervals.
 
     Confidence intervals coud be set using `confidence` parameter.
@@ -69,43 +69,27 @@ def fit_image(fit_res: ImageFitResult,
 
     Parameters
     ----------
-    x : pd.Series
-        x-axis reference values.
-    y : pd.series
-        y-axis reference values.
-    popt : iterable
-        Fit parameters.
-    pcov : 
-        Covariance matrix from fitting algorithm.
-    file_path : string
-        Path where the graph image is saved or `None`
+    fit_res : ImageFitResult
+        Fit result.
+    sample : SampleData
+        Sample data.
     confidence_interval : float 
         Confidence interval in %
     interval_ratio: float
         Ration of min and max extention of x axis for fitted curve plot.
-    rm_index: list
-        Index of a removed point.
-    sx : array_like
-        Sample x-values.
-    sy : array_like
-        Sample x-values.
-    mask_idx : array_like
-        Indices of masked samples.
-    sna_idx : 
-        Indices of nan data excluded.
-    valid_sample : bool
-        Is sample valid?
+    confidence : None, 'student-t', 'sqrt_err'
+        Confidence intervals method.
     """
     if fit_res.rm_index is None:
         fit_res.rm_index = []
     if sample.mask_idx is None:
         sample.mask_idx = []
-    if sample.sna_idx is None:
-        sample.sna_idx = []
+    if sample.na_idx is None:
+        sample.na_idx = []
     # confidence [None, 'student-t', 'sqrt_err']
 
     kw_scatter = {'marker': 'x'}
-    if not valid_sample:
+    if not sample.valid:
         kw_scatter = {'marker': 'o', 'facecolors': 'none'}
     if (sample.sx is not None) and (sample.sy is not None):
         if len(sample.sx.drop(sample.mask_idx, axis=0)) != 0:
@@ -114,7 +98,7 @@ def fit_image(fit_res: ImageFitResult,
                         s=48, linewidths=0.6, label='point valid',
                         color='forestgreen', **kw_scatter)
         if ((len(sample.sx.iloc[sample.mask_idx]) != 0)
-                and (list(sample.mask_idx) != list(sample.sna_idx))):
+                and (list(sample.mask_idx) != list(sample.na_idx))):
             plt.scatter(sample.sx.iloc[sample.mask_idx], sample.sy.iloc[sample.mask_idx],
                         s=48, linewidths=0.8, label='point masked', color='r', **kw_scatter)
 
@@ -167,10 +151,10 @@ def fit_image(fit_res: ImageFitResult,
     # show NaN concentration values somewhere -> show OD
     sx_na = sample.sx[sample.sx.isna()] if sample.sx is not None else None
     if sample.sx is not None:
-        sample.sna_idx = sample.sx[~sample.sx.isna()].index
+        sample.na_idx = sample.sx[~sample.sx.isna()].index
         if len(sx_na) != 0:
             x_na = np.full(shape=len(sx_na), fill_value=x_min_ext * 0.5)
-            y_na = sample.sy.drop(sample.sna_idx, axis=0)
+            y_na = sample.sy.drop(sample.na_idx, axis=0)
             plt.scatter(x_na, y_na, marker='_', color='red', s=48,
                         linewidths=0.8, label='backfit failed')
 
@@ -293,9 +277,12 @@ def sample_img(samples, reference, sample_type, sample_num, img_file=None) -> No
         lambda x: x['concentration'] / x['plate_layout_dil'], axis=1)
     sx = sd['sample'].reset_index(level=[0, 1])['conc_plot']
     sy = sd['sample'].reset_index(level=[0, 1])['OD_delta']
+    nai = na_index(sd['sample'])
+    sample_data = SampleData(
+        sx=sx, sy=sy, mask_idx=mask_idx, na_idx=nai, valid=sd['valid'])
     img = fit_image(ImageFitResult(x, y, fit_result[0][0], fit_result[0][1], fit_result[1]),
-                    SampleData(sx, sy, mask_idx, na_index(sd['sample'])),
+                    sample_data,
                     confidence='student-t',
-                    valid_sample=sd['valid'], interval_ratio=1.0)
+                    interval_ratio=1.0)
     if img_file:
         save_image(img, img_file)

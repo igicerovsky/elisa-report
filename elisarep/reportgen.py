@@ -22,7 +22,7 @@ def gen_report_raw(report_params: dict, working_dir: PathLike):
     print(alist)
     for analysis_file in alist:
         plate = int(parse_photometer_filename(analysis_file)['plate'])
-        print('Processing plate {plate} of {len(alist)}')
+        print(f'Processing plate {plate} of {len(alist)}')
 
         report_file_path = make_output_paths(working_dir,
                                              basename_from_inputdir(
