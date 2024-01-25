@@ -3,9 +3,9 @@
 
 from setuptools import setup, find_packages
 
-VERSION = '0.1.4'
-DESCRIPTION = 'Hamilton report generation'
-LONG_DESCRIPTION = 'Genrate report from Hamilton photometer output'
+VERSION = '0.1.5'
+DESCRIPTION = 'Hamilton report generation fro ELISA'
+LONG_DESCRIPTION = 'Genrate report from Hamilton photometer output for ELISA.'
 
 # Setting up
 setup(
