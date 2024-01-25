@@ -109,10 +109,12 @@ def fit_image(fit_res: ImageFitResult,
         kw_scatter = {'marker': 'o', 'facecolors': 'none'}
     if (sample.sx is not None) and (sample.sy is not None):
         if len(sample.sx.drop(sample.mask_idx, axis=0)) != 0:
-            plt.scatter(sample.sx.drop(sample.mask_idx, axis=0), sample.sy.drop(sample.mask_idx, axis=0),
+            plt.scatter(sample.sx.drop(sample.mask_idx, axis=0),
+                        sample.sy.drop(sample.mask_idx, axis=0),
                         s=48, linewidths=0.6, label='point valid',
                         color='forestgreen', **kw_scatter)
-        if (len(sample.sx.iloc[sample.mask_idx]) != 0) and (list(sample.mask_idx) != list(sample.sna_idx)):
+        if ((len(sample.sx.iloc[sample.mask_idx]) != 0)
+                and (list(sample.mask_idx) != list(sample.sna_idx))):
             plt.scatter(sample.sx.iloc[sample.mask_idx], sample.sy.iloc[sample.mask_idx],
                         s=48, linewidths=0.8, label='point masked', color='r', **kw_scatter)
 
