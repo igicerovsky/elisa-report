@@ -14,7 +14,7 @@ Install `pandoc` frpm [pandoc](https://pandoc.org/installing.html) website.
 
 Install `latex` from any of the [distributions](https://www.latex-project.org/get/#tex-distributions).  
 
-## Buld distribution of `hamrep`
+## Buld distribution of `elisarep`
 
 For experts only!  
 To build a hemrep library execute following command:
@@ -142,7 +142,7 @@ python report_gen.py DIR_NAME --cfg ./data
 
 To export data in **TXT** format run the *SoftMax Pro* softare, and open given analysis. From the main menu choose 'Export' and select the `Export to XML XLS TXT` option.  
 
-![Alt text](image.png)
+![softmax_export](media\softmax_menu.png)
 
 ![softmax_export_opt](media\softmax_export_opt.png)
 
