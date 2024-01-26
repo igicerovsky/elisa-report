@@ -7,3 +7,6 @@ hamrep.egg-info
 *.sdax
 results_plate*
 .tmp
+media/GT_ProjektErsetzen_Details.xlsx
+media/DMD-212109_HEK293-HostCellProtein_ELISA.docx
+media/DMD-212109_HEK293-HostCellProtein_ELISA_new.docx
