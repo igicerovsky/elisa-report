@@ -25,6 +25,7 @@
 - Github lint fixes & tests
 - Copilot exploring
 - Documenting code
+- MS Word replace codes
 
 ## KW03-15.01.2024
 
