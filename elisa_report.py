@@ -101,8 +101,10 @@ class Gui:
         else:
             self.config_folder.set(path.join(getcwd(), 'data'))
 
+        def analysis_fn():
+            self.browse_analysis()
         button_analysis = Button(self.window, text="Browse Analysis Folder",
-                                 command=lambda: self.browse_analysis())
+                                 command=analysis_fn)
         button_analysis.grid(column=0, row=0)
 
         self.entry_analysis = Entry(textvariable=self.analysis_folder,
@@ -110,8 +112,10 @@ class Gui:
         self.entry_analysis.grid(row=0, column=1,
                                  padx=10, pady=10)
 
+        def browse_fn():
+            self.browse_config()
         button_config = Button(self.window, text="Browse Config Folder",
-                               command=lambda: self.browse_config())
+                               command=browse_fn)
         button_config.grid(column=0, row=1)
         entry_config = Entry(textvariable=self.config_folder,
                              state=DISABLED, width=110)
