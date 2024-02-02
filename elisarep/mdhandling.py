@@ -95,7 +95,7 @@ def export_main_report(reports, working_dir, pandoc_bin, reference_doc, docx=Tru
         md2docx(pandoc_bin, reference_doc, md_filepath)
     else:
         parsed_dir = parse_dir_name(working_dir)
-        docxfile = f'{parsed_dir["date"]}_{ parsed_dir["protocol"]}_new.docx'
+        docxfile = f'{parsed_dir["date"]}_{ parsed_dir["protocol"]}.docx'
         docxfile = path.join(working_dir, docxfile)
         assembly_word(reports, protocol=parsed_dir['protocol'],
                       docx_path=docxfile, reference_doc=reference_doc)

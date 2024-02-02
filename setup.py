@@ -3,14 +3,14 @@
 
 from setuptools import setup, find_packages
 
-VERSION = '0.1.5'
-DESCRIPTION = 'Hamilton report generation fro ELISA'
+VERSION = '0.1.6'
+DESCRIPTION = 'Hamilton report generation for ELISA'
 LONG_DESCRIPTION = 'Genrate report from Hamilton photometer output for ELISA.'
 
 # Setting up
 setup(
     # the name must match the folder name 'verysimplemodule'
-    name="hamrep",
+    name="elisarep",
     version=VERSION,
     author="Igor Cerovsky",
     author_email="<igor.cerovsky@takeda.com>",

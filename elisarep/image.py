@@ -268,7 +268,7 @@ def mask_index(df: pd.DataFrame) -> list:
     return b.index
 
 
-def na_index(df: pd.DataFrame):
+def na_index(df: pd.DataFrame) -> list:
     """Get index of `na` data
     """
     b = df.reset_index(level=[0, 1])
