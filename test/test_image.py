@@ -1,10 +1,19 @@
-from elisarep.image import mask_index, na_index, confidence_intervals
+""" Tests for the image module."""
 import pandas as pd
 import numpy as np
-from elisarep.image import mask_index, na_index
+from elisarep.image import mask_index, na_index, confidence_intervals
 
 
 def test_mask_index():
+    """
+    Test function for the mask_index function.
+
+    This function tests the behavior of the mask_index function by creating a DataFrame
+    with a specific structure and checking the output against expected values.
+
+    Returns:
+        None
+    """
     idx = pd.MultiIndex.from_product([['A'],
                                       [1, 2, 3, 4]],
                                      names=['col', 'row'])
@@ -17,10 +26,19 @@ def test_mask_index():
     expected = [0, 2]
 
     assert len(actual) == len(expected)
-    assert all([a == b for a, b in zip(actual, expected)])
+    assert all(a == b for a, b in zip(actual, expected))
 
 
 def test_na_index():
+    """
+    Test function for the na_index function.
+
+    This function tests the behavior of the na_index function by creating a DataFrame
+    with a specific structure and checking the output against expected values.
+
+    Returns:
+        None
+    """
     idx = pd.MultiIndex.from_product([['A'],
                                       [1, 2, 3, 4]],
                                      names=['col', 'row'])
@@ -33,10 +51,19 @@ def test_na_index():
     expected = [0, 2]
 
     assert len(actual) == len(expected)
-    assert all([a == b for a, b in zip(actual, expected)])
+    assert all(a == b for a, b in zip(actual, expected))
 
 
 def test_confidence_intervals():
+    """
+    Test function for the confidence_intervals function.
+
+    This function tests the behavior of the confidence_intervals function by providing
+    a covariance matrix and parameter estimates, and checking the output against expected values.
+
+    Returns:
+        None
+    """
     pcov = np.array([[0.01, 0.02],
                      [0.02, 0.04]])
     popt = np.array([1.0, 2.0])
