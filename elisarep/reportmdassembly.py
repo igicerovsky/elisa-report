@@ -129,9 +129,9 @@ def new_doc(reference_doc: PathLikeOrNone = None):
     document = Document(reference_doc)
     for paragraph in document.paragraphs:
         if len(paragraph.text) == 0:
-            p = paragraph._element
+            p = paragraph._element  # pylint: disable=protected-access
             p.getparent().remove(p)
-            p._p = p._element = None
+            p._p = p._element = None  # pylint: disable=protected-access
 
     return document
 
