@@ -250,7 +250,7 @@ def confidence_intervals_studentt(y, popt, pcov, confidence_interval):
     return popt - sigma_popt, popt + sigma_popt
 
 
-def mask_index(df: pd.DataFrame) -> list:
+def mask_index(df: pd.DataFrame, key: str = 'mask_reason') -> list:
     """Get the index of masked data
 
     Parameters:
@@ -263,16 +263,16 @@ def mask_index(df: pd.DataFrame) -> list:
         Index of masked data.
     """
     b = df.reset_index(level=[0, 1])
-    b = b[b['mask_reason'].notna()]
+    b = b[b[key].notna()]
 
     return b.index
 
 
-def na_index(df: pd.DataFrame) -> list:
+def na_index(df: pd.DataFrame, key: str = 'backfit') -> list:
     """Get index of `na` data
     """
     b = df.reset_index(level=[0, 1])
-    b = b[b['backfit'].isna()]
+    b = b[b[key].isna()]
 
     return b.index
 
