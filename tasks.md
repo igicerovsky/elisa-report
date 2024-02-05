@@ -20,6 +20,11 @@
 
 ## Done
 
+## KW05-29.01.2024
+
+- v0.1.6
+- pylint cleaning (ignore)
+
 ## KW04-22.01.2024
 
 - Github lint fixes & tests

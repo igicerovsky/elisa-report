@@ -1,5 +1,10 @@
 # Hamiltom report changelog
 
+## v0.1.6
+
+- unit tests
+- small fixes in setup
+
 ## v0.1.5
 
 25.01.2024
