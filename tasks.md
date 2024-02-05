@@ -24,6 +24,7 @@
 
 - v0.1.6
 - pylint cleaning (ignore)
+- unit tests
 
 ## KW04-22.01.2024
 
