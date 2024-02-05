@@ -16,7 +16,7 @@ Install `latex` from any of the [distributions](https://www.latex-project.org/ge
 
 ## Buld distribution of `elisarep`
 
-For experts only!  
+For experts only.  
 To build a hemrep library execute following command:
 
 ```bash
@@ -45,12 +45,13 @@ options:
 
 `--analysis` is path to a folder with finished Hamilton analysis, e.g. `C:/work/hamilton/230801_AAV9-ELISA_sey_GN004240-053`  
 If analysis directory is not given, GUI window opens to select the diectory.  
-**Analysis folder name is parsed to retrieve certain analysis information!** The structume shall be `[DATE]_[METHOD]_[USER]_[GN]`, where the fields are separated by underscore character `_`  
+**Analysis folder name is parsed to retrieve certain analysis information!**  
+The structume shall be `[DATE]_[METHOD]_[USER]_[GN]`, where the fields are separated by underscore character `_`  
 where  
 `[DATE]` is a date in format `%y%m%d` (*230801*)  
 `[GN]` is analysis identifier (*GN004240-033*)  
 `[PROTOCOL]` is a protocol name (*AAV9-ELISA*)  
-`[USER]` is user name/coce (*sey*)
+`[USER]` is user name/code (*sey*)
 
 The working directory **must** contain following files in given format:  
 
