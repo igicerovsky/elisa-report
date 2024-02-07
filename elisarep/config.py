@@ -8,6 +8,12 @@ import json
 
 from .typing import PathLike
 
+
+VERSION = '0.1.6'
+DESCRIPTION = 'Hamilton report generation for ELISA'
+LONG_DESCRIPTION = 'Genrate report from Hamilton photometer output for ELISA.'
+NAME = 'elisarep'
+
 CONFIG_FILENAME = 'config.json'
 
 REFVAL_NAME = 'referenceValue'

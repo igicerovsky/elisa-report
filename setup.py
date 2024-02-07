@@ -2,15 +2,12 @@
 """
 
 from setuptools import setup, find_packages
-
-VERSION = '0.1.6'
-DESCRIPTION = 'Hamilton report generation for ELISA'
-LONG_DESCRIPTION = 'Genrate report from Hamilton photometer output for ELISA.'
+from elisa_report import VERSION, NAME, DESCRIPTION, LONG_DESCRIPTION
 
 # Setting up
 setup(
     # the name must match the folder name 'verysimplemodule'
-    name="elisarep",
+    name=NAME,
     version=VERSION,
     author="Igor Cerovsky",
     author_email="<igor.cerovsky@takeda.com>",

@@ -20,6 +20,10 @@
 
 ## Done
 
+## KW06-05.02.2024
+
+- asdd footer to docx with "Generated with elisarep v#.#.# on DateTime"
+
 ## KW05-29.01.2024
 
 - v0.1.6
