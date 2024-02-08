@@ -55,7 +55,7 @@ def header_section(dc: dict, plate_id: int, msg: str) -> str:
     md += f'Plate: **{plate_id}**  \n'
     if msg:
         md += f'Comment: {msg}  \n'
-    md += f'\n'
+    md += '\n'
 
     return md
 

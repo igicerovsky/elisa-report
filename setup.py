@@ -2,7 +2,7 @@
 """
 
 from setuptools import setup, find_packages
-from elisa_report import VERSION, NAME, DESCRIPTION, LONG_DESCRIPTION
+from elisarep.config import VERSION, NAME, DESCRIPTION, LONG_DESCRIPTION
 
 # Setting up
 setup(
