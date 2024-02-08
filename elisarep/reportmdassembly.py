@@ -24,7 +24,8 @@ def plate_section_ex(df, plate):
     dg = CV_DIGITS
     md += df.to_markdown(floatfmt=f'#.{dg}f')
     md += '\n\n'
-    md += '\\* sample will be retested\n\n'
+    if df['Result [cp/ml]'].str.contains(r'\)\*').any():
+        md += '\\* sample will be retested\n\n'
 
     return md
 

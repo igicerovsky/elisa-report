@@ -53,7 +53,9 @@ def header_section(dc: dict, plate_id: int, msg: str) -> str:
     md += f'Protocol: **{dc["protocol"]}**  \n'
     md += f'Analyzed by: **{dc["analyst"]}**  \n'
     md += f'Plate: **{plate_id}**  \n'
-    md += f'Comment: {msg}  \n\n'
+    if msg:
+        md += f'Comment: {msg}  \n'
+    md += f'\n'
 
     return md
 
@@ -240,6 +242,7 @@ def result_section(df: pd.DataFrame) -> str:
     df_formated = format_results(df, limits)
     md += df_formated.to_markdown(floatfmt=f"#.{CV_DIGITS}f")
     md += '\n\n'
-    md += '\\* sample will be retested\n\n'
+    if df['Result [cp/ml]'].str.contains(r'\)\*').any():
+        md += '\\* sample will be retested\n\n'
 
     return md

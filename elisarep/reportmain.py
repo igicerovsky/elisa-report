@@ -59,11 +59,9 @@ fontsize: 10pt
 colorlinks: true
 ---
 
-# Automatically Generated Markdown report
+# Automatically Generated Markdown Report for ELISA\n\n'''
 
-This a PoC for automatic report generation...\n\n'''
-
-    report += header_section(info, plate_id, ':)')
+    report += header_section(info, plate_id, '')
     final = make_final(sl, report_params['worklist'], plate_id).drop(
         'reference 01', axis=0)
     report += result_section(final)
