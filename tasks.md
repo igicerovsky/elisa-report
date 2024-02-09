@@ -24,6 +24,7 @@
 
 - asdd footer to docx with "Generated with elisarep v#.#.# on DateTime"
 - text fixes in plate report + unit tests
+- test for docx content
 
 ## KW05-29.01.2024
 

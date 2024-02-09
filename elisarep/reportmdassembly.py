@@ -17,15 +17,25 @@ from .constants import CV_DIGITS
 from .config import config as cfg
 from .config import LIMITS_NAME, SOP_NAME, MHF_NAME
 from .config import NAME, VERSION
+from typing import Union
 
 SHEET_FONT_SZ = Pt(8)
 
 
-def iter_block_items(parent):
+def iter_block_items(parent: Union[Doc, _Cell]):
+    """
+    Iterate over the block items in the given parent element.
+
+    Args:
+        parent: The parent element to iterate over.
+
+    Yields:
+        Block items (Paragraph or Table) in the parent element.
+    """
     if isinstance(parent, Doc):
         parent_elm = parent.element.body
     elif isinstance(parent, _Cell):
-        parent_elm = parent._tc
+        parent_elm = parent._tc  # pylint: disable=protected-access
     else:
         raise ValueError("something's not right")
 
