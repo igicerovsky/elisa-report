@@ -1,9 +1,9 @@
 """ Final markdown report assembly
 """
+from typing import Union
 from datetime import datetime
 import re
 import pandas as pd
-from typing import Union
 
 from docx import Document
 from docx.shared import Pt
