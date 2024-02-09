@@ -3,6 +3,7 @@
 from datetime import datetime
 import re
 import pandas as pd
+from typing import Union
 
 from docx import Document
 from docx.shared import Pt
@@ -17,7 +18,6 @@ from .constants import CV_DIGITS
 from .config import config as cfg
 from .config import LIMITS_NAME, SOP_NAME, MHF_NAME
 from .config import NAME, VERSION
-from typing import Union
 
 SHEET_FONT_SZ = Pt(8)
 
