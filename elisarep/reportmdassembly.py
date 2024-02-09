@@ -3,16 +3,40 @@
 from datetime import datetime
 import re
 import pandas as pd
+
 from docx import Document
 from docx.shared import Pt
+from docx.oxml.table import CT_Tbl
+from docx.oxml.text.paragraph import CT_P
+from docx.table import _Cell, Table
+from docx.document import Document as Doc
+from docx.text.paragraph import Paragraph
 
-from elisarep.typing import PathLikeOrNone
+from .typing import PathLikeOrNone
 from .constants import CV_DIGITS
 from .config import config as cfg
 from .config import LIMITS_NAME, SOP_NAME, MHF_NAME
 from .config import NAME, VERSION
 
 SHEET_FONT_SZ = Pt(8)
+
+
+def iter_block_items(parent):
+    if isinstance(parent, Doc):
+        parent_elm = parent.element.body
+    elif isinstance(parent, _Cell):
+        parent_elm = parent._tc
+    else:
+        raise ValueError("something's not right")
+
+    for child in parent_elm.iterchildren():
+        if isinstance(child, CT_P):
+            yield Paragraph(child, parent)
+        elif isinstance(child, CT_Tbl):
+            table = Table(child, parent)
+            for row in table.rows:
+                for cell in row.cells:
+                    yield from iter_block_items(cell)
 
 
 def plate_section_ex(df, plate):
@@ -150,7 +174,8 @@ def add_footer(document):
     footer.paragraphs[0].text = footer_text
 
 
-def assembly_word(reports: list, protocol: str, **kwargs):
+def assembly_word(reports: list, protocol: str,
+                  footer=True, **kwargs):
     """ Word document final report assembly
     """
     reference_doc = None
@@ -194,9 +219,10 @@ def assembly_word(reports: list, protocol: str, **kwargs):
                             f'{limits[0]:.3e} - {limits[1]:.3e} cp/ml.')
                            )
 
-    add_footer(document)
+    if footer:
+        add_footer(document)
 
-    if kwargs and kwargs['docx_path']:
+    if kwargs and kwargs.get('docx_path'):
         document.save(kwargs['docx_path'])
 
     return document

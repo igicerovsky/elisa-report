@@ -4,6 +4,7 @@ Test the whole pipeline.
 """
 
 from os import path
+from zlib import crc32
 import warnings
 
 from scipy.optimize import OptimizeWarning
@@ -15,7 +16,7 @@ from elisarep.sample import make_concentration
 from elisarep.readdata import read_layouts
 import elisarep.reportgen as rg
 from elisarep.reportmain import check_report_crc
-from elisarep.reportmdassembly import assembly
+from elisarep.reportmdassembly import assembly, assembly_word, iter_block_items
 from elisarep.config import config as cfg
 from elisarep.config import init_config, REFVAL_NAME, DIL_NAME
 from elisarep.typing import PathLike
@@ -30,7 +31,30 @@ warnings.simplefilter('ignore', OptimizeWarning)
 warnings.filterwarnings('ignore', category=UserWarning, module='openpyxl')
 
 
-def generic_test(analysis_dir: PathLike, report_plates_crc: list, assembly_crc: int) -> None:
+def check_docx(document, crc_expected):
+    """Check docx document
+
+    Parameters:
+    -----------
+    document : str
+        Document to check
+    crc : int
+        Expected CRC
+
+    Raises:
+    -------
+    Exception
+        If check fail, exception is raisee.
+    """
+    doctxt = ''
+    for block in iter_block_items(document):
+        doctxt += block.text
+    crc_actual = crc32(doctxt.encode())
+    assert crc_actual == crc_expected, f'Expected {crc_expected}, got {crc_actual}'
+
+
+def generic_test(analysis_dir: PathLike, report_plates_crc: list,
+                 md_crc: int, word_crc: int) -> None:
     """Run test for given parameters
 
     Parameters:
@@ -71,8 +95,13 @@ def generic_test(analysis_dir: PathLike, report_plates_crc: list, assembly_crc: 
     parsed_dir = parse_dir_name(analysis_dir)
     md_assembly = assembly(
         reports, protocol=parsed_dir['protocol'])
+    check_report_crc(md_assembly, md_crc)
 
-    check_report_crc(md_assembly, assembly_crc)
+    doc = assembly_word(
+        reports, parsed_dir['protocol'], footer=False,
+        reference_doc=path.join(CONFIG_DIR, cfg['reference_docx']),
+    )
+    check_docx(doc, word_crc)
 
 
 def test_e2e_aav9():
@@ -80,8 +109,9 @@ def test_e2e_aav9():
     """
     analysis_dir = './test/analysis/230801_AAV9-ELISA_sey_GN004240-053'
     report_plates_crc = [1243771558, 1604776012, 1165470534]
-    assembly_crc = 2880663749
-    generic_test(analysis_dir, report_plates_crc, assembly_crc)
+    generic_test(analysis_dir, report_plates_crc,
+                 md_crc=2880663749,
+                 word_crc=2096579211)
 
 
 def test_e2e_aav9_dilthr():
@@ -89,8 +119,9 @@ def test_e2e_aav9_dilthr():
     """
     analysis_dir = './test/analysis/231122_AAV9-ELISA_sey_GN004240-064'
     report_plates_crc = [3271910687]
-    assembly_crc = 2473881083
-    generic_test(analysis_dir, report_plates_crc, assembly_crc)
+    generic_test(analysis_dir, report_plates_crc,
+                 md_crc=2473881083,
+                 word_crc=825627088)
 
 
 def test_e2e_aav8():
@@ -98,5 +129,6 @@ def test_e2e_aav8():
     """
     analysis_dir = './test/analysis/231024_AAV8-ELISA_sey_GN004240-058'
     report_plates_crc = [858956047]
-    assembly_crc = 117438155
-    generic_test(analysis_dir, report_plates_crc, assembly_crc)
+    generic_test(analysis_dir, report_plates_crc,
+                 md_crc=117438155,
+                 word_crc=3671054324)
