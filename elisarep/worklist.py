@@ -5,6 +5,8 @@ from os import path
 
 import pandas as pd
 
+from .typing import PathLike
+
 
 def check_worklist(wl: pd.DataFrame) -> list:
     """ Find number of valid plates in worklist
@@ -50,14 +52,11 @@ def worklist_sample(wl: pd.DataFrame, plate_id: int) -> tuple:
     return wl[cols], cols_dict
 
 
-def predil_worklist(worklist_file: str) -> pd.DataFrame:
+def predil_worklist(worklist_file: PathLike, worklist_predil_path: PathLike) -> pd.DataFrame:
     """ Create pre-dilution from worklist
     """
-    manual_dil_name = '_ManualDil'
     wl = read_worklist(worklist_file)
 
-    worklist_predil_path = path.splitext(
-        worklist_file)[0] + manual_dil_name + '.xlsx'
     if path.isfile(worklist_predil_path):
         print(f'Reading pre-dilution from {worklist_predil_path}')
         wl_pdil = read_worklist(worklist_predil_path)
