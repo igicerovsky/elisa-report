@@ -5,7 +5,7 @@ from os import path
 
 import pandas as pd
 
-from .typing import PathLike
+from .typing import PathLike, PathLikeOrNone
 
 
 def check_worklist(wl: pd.DataFrame) -> list:
@@ -52,12 +52,12 @@ def worklist_sample(wl: pd.DataFrame, plate_id: int) -> tuple:
     return wl[cols], cols_dict
 
 
-def predil_worklist(worklist_file: PathLike, worklist_predil_path: PathLike) -> pd.DataFrame:
+def predil_worklist(worklist_file: PathLike, worklist_predil_path: PathLikeOrNone) -> pd.DataFrame:
     """ Create pre-dilution from worklist
     """
     wl = read_worklist(worklist_file)
 
-    if path.isfile(worklist_predil_path):
+    if worklist_predil_path and path.isfile(worklist_predil_path):
         print(f'Reading pre-dilution from {worklist_predil_path}')
         wl_pdil = read_worklist(worklist_predil_path)
 

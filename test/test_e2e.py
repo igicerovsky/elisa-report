@@ -10,7 +10,7 @@ import warnings
 from scipy.optimize import OptimizeWarning
 
 from elisarep.readdata import read_params
-from elisarep.mkinout import make_input_paths, parse_dir_name
+from elisarep.mkinout import make_input_paths, parse_dir_name, make_mdil_path
 from elisarep.worklist import predil_worklist
 from elisarep.sample import make_concentration
 from elisarep.readdata import read_layouts
@@ -75,11 +75,12 @@ def generic_test(analysis_dir: PathLike, report_plates_crc: list,
     input_files = make_input_paths(analysis_dir)
     worklist_file_path = input_files['worklist']
     params_file_path = input_files['params']
+    predil_file_path = make_mdil_path(analysis_dir)
 
     init_config(analysis_dir, CONFIG_DIR)
 
     report_params = {
-        'worklist': predil_worklist(worklist_file_path),
+        'worklist': predil_worklist(worklist_file_path, predil_file_path),
         'params': read_params(params_file_path),
         'layouts': read_layouts(path.join(CONFIG_DIR, cfg['plate_layout_id']),
                                 path.join(CONFIG_DIR, cfg['plate_layout_num']),

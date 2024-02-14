@@ -3,6 +3,7 @@
 Generates ELISA report from photometer output; analysis performed on Hamilton robot.
 """
 
+from dataclasses import dataclass
 from os import path, getcwd
 import argparse
 import warnings
@@ -37,31 +38,41 @@ if WARNING_DISABLE:
     warnings.filterwarnings('ignore', category=UserWarning, module='openpyxl')
 
 
-def main_report(analysis_dir: PathLike, config_dir: PathLike,
-                params_file_path: PathLike, worklist_file_path: PathLike,
-                mdil_file_path: PathLike,
+@dataclass
+class InputFiles:
+    """ Input files
+    """
+    sanalysis_dir: PathLike
+    config_dir: PathLike
+    params_file_path: PathLike
+    worklist_file_path: PathLike
+    mdil_file_path: PathLikeOrNone
+
+
+def main_report(fl: InputFiles,
                 docxa: bool = True, docxr: bool = False, pdf: bool = True) -> None:
     """ Generate main report
     """
-    print(f'Analysis diretory {analysis_dir}')
-    print(f'Configuration directory {config_dir}')
+    print(f'Analysis diretory {fl.analysis_dir}')
+    print(f'Configuration directory {fl.config_dir}')
 
-    init_config(analysis_dir, config_dir)
+    init_config(fl.analysis_dir, fl.config_dir)
 
     report_params = {
-        'worklist': predil_worklist(worklist_file_path, mdil_file_path),
-        'params': read_params(params_file_path),
-        'layouts': read_layouts(path.join(config_dir, cfg['plate_layout_id']),
-                                path.join(config_dir, cfg['plate_layout_num']),
-                                path.join(config_dir, cfg['plate_layout_dil_id'])),
+        'worklist': predil_worklist(fl.worklist_file_path, fl.mdil_file_path),
+        'params': read_params(fl.params_file_path),
+        'layouts': read_layouts(path.join(fl.config_dir, cfg['plate_layout_id']),
+                                path.join(fl.config_dir,
+                                          cfg['plate_layout_num']),
+                                path.join(fl.config_dir, cfg['plate_layout_dil_id'])),
         'refconc': make_concentration(
             cfg[REFVAL_NAME], cfg[DIL_NAME])
     }
-    reports = rg.gen_report_raw(report_params, analysis_dir)
+    reports = rg.gen_report_raw(report_params, fl.analysis_dir)
 
     if docxa:
-        export_main_report(reports, analysis_dir, cfg['pandoc_bin'],
-                           path.join(config_dir, cfg['reference_docx']))
+        export_main_report(reports, fl.analysis_dir, cfg['pandoc_bin'],
+                           path.join(fl.config_dir, cfg['reference_docx']))
 
     for report in reports:
         print(f"Report for plate {report['plate']} saved as {report['path']}")
@@ -217,6 +228,7 @@ class Gui:
             self.check_requirements(params_path, worklist_path, mdil_path)
 
     def check_requirements(self, params_path, worklist_path, mdil_path) -> None:
+        """Check if all requirements are met"""
         close_win = True
         if not params_path:
             messagebox.showwarning("Invalid file",
@@ -244,7 +256,6 @@ class Gui:
 
         if close_win:
             self.window.destroy()
-        return None
 
     def browse_config(self) -> None:
         """ Browse config folder
@@ -254,7 +265,7 @@ class Gui:
 
         if dirname:
             self.config_folder.set(dirname)
-            self.entry_config.update(dirname)
+            self.entry_config.update()
 
     def res(self) -> None:
         """ Result
@@ -297,8 +308,8 @@ def main() -> None:
         return
 
     try:
-        main_report(analysis_dir, config_dir,
-                    params_file, worklist_file, mdil_file)
+        main_report(InputFiles(analysis_dir, config_dir,
+                    params_file, worklist_file, mdil_file))
     except (KeyError, ValueError, FileNotFoundError, ) as e:
         print(e)
         print('Failed!')
