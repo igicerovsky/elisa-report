@@ -107,7 +107,10 @@ class Gui:
         """ Browse path
         """
 
-        def __init__(self, wnd, text: str, command, col, row, var: str = None, bstate=NORMAL) -> None:
+        def __init__(self, wnd, text: str, command,
+                     col, row,
+                     var: str = None,
+                     bstate=NORMAL) -> None:  # pylint: disable=too-many-arguments
             self.button = Button(wnd, text=text, command=command, state=bstate)
             self.var = StringVar()
             self.var.set(var)
