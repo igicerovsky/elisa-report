@@ -92,12 +92,12 @@ def main_report(fl: InputFiles,
     print('Done.')
 
 
-def svar2path(svar: StringVar) -> PathLikeOrNone:
-    """ Convert StringVar to path
+def add_msg(msg, add: str) -> None:
+    """ Add message
     """
-    if svar.get() == 'None' or not svar:
-        return None
-    return svar.get()
+    if msg:
+        return msg + '\n' + add
+    return add
 
 
 class Gui:
@@ -116,6 +116,19 @@ class Gui:
             self.button.grid(column=col, row=row)
             self.entry.grid(row=row, column=col+1,
                             padx=10, pady=10)
+
+        def val(self) -> str:
+            """ Value
+            """
+            if self.var.get() == 'None':
+                return None
+            return self.var.get()
+
+        def set(self, val: str) -> None:
+            """ Set value
+            """
+            self.var.set(val)
+            self.entry.update()
 
     def __init__(self, window, config_dir: PathLikeOrNone,
                  init_folder: PathLikeOrNone) -> None:
@@ -153,39 +166,39 @@ class Gui:
 
     def browse_mdil(self) -> None:
         """Browse manual dilution filename"""
-        filename = filedialog.askopenfilename(initialdir=self.analysis.var.get(),
+        filename = filedialog.askopenfilename(initialdir=self.analysis.val(),
                                               title="Select Manual Dilution File",
                                               filetypes=[('XLS Files', '*.xlsx')])
         if filename:
             self.mdil.var.set(filename)
             self.mdil.entry.update()
-            self.check_requirements(svar2path(self.params.var),
-                                    svar2path(self.worklist. var),
+            self.check_requirements(self.params.val(),
+                                    self.worklist.val(),
                                     filename)
 
     def browse_worklist(self) -> None:
         """Browse params filename"""
-        filename = filedialog.askopenfilename(initialdir=self.analysis.var.get(),
+        filename = filedialog.askopenfilename(initialdir=self.analysis.val(),
                                               title="Select Worklist File",
                                               filetypes=[('XLS Files', '*.xls')])
         if filename:
             self.worklist. var.set(filename)
             self.worklist.entry.update()
-            self.check_requirements(svar2path(self.worklist. var),
+            self.check_requirements(self.worklist.val(),
                                     filename,
-                                    svar2path(self.mdil.var))
+                                    self.mdil.val())
 
     def browse_params(self) -> None:
         """Brows params filename"""
-        filename = filedialog.askopenfilename(initialdir=self.analysis.var.get(),
+        filename = filedialog.askopenfilename(initialdir=self.analysis.val(),
                                               title="Select Parameters File",
                                               filetypes=[('CSV Files', '*.csv')])
         if filename:
             self.params.var.set(filename)
             self.params.entry.update()
             self.check_requirements(filename,
-                                    svar2path(self.worklist.var),
-                                    svar2path(self.mdil.var))
+                                    self.worklist.val(),
+                                    self.mdil.val())
 
     def browse_analysis(self) -> None:
         """ Browse analysis folder
@@ -205,41 +218,36 @@ class Gui:
 
     def check_requirements(self, params_path, worklist_path, mdil_path) -> None:
         """Check if all requirements are met"""
-        close_win = True
+        msg = None
         if not params_path:
-            messagebox.showwarning("Invalid file",
-                                   "Defalult parameters file is missing \nor file name is invalid.",
-                                   parent=self.window)
-            close_win = False
+            msg = add_msg(
+                msg, "Defalult parameters file is missing \nor file name is invalid.\n")
         self.params.button['state'] = NORMAL
-        self.params.var.set(params_path)
-        self.params.entry.update()
+        self.params.set(params_path)
 
         if not worklist_path:
-            messagebox.showwarning("Invalid file",
-                                   "Defalult worklist file is missing or \nfile name is invalid.",
-                                   parent=self.window)
-            close_win = False
+            msg = add_msg(
+                msg, "Defalult worklist file is missing or \nfile name is invalid.\n")
         self.worklist.button['state'] = NORMAL
-        self.worklist.var.set(worklist_path)
-        self.worklist.entry.update()
+        self.worklist.set(worklist_path)
 
         if not mdil_path:
-            messagebox.showwarning("Invalid file",
-                                   "Manual dilution worklist file is missing \nor file name is invalid.",
-                                   parent=self.window)
-            close_win = False
+            msg = add_msg(
+                msg, "Defalult manual dilution worklist file is missing \nor file name is invalid.")
         self.mdil.button['state'] = NORMAL
-        self.mdil.var.set(mdil_path)
-        self.mdil.entry.update()
+        self.mdil.set(mdil_path)
 
-        if close_win:
+        if msg:
+            messagebox.showwarning("Invalid file",
+                                   msg,
+                                   parent=self.window)
+        else:
             self.window.destroy()
 
     def browse_config(self) -> None:
         """ Browse config folder
         """
-        dirname = filedialog.askdirectory(initialdir=self.config.var.get(),
+        dirname = filedialog.askdirectory(initialdir=self.config.val(),
                                           title="Select a Config Folder")
 
         if dirname:
@@ -249,8 +257,8 @@ class Gui:
     def res(self) -> None:
         """ Result
         """
-        return (self.analysis.var.get(), self.config.var.get(),
-                self.params.var.get(), self.worklist.var.get(), self.mdil.var.get())
+        return (self.analysis.val(), self.config.val(),
+                self.params.val(), self.worklist.val(), self.mdil.val())
 
 
 def gui_fn(config_dir: PathLikeOrNone, init_folder: PathLikeOrNone) -> PathLikeOrNone:
