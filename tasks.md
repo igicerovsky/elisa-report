@@ -20,6 +20,10 @@
 
 ## Done
 
+## KW08-19.02.2024
+
+- GUI: browse worklist, parameter, manual dilution files if not automatically found
+
 ## KW06-05.02.2024
 
 - asdd footer to docx with "Generated with elisarep v#.#.# on DateTime"

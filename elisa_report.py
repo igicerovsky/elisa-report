@@ -137,7 +137,7 @@ class Gui:
     def __init__(self, window, config_dir: PathLikeOrNone,
                  init_folder: PathLikeOrNone) -> None:
         self.window = window
-        self.window.title('HAMILTON Analysis')
+        self.window.title('HAMILTON ELISA Analysis')
         self.window.geometry("840x220")
         self.init_folder = init_folder
         self.group = {}
