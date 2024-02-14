@@ -103,131 +103,101 @@ def svar2path(svar: StringVar) -> PathLikeOrNone:
 class Gui:
     """ GUI class
     """
-    @dataclass
-    class GuiPaths:
-        """ GUI paths
+    class BrowsePath:
+        """ Browse path
         """
-        init_folder: PathLikeOrNone
-        analysis_folder: StringVar
-        config_folder: StringVar
-        params_file: StringVar
-        worklist_file: StringVar
-        mdil_file: StringVar
+
+        def __init__(self, wnd, text: str, command, col, row, var: str = None) -> None:
+            self.button = Button(wnd, text=text, command=command)
+            self.var = StringVar()
+            self.var.set(var)
+            self.entry = Entry(textvariable=self.var,
+                               state=DISABLED, width=110)
+            self.button.grid(column=col, row=row)
+            self.entry.grid(row=row, column=col+1,
+                            padx=10, pady=10)
 
     def __init__(self, window, config_dir: PathLikeOrNone,
                  init_folder: PathLikeOrNone) -> None:
         self.window = window
         self.window.title('HAMILTON Analysis')
         self.window.geometry("840x220")
-        self.gp = self.GuiPaths(init_folder, StringVar(), StringVar(),
-                                StringVar(), StringVar(), StringVar())
-
-        self.gp.analysis_folder.set('')
-        if config_dir:
-            self.gp.config_folder.set(config_dir)
-        else:
-            self.gp.config_folder.set(path.join(getcwd(), 'data'))
+        self.init_folder = init_folder
 
         def analysis_fn():
             self.browse_analysis()
-        button_analysis = Button(self.window, text="Browse Analysis Folder",
-                                 command=analysis_fn)
-        button_analysis.grid(column=0, row=0)
+        self.analysis = self.BrowsePath(self.window, text="Browse Analysis Folder",
+                                        command=analysis_fn, row=0, col=0)
 
-        self.entry_analysis = Entry(textvariable=self.gp.analysis_folder,
-                                    state=DISABLED, width=110)
-        self.entry_analysis.grid(row=0, column=1,
-                                 padx=10, pady=10)
+        cfg_folder = config_dir if config_dir else path.join(getcwd(), 'data')
 
         def browse_fn():
             self.browse_config()
-        button_config = Button(self.window, text="Browse Config Folder",
-                               command=browse_fn)
-        button_config.grid(column=0, row=1)
-        self.entry_config = Entry(textvariable=self.gp.config_folder,
-                                  state=DISABLED, width=110)
-        self.entry_config.grid(row=1, column=1,
-                               padx=10, pady=10)
+        self.config = self.BrowsePath(self.window, text="Browse Config Folder",
+                                      command=browse_fn, row=1, col=0, var=cfg_folder)
 
         def params_fn():
             self.browse_params()
-        self.button_params = Button(self.window, text="Browse Parameters File",
-                                    command=params_fn, state=DISABLED)
-        self.button_params.grid(column=0, row=2)
-        self.entry_params = Entry(textvariable=self.gp.params_file,
-                                  state=DISABLED, width=110)
-        self.entry_params.grid(row=2, column=1,
-                               padx=10, pady=10)
+        self.params = self.BrowsePath(self.window, text="Browse Parameters File",
+                                      command=params_fn, row=2, col=0)
 
         def worklist_fn():
             self.browse_worklist()
-        self.button_worklist = Button(self.window, text="Browse Worklist File",
-                                      command=worklist_fn, state=DISABLED)
-        self.button_worklist.grid(column=0, row=3)
-        self.entry_worklist = Entry(textvariable=self.gp.worklist_file,
-                                    state=DISABLED, width=110)
-        self.entry_worklist.grid(row=3, column=1,
-                                 padx=10, pady=10)
+        self.worklist = self.BrowsePath(self.window, text="Browse Worklist File",
+                                        command=worklist_fn, row=3, col=0)
 
         def mdil_fn():
             self.browse_mdil()
-        self.button_mdil = Button(self.window, text="Browse Manual Dilution File",
-                                  command=mdil_fn, state=DISABLED)
-        self.button_mdil.grid(column=0, row=4)
-        self.entry_mdil = Entry(textvariable=self.gp.mdil_file,
-                                state=DISABLED, width=110)
-        self.entry_mdil.grid(row=4, column=1,
-                             padx=10, pady=10)
+        self.mdil = self.BrowsePath(self.window, text="Browse Manual Dilution File",
+                                    command=mdil_fn, row=4, col=0)
 
     def browse_mdil(self) -> None:
         """Browse manual dilution filename"""
-        filename = filedialog.askopenfilename(initialdir=self.gp.analysis_folder.get(),
+        filename = filedialog.askopenfilename(initialdir=self.analysis.var.get(),
                                               title="Select Manual Dilution File",
                                               filetypes=[('XLS Files', '*.xlsx')])
         if filename:
-            self.gp.mdil_file.set(filename)
-            self.entry_mdil.update()
-            self.check_requirements(
-                svar2path(self.gp.params_file),
-                svar2path(self.gp.worklist_file), filename)
+            self.mdil.var.set(filename)
+            self.mdil.entry.update()
+            self.check_requirements(svar2path(self.params.var),
+                                    svar2path(self.worklist. var),
+                                    filename)
 
     def browse_worklist(self) -> None:
         """Browse params filename"""
-        filename = filedialog.askopenfilename(initialdir=self.gp.analysis_folder.get(),
+        filename = filedialog.askopenfilename(initialdir=self.analysis.var.get(),
                                               title="Select Worklist File",
                                               filetypes=[('XLS Files', '*.xls')])
         if filename:
-            self.gp.worklist_file.set(filename)
-            self.entry_worklist.update()
-            self.check_requirements(
-                svar2path(self.gp.worklist_file),
-                filename,
-                svar2path(self.gp.mdil_file))
+            self.worklist. var.set(filename)
+            self.worklist.entry.update()
+            self.check_requirements(svar2path(self.worklist. var),
+                                    filename,
+                                    svar2path(self.mdil.var))
 
     def browse_params(self) -> None:
         """Brows params filename"""
-        filename = filedialog.askopenfilename(initialdir=self.gp.analysis_folder.get(),
+        filename = filedialog.askopenfilename(initialdir=self.analysis.var.get(),
                                               title="Select Parameters File",
                                               filetypes=[('CSV Files', '*.csv')])
         if filename:
-            self.gp.params_file.set(filename)
-            self.entry_params.update()
-            self.check_requirements(
-                filename,
-                svar2path(self.gp.worklist_file),
-                svar2path(self.gp.mdil_file))
+            self.params.var.set(filename)
+            self.params.entry.update()
+            self.check_requirements(filename,
+                                    svar2path(self.worklist.var),
+                                    svar2path(self.mdil.var))
 
     def browse_analysis(self) -> None:
         """ Browse analysis folder
         """
         initialdir = getcwd()
-        if self.gp.init_folder:
-            initialdir = self.gp.init_folder
+        if self.init_folder:
+            initialdir = self.init_folder
         dirname = filedialog.askdirectory(initialdir=initialdir,
                                           title="Select a Hamilton Analysis Folder")
         if dirname:
-            self.gp.analysis_folder.set(dirname)
-            self.entry_analysis.update()
+            self.analysis.var.set(dirname)
+            self.analysis.entry.update()
             params_path = make_params_path(dirname)
             worklist_path = make_worklist_path(dirname)
             mdil_path = make_mdil_path(dirname)
@@ -238,27 +208,30 @@ class Gui:
         close_win = True
         if not params_path:
             messagebox.showwarning("Invalid file",
-                                   "Defalult parameters file is missing or file name is invalid.")
+                                   "Defalult parameters file is missing \nor file name is invalid.",
+                                   parent=self.window)
             close_win = False
-        self.button_params['state'] = NORMAL
-        self.gp.params_file.set(params_path)
-        self.entry_params.update()
+        self.params.button['state'] = NORMAL
+        self.params.var.set(params_path)
+        self.params.entry.update()
 
         if not worklist_path:
             messagebox.showwarning("Invalid file",
-                                   "Defalult worklist file is missing or file name is invalid.")
+                                   "Defalult worklist file is missing or \nfile name is invalid.",
+                                   parent=self.window)
             close_win = False
-        self.button_worklist['state'] = NORMAL
-        self.gp.worklist_file.set(worklist_path)
-        self.entry_worklist.update()
+        self.worklist.button['state'] = NORMAL
+        self.worklist.var.set(worklist_path)
+        self.worklist.entry.update()
 
         if not mdil_path:
             messagebox.showwarning("Invalid file",
-                                   "Manual worklist file is missing or file name is invalid.")
+                                   "Manual dilution worklist file is missing \nor file name is invalid.",
+                                   parent=self.window)
             close_win = False
-        self.button_mdil['state'] = NORMAL
-        self.gp.mdil_file.set(mdil_path)
-        self.entry_mdil.update()
+        self.mdil.button['state'] = NORMAL
+        self.mdil.var.set(mdil_path)
+        self.mdil.entry.update()
 
         if close_win:
             self.window.destroy()
@@ -266,18 +239,18 @@ class Gui:
     def browse_config(self) -> None:
         """ Browse config folder
         """
-        dirname = filedialog.askdirectory(initialdir=self.gp.config_folder.get(),
+        dirname = filedialog.askdirectory(initialdir=self.config.var.get(),
                                           title="Select a Config Folder")
 
         if dirname:
-            self.gp.config_folder.set(dirname)
-            self.entry_config.update()
+            self.config.var.set(dirname)
+            self.config.entry.update()
 
     def res(self) -> None:
         """ Result
         """
-        return (self.gp.analysis_folder.get(), self.gp.config_folder.get(),
-                self.gp.params_file.get(), self.gp.worklist_file.get(), self.gp.mdil_file.get())
+        return (self.analysis.var.get(), self.config.var.get(),
+                self.params.var.get(), self.worklist.var.get(), self.mdil.var.get())
 
 
 def gui_fn(config_dir: PathLikeOrNone, init_folder: PathLikeOrNone) -> PathLikeOrNone:
