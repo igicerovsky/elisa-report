@@ -1,5 +1,11 @@
 # Hamiltom report changelog
 
+## v0.1.8
+
+21.0.2.2024
+
+- UI to browse prameters, worklist, manual dilution files
+
 ## v0.1.6
 
 - unit tests
