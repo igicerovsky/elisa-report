@@ -8,7 +8,7 @@ from os import path, listdir
 from datetime import datetime
 import re
 
-from .typing import PathLike
+from .typing import PathLike, PathLikeOrNone
 
 
 def find_analysis(work_dir: PathLike, match_pattern: str) -> list:
@@ -121,6 +121,35 @@ def basename_from_inputdir(input_dir: PathLike) -> str:
     return make_base_name(p['date'], p['gn'])
 
 
+def make_worklist_path(input_dir: PathLikeOrNone) -> PathLikeOrNone:
+    """Make worklist file path"""
+    base_name = basename_from_inputdir(input_dir)
+    worklist = path.join(input_dir, base_name + 'worklist-ELISA.xls')
+    if not path.isfile(worklist):
+        return None
+    return worklist
+
+
+def make_mdil_path(input_dir: PathLikeOrNone) -> PathLikeOrNone:
+    """Make manual dilution file path"""
+    base_name = basename_from_inputdir(input_dir)
+    mdil = path.join(input_dir, base_name + 'worklist-ELISA_ManualDil.xlsx')
+    if not path.isfile(mdil):
+        return None
+    return mdil
+
+
+def make_params_path(input_dir: PathLikeOrNone) -> PathLikeOrNone:
+    """Make params file path"""
+    p = parse_dir_name(input_dir)
+    base_name = basename_from_inputdir(input_dir)
+    params = path.join(input_dir, base_name +
+                       p['protocol'] + '_Parameters.csv')
+    if not path.isfile(params):
+        return None
+    return params
+
+
 def make_input_paths(input_dir: PathLike) -> dict:
     """Make worklist and parameters path names
 
@@ -136,15 +165,12 @@ def make_input_paths(input_dir: PathLike) -> dict:
     dictionary
         Paths to `worklist` and `params` files
     """
-    p = parse_dir_name(input_dir)
-    base_name = basename_from_inputdir(input_dir)
-    worklist = path.join(input_dir, base_name + 'worklist-ELISA.xls')
-    if not path.isfile(worklist):
+    worklist = make_worklist_path(input_dir)
+    if not worklist:
         raise FileNotFoundError(f"Worklist file path is invlaid: {worklist}")
 
-    params = path.join(input_dir, base_name +
-                       p['protocol'] + '_Parameters.csv')
-    if not path.isfile(params):
+    params = make_params_path(input_dir)
+    if not worklist:
         raise FileNotFoundError("Parameters file path is invlaid: {params}")
 
     return {'worklist': worklist, 'params': params}
