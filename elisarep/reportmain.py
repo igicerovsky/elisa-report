@@ -49,6 +49,8 @@ def report_plate(plate_id: int, report_params: dict,
     dfg = apply_fit(dfg, fd.popt)
     dfg = mask_sample(dfg, fd.dr)
     sl = generate_results(dfg, fd.dr)
+    final = make_final(sl, report_params['worklist'], plate_id).drop(
+        'reference 01', axis=0)
 
     report = '''\
 ---
@@ -62,8 +64,6 @@ colorlinks: true
 # Automatically Generated Markdown Report for ELISA\n\n'''
 
     report += header_section(info, plate_id, '')
-    final = make_final(sl, report_params['worklist'], plate_id).drop(
-        'reference 01', axis=0)
     report += result_section(final)
     report += param_section(report_params['params'])
     img_dir = os.path.join(report_dir, 'img')
