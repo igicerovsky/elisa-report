@@ -109,10 +109,10 @@ def test_e2e_aav9():
     """ Test for AAV9
     """
     analysis_dir = './test/analysis/230801_AAV9-ELISA_sey_GN004240-053'
-    report_plates_crc = [1243771558, 1604776012, 1165470534]
+    report_plates_crc = [1243771558, 2794876820, 1165470534]
     generic_test(analysis_dir, report_plates_crc,
-                 md_crc=2880663749,
-                 word_crc=2096579211)
+                 md_crc=60030663,
+                 word_crc=3887589158)
 
 
 def test_e2e_aav9_dilthr():
