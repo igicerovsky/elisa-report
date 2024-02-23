@@ -3,17 +3,9 @@
 
 ## TODO
 
-- `240220_AAV9-ELISA_sey_GN004240-073` plate 2, sample 9 check `****` in result Word document
-- write LOQ value
+- fo manual dilution equals `10` only one valid point is needed (two otherwise)
 - 231213_AAV9-ELISA_sey_GN004240-068; plate 3; why is masked second point and not first??? see fitting
 - add description of graphs to README.md, symbol meaning (croos, circle, -) [Ewald Fri 12/15/2023 2:04 PM]
-- check correctness of the exported `*.txt` filename for given plate
-- save final results with `,` decimal delimiter for Andrea
-- Further review process ???
-- Unit tests
-  - modules
-- Documentation
-  - modules
 
 ## Review
 
@@ -24,6 +16,7 @@
 ## KW08-19.02.2024
 
 - GUI: browse worklist, parameter, manual dilution files if not automatically found
+- `240220_AAV9-ELISA_sey_GN004240-073` plate 2, sample 9 check `****` in result Word document
 
 ## KW06-05.02.2024
 
