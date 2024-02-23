@@ -10,7 +10,8 @@ import numpy as np
 import pandas as pd
 from scipy.stats import variation
 
-from .constants import RESULT_DIGITS, MIN_VALID_SAMPLE_POINTS, SAMPLE_TYPES
+from .constants import (RESULT_DIGITS, SAMPLE_TYPES,
+                        MIN_VALID_SAMPLE_POINTS, MIN_VALID_SAMPLE_POINTS_DIL10)
 from .constants import CV_THRESHOLD, PRE_DILUTION_THRESHOLD
 from .fitdata import conc_func, inv_func, backfit, DataRange
 
@@ -75,7 +76,7 @@ def mask_value_short_fn(val, vmin, vmax, dil):
     return None
 
 
-def mask_sample_cv(df_in: pd.DataFrame, valid_pts: list, cv_threshold: float):
+def mask_sample_cv(df_in: pd.DataFrame, valid_pts: int, cv_threshold: float):
     """ Aply masking to a sample
     """
     df = df_in[df_in['mask_reason'].isna()]
@@ -271,6 +272,9 @@ def final_sample_info(all_info, pre_dilution, limits):
         msg = f'>{info["value"] * pre_dilution:.{RESULT_DIGITS}e}'
     elif info['enum'] == SampleInfo.VALID_PTS:
         msg = f'{all_info["valid_pts"]} valid point'
+        if pre_dilution == 10 and all_info['valid_pts'] == MIN_VALID_SAMPLE_POINTS_DIL10:
+            valid_ex = True
+            msg = 'info only, 1pt valid'
     elif info['enum'] == SampleInfo.CV:
         msg = f'CV>{CV_THRESHOLD * 100.0:.1f}%({info["value"] * 100.0:.1f}%)'
     elif info['enum'] == SampleInfo.LIMITS_3S:

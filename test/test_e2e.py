@@ -109,10 +109,10 @@ def test_e2e_aav9():
     """ Test for AAV9
     """
     analysis_dir = './test/analysis/230801_AAV9-ELISA_sey_GN004240-053'
-    report_plates_crc = [1243771558, 2794876820, 1165470534]
+    report_plates_crc = [1243771558, 2794876820, 2103061295]
     generic_test(analysis_dir, report_plates_crc,
-                 md_crc=60030663,
-                 word_crc=3887589158)
+                 md_crc=2637769489,
+                 word_crc=1274083522)
 
 
 def test_e2e_aav9_dilthr():
@@ -133,3 +133,13 @@ def test_e2e_aav8():
     generic_test(analysis_dir, report_plates_crc,
                  md_crc=117438155,
                  word_crc=3671054324)
+
+
+def test_e2e_aav9_073():
+    """AAV8 test
+    """
+    analysis_dir = './test/analysis/240220_AAV9-ELISA_sey_GN004240-073'
+    report_plates_crc = [853895303, 3192554563]
+    generic_test(analysis_dir, report_plates_crc,
+                 md_crc=3094436759,
+                 word_crc=3440131459)
