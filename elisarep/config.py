@@ -9,7 +9,7 @@ import json
 from .typing import PathLike
 
 
-VERSION = '0.1.7'
+VERSION = '0.1.8'
 DESCRIPTION = 'Hamilton report generation for ELISA'
 LONG_DESCRIPTION = 'Genrate report from Hamilton photometer output for ELISA.'
 NAME = 'elisarep'

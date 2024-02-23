@@ -208,11 +208,11 @@ def sample_info(samples: pd.DataFrame, stype: str, sample_num: int, dr: DataRang
         t = s[['OD_delta', 'plate_layout_dil', 'concentration', 'backfit']]
         t_not_na = t[~t['backfit'].isna()]
 
-        if t_not_na['OD_delta'].max() < dr.od[0]:
+        if t_not_na['OD_delta'].max() < dr.od[0] or t_not_na['OD_delta'].max() < dr.od_fit[0]:
             msgdc = {'sign': '<', 'value': Decimal(
                 dr.sv[0]), 'enum': SampleInfo.LOW}
             # dr.sv[0] * sc['sample']['plate_layout_dil'].min()), 'enum': SampleInfo.LOW}
-        elif t_not_na['OD_delta'].min() > dr.od[1]:
+        elif t_not_na['OD_delta'].min() > dr.od[1] or t_not_na['OD_delta'].min() > dr.od_fit[1]:
             msgdc = {'sign': '>', 'value': Decimal(
                 # dr.sv[1] * sc['sample']['plate_layout_dil'].max()), 'enum': SampleInfo.HIGH}
                 dr.sv[1]), 'enum': SampleInfo.HIGH}
