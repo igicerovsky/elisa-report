@@ -3,7 +3,6 @@
 
 ## TODO
 
-- fo manual dilution equals `10` only one valid point is needed (two otherwise)
 - 231213_AAV9-ELISA_sey_GN004240-068; plate 3; why is masked second point and not first??? see fitting
 - add description of graphs to README.md, symbol meaning (croos, circle, -) [Ewald Fri 12/15/2023 2:04 PM]
 
@@ -12,6 +11,11 @@
 - Sample mean multiply (Andrea) in sample overview; add if easy  
 
 ## Done
+
+## KW09-26.02.2024
+
+- if manual dilution equals `10` only one valid point is needed (two otherwise)
+- boundary conditions for valid points
 
 ## KW08-19.02.2024
 
