@@ -1,5 +1,12 @@
 # Hamiltom report changelog
 
+## v0.1.9
+
+27.02.2024
+
+- boundary conditions update for fit curve points and sample points
+- manual dilution `10` special case: 1 valid point requred for information only
+
 ## v0.1.8
 
 21.0.2.2024

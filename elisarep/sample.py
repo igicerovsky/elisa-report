@@ -262,12 +262,8 @@ def final_sample_info(all_info, pre_dilution, limits):
     if info['enum'] == SampleInfo.NAN_HIGH:
         msg = f'>{info["value"] * pre_dilution:.{RESULT_DIGITS}e}'
     elif info['enum'] == SampleInfo.NAN_LOW or info['enum'] == SampleInfo.LOW:
-        if pre_dilution <= PRE_DILUTION_THRESHOLD:
-            valid_ex = True
-            msg = f'<{info["value"] * pre_dilution:.{RESULT_DIGITS}e}'
-        else:
-            valid_ex = False
-            msg = f'<{info["value"] * pre_dilution:.{RESULT_DIGITS}e}'
+        valid_ex = pre_dilution <= PRE_DILUTION_THRESHOLD
+        msg = f'<{info["value"] * pre_dilution:.{RESULT_DIGITS}e}'
     elif info['enum'] == SampleInfo.HIGH:
         msg = f'>{info["value"] * pre_dilution:.{RESULT_DIGITS}e}'
     elif info['enum'] == SampleInfo.VALID_PTS:
